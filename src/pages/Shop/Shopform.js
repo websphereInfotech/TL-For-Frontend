@@ -9,20 +9,27 @@ function Shopform() {
     const [mobileNo, setMoblieNo] = useState('');
     const [Address, setAddress] = useState('');
     const navigate = useNavigate();
-
+    
     const handleShop = (e) => {
         e.preventDefault();
-        axios.post(`http://localhost:2002/api/shop/data/create`, {
+       const saved = localStorage.getItem( process.env.KEY);
+       console.log('Token from localStorage:', saved); 
+        axios.post(`http://localhost:2002/api/shop/data/create`, 
+        {
             shopName: shopName,
             mobileNo: mobileNo,
             Address: Address
-        })
+        } , {
+            headers: {
+                "Authorization": `Bearer ${saved}`
+            }
+        }
+        )
             .then(function (response) {
-                console.log(response.data.data);
                 if (response.data.status === "Success") {
                     navigate('/dashboard');
                 } else {
-                    navigate('/');
+                    navigate('/shopform');
                 }
             })
             .catch(function (error) {

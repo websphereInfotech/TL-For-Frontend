@@ -3,60 +3,75 @@ import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import Select from 'react-select';
 import { Breadcrumb, Container, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function QuotationForm() {
     const [userName, setUserName] = useState('');
     const [mobileNo, setMobileNo] = useState('');
-    const [address, setAddress] = useState('');
-    const navigate = useNavigate();
+    const [Address, setAddress] = useState('');
 
-    const [architecture, setArchitecture] = useState([]);
+    const [ architecture, setArchitecture] = useState([]);
+    const [selectedArchitecture, setSelectedArchitecture] = useState([]);
     const [carpenter, setCarpenter] = useState([]);
+    const [selectCarpenter, selectsetCarpenter] = useState([]);
     const [shop, setShop] = useState([]);
+    const [selectShop, selectsetShop] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const saved = localStorage.getItem( process.env.KEY);
+        async function fetchData() {
             try {
-                const [architectureResponse, carpenterResponse, shopResponse] = await Promise.all([
-                    axios.get('http://localhost:2002/api/architec/listdata'), 
-                    axios.get('http://localhost:2002/api/carpenter/listdata'),
-                    axios.get('http://localhost:2002/api/shop/listdata') 
-                ]);
-                setArchitecture(architectureResponse.data);
-                setCarpenter(carpenterResponse.data);
-                setShop(shopResponse.data);
+                const timestamp = Date.now();
+                const architectureResponse = await axios.get(`http://localhost:2002/api/architec/listdata?timestamp=${timestamp}`, {
+                    headers: {
+                        "Authorization": `Bearer ${saved}`
+                    }
+                });
+                const carpenterResponse = await axios.get(`http://localhost:2002/api/carpenter/listdata?timestamp=${timestamp}`, {
+                    headers: {
+                        "Authorization": `Bearer ${saved}`
+                    }
+                });
+                const shopResponse = await axios.get(`http://localhost:2002/api/shop/listdata?timestamp=${timestamp}`, {
+                    headers: {
+                        "Authorization": `Bearer ${saved}`
+                    }
+                });
+                const architectureData = await architectureResponse.data.data.map(item => item.architecsName);
+                const carpenterData = await carpenterResponse.data.data.map(item => item.carpentersName);
+                const shopData = await shopResponse.data.data.map(item => item.shopName);
+
+                setArchitecture(architectureData);
+                setCarpenter(carpenterData);
+                setShop(shopData);
             } catch (error) {
-                console.log('Multiple fetch failed');
+                console.error(error);
             }
-        };
+        }
         fetchData();
     }, []);
-
-    const handleQuotation = (e) => {
-        e.preventDefault();
-        axios.post('http://localhost:2002/api/quotation/create', {
+    const handleQuotation = () => {
+        // e.preventDefault();
+        const saved = localStorage.getItem( process.env.KEY);
+        axios.post(`http://localhost:2002/api/quotation/cerate`, {
             userName: userName,
             mobileNo: mobileNo,
-            address: address,
-            architecture:architecture,
-            carpenter:carpenter,
-            shop:shop
+            Address: Address,
+            architectureId:selectedArchitecture.map(item => item.value),
+            carpenterId:selectCarpenter.map(item => item.value),
+            shopId:selectShop.map(item => item.value)
+        }, {
+            headers: {
+                "Authorization": `Bearer ${saved}`
+            }
         })
-            .then(function (response) {
-                console.log(response.data.data);
-                if (response.data.status === 'Success') {
-                    navigate('/dashboard');
-                } else {
-                    navigate('/');
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
+        .then(function (response) {
+            console.log(response.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
             });
     }
-
     return (
         <>
             <Header />
@@ -79,32 +94,33 @@ function QuotationForm() {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label className='font-bold'>Address :</Form.Label>
-                        <Form.Control type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                        <Form.Control type="text" placeholder="Address" value={Address} onChange={(e) => setAddress(e.target.value)} />
                     </Form.Group>
                 </Form>
                 <div className='w-50 mx-auto'>
                     <p className='font-bold'>Architecture Name</p>
                         <Select
                             isMulti
-                            options={architecture}
-                            value={architecture}
-                            onChange={(selectedOptions) => setArchitecture(selectedOptions)}
+                            options={architecture.map(name => ({ label: name, value: name }))}
+                            value={selectedArchitecture}
+                            onChange={(selectedOptions) => setSelectedArchitecture(selectedOptions)}
                         />
                     <p className='font-bold'>Carpenter Name</p>
                     <Select
                         isMulti
-                        options={carpenter}
-                        value={carpenter}
-                        onChange={(selectedOptions) =>setCarpenter(selectedOptions)}
+                        options={carpenter.map(name => ({ label: name, value: name }))}
+                        value={selectCarpenter}
+                        onChange={(selectedOptions) =>selectsetCarpenter(selectedOptions)}
                     />
                     <p className='font-bold'>Shop Name</p>
                     <Select
                         isMulti
-                        options={shop}
-                        value={shop}
-                        onChange={(selectedOptions)=> setShop(selectedOptions)}
+                        options={shop.map(name => ({ label: name, value: name }))}
+                        value={selectShop}
+                        onChange={(selectedOptions)=> selectsetShop(selectedOptions)}
                     />
-                    <button type="submit" className='btn mt-3 bg-black text-white w-full' >Submit</button>
+                    <button type="submit" className='btn mt-3 bg-black text-white w-full' onClick={(e)=>handleQuotation(e.target.value)} >Submit</button>
+                    {/* <a href="/details" className='btn mt-3 bg-black text-white w-full'>Submit</a> */}
                 </div>
             </Container>
         </>
@@ -112,3 +128,4 @@ function QuotationForm() {
 }
 
 export default QuotationForm;
+

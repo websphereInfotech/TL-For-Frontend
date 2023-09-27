@@ -12,10 +12,16 @@ function Architectureform() {
 
     const handleArchitecture = (e) => {
         e.preventDefault();
+        const saved = localStorage.getItem( process.env.KEY);
+        console.log('Token from localStorage:', saved); 
         axios.post(`http://localhost:2002/api/architec/data/create`, {
             architecsName: architecsName,
             mobileNo: mobileNo,
             Address: Address
+        }, {
+            headers: {
+                "Authorization": `Bearer ${saved}`
+            }
         })
             .then(function (response) {
                 console.log(response.data.data);

@@ -12,13 +12,19 @@ function Carpenterform() {
     
     const handleCarpenter = (e) => {
         e.preventDefault();
+        const saved = localStorage.getItem( process.env.KEY);
+        console.log('Token from localStorage:', saved); 
         axios.post(`http://localhost:2002/api/carpenter/data/create`, {
             carpentersName: carpentersName,
             mobileNo:  mobileNo,
             Address: Address
+        }, {
+            headers: {
+                "Authorization": `Bearer ${saved}`
+            }
         })
             .then(function (response) {
-                console.log(response.data.data);
+                console.log(response.data.data); 
                 if (response.data.status === "Success") {
                     navigate('/dashboard');
                 } else {

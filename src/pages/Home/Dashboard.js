@@ -1,16 +1,57 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap"
 import { FaPlus } from 'react-icons/fa'
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [architecCount,setArchitectureCount] = useState(0);
+  const [carpenterCount,setCarpenterCount] = useState(0);
+  const [shopCount,setShopCount] = useState(0);
+  const [quotation,setQuotation] = useState(0);
 
-  const handleLogout = () => {
+  useEffect(() => {
+    const saved = localStorage.getItem( process.env.KEY);
+    async function fetchData() {
+        try {
+            const timestamp = Date.now();
+            const architecCountRes = await axios.get(`http://localhost:2002/api/architec/listdata?timestamp=${timestamp}`, {
+                headers: {
+                    "Authorization": `Bearer ${saved}`
+                }
+            });
+            setArchitectureCount(architecCountRes.data.data.length);
+            const carpenterCountRes = await axios.get(`http://localhost:2002/api/carpenter/listdata?timestamp=${timestamp}`, {
+                headers: {
+                    "Authorization": `Bearer ${saved}`
+                }
+            });
+            setCarpenterCount(carpenterCountRes.data.data.length);
+            const shopCountRes = await axios.get(`http://localhost:2002/api/shop/listdata?timestamp=${timestamp}`, {
+                headers: {
+                    "Authorization": `Bearer ${saved}`
+                }
+            });
+            setShopCount(shopCountRes.data.data.length);
+            const quotationRes = await axios.get(`http://localhost:2002/api/quotation/listdata?timestamp=${timestamp}`, {
+                headers: {
+                    "Authorization": `Bearer ${saved}`
+                }
+            });
+            setQuotation(quotationRes.data.data.length);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    fetchData();
+}, []);
+  const handleLogout = () => { 
     setLogoutModalOpen(true);
   };
   const handleLogoutConfirm = () => {
-    localStorage.clear();
-    setLogoutModalOpen(false);
+      localStorage.clear();
+      setLogoutModalOpen(false);
+      window.location.href = '/login';
   };
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
@@ -20,17 +61,18 @@ function Dashboard() {
      <div className="bg-dark text-white rounded-br-full">
         <div className="container mb-3 flex justify-between py-3">
           <p className="text-2xl font-bold">TIMBERLAND</p>
-          {/* <a href="/" onClick={handleLogout}>LOG OUT</a> */}
-          <input type="button" value="Logout" onClick={handleLogout} className="bg-white text-dark font-bold px-4 py-2 me-3" />
+          <button className="bg-light text-black mx-1 px-3 py-1" onClick={handleLogout}>
+            LOG OUT
+          </button>
         </div> 
       </div>
       <div className="container">
         <div className="bg-dark text-white rounded-md">
           <ul className="flex	align-middle	justify-around">
-            <li>Quotation <p className="text-center">00</p></li>
-            <li>Shop <p className="text-center">00</p></li>
-            <li>Architecture <p className="text-center">00</p></li>
-            <li>Carpenter <p className="text-center">00</p></li>
+            <li>Quotation <p className="text-center">{quotation}</p></li>
+            <li>Shop <p className="text-center">{shopCount}</p></li>
+            <li>Architecture <p className="text-center">{architecCount}</p></li>
+            <li>Carpenter <p className="text-center">{carpenterCount}</p></li>
           </ul>
         </div>
       </div>
