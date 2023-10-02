@@ -1,15 +1,15 @@
   import React, { useState } from 'react'
   import { Col, Container, Form, Row } from 'react-bootstrap'
   import axios from 'axios';
-  import { Modal, Button } from 'react-bootstrap';
   import { useNavigate } from 'react-router-dom'; 
+  import { Modal, Button } from 'react-bootstrap';
 
   function AdminLogin() {
     const emoji = String.fromCodePoint(128075);
     const [login_id, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [apiMessage, setApiMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [message, setMessage] = useState('');
     const navigate = useNavigate(); 
 
     const handleSubmit = (e) => {
@@ -19,39 +19,28 @@
         password: password
       })
       .then(function (response) {
-        console.log(response.data.token);
-        localStorage.setItem( process.env.KEY,response.data.token)
-        if (response.status === 200) {
-          if (response.data.status === "Success") {
-            setApiMessage("Login successfully !");
-            setShowModal(true);
-          } else {
-            setApiMessage("Login failed. Check your login_id or password.");
-            setShowModal(true);
-          }
+        if (response.data && response.data.status === 'Success') {
+          const saved = response.data.token;
+          localStorage.setItem(process.env.KEY, saved);
+          setMessage('Login successful');
+          setShowModal(true);
+        } else {
+          setMessage(response.data.message );
+          setShowModal(true);
         }
       })
       .catch(function (error) {
-        if (error.response) {
-          if (error.response.status === 404) {
-            setApiMessage("Enter Valid Login_id");
-            setShowModal(true);
-          } else if (error.response.status === 400) {
-            setApiMessage("Enter Valid Password");
-            setShowModal(true);
-          }
-        } else {
-          setApiMessage("An error occurred while processing your request.");
-          setShowModal(true);
-        }
-      });
+        console.log(error);
+        setMessage(error.response.data.message);
+        setShowModal(true);
+      })
   }
-    const handleClose = () => {
-      setShowModal(false);
-      if (apiMessage.includes('successfully')) {
-        navigate('/dashboard');
-      }
-    };
+  const handleClose = () => {
+    setShowModal(false);
+    if (message.includes('successful')) {
+      navigate('/dashboard');
+    }
+  };
     return (
       <>
         <Container>
@@ -78,15 +67,15 @@
               </Form>
             </Col>
           </Row>
-          <Modal show={showModal} onHide={handleClose} >
-            <Modal.Body  className={apiMessage.includes('successfully') ? 'modal-success' : 'modal-error'}>{apiMessage}</Modal.Body>
-            <Modal.Footer  className={apiMessage.includes('successfully') ? 'modal-success' : 'modal-error'}>
-              <Button variant="light" onClick={handleClose} className='mx-auto'>
-                Close
-              </Button>
-            </Modal.Footer>
-          </Modal>
         </Container>
+        <Modal show={showModal} onHide={handleClose}>
+        <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
+        <Modal.Footer className={message.includes('successful') ? 'modal-success' : 'modal-error'}>
+          <Button variant='light' onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </>
     )
   }
