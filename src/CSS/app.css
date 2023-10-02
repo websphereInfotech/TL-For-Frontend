@@ -8,7 +8,7 @@
     color: white;
 }
 .modal-error {
-    background-color: #dc3545;
+    background-color: #dc3545 !important;
     color: white;
 }
 .btn {
