@@ -39,7 +39,7 @@ function Quotationlist() {
         .then(function (response) {
             console.log(response.data.data);
             setQuotation((prevQuotation) =>
-            prevQuotation.filter((quotation) => quotation._id !== setSelectedQuotationId)
+            prevQuotation.filter((quotation) => quotation._id !== selectedQuotationID)
             );
             setShowDeleteConfirmation(false); 
           })
@@ -96,11 +96,11 @@ function Quotationlist() {
             </div>
             <h1 className='text-center text-4xl font-bold my-4'>Quotation List</h1>
             <Container>
-                <table className='w-full text-center' cellPadding={'5px'}>
+                <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
                     <thead>
                         <tr>
                             <th>SR No.</th>
-                            <th>User Name</th>
+                            <th>Name</th>
                             <th>Detalis</th>
                             <th>Delete</th>
                             <th>Edit</th>

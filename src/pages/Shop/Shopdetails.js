@@ -34,8 +34,8 @@ function Shopdetails() {
             
             <Header />
            <Container>
-           <h2 className='text-center fs-3 font-bold'>Shop DETAILS</h2>
-            <table className='w-full md:w-50 table-bordered border mt-5' align='center'>
+           <h2 className='text-center fs-3 font-bold'>Shop Detalis</h2>
+            <table className='mx-auto lg:w-1/2 w-full  table-bordered border mt-5' align='center'>
                 <tr>
                     <td className='font-bold'>Shop Name:</td>
                     <td>{shop.shopName}</td>

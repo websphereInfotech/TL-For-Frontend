@@ -98,7 +98,7 @@ function Carpenterlist() {
       </div>
       <h1 className='text-center text-4xl font-bold my-4'>Carpenter List</h1>
       <Container>
-        <table className='w-full text-center' cellPadding={'5px'}>
+        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
           <thead>
             <tr>
               <th>Carpenter Name</th>

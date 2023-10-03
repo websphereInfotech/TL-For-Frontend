@@ -15,6 +15,7 @@ function Architecturelist() {
 
   useEffect(() => {
     const saved = localStorage.getItem(process.env.KEY);
+    console.log(saved);
     axios.get(`http://localhost:2002/api/architec/listdata`, {
       headers: {
         "Authorization": `Bearer ${saved}`
@@ -32,8 +33,9 @@ function Architecturelist() {
       })
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = () => {
     const saved = localStorage.getItem(process.env.KEY);
+    console.log(saved);
     axios.delete(`http://localhost:2002/api/architec/data/delete/${selectedArchitectureId}`, {
       headers: {
         "Authorization": `Bearer ${saved}`
@@ -100,7 +102,7 @@ function Architecturelist() {
       </div>
       <h1 className='text-center text-4xl font-bold my-4'>Architecture List</h1>
       <Container>
-        <table className='w-full text-center' cellPadding={'5px'}>
+        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
           <thead>
             <tr>
               <th>Architecture Name</th>

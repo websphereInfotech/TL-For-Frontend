@@ -31,7 +31,7 @@ function Shoplist() {
       })
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = () => {
     const saved = localStorage.getItem(process.env.KEY);
     axios.delete(`http://localhost:2002/api/shop/data/delete/${selectedShopID}`, {
       headers: {
@@ -41,7 +41,7 @@ function Shoplist() {
     .then(function (response) {
       console.log(response.data.data);
       setShop((prevShop) =>
-      prevShop.filter((shop) => shop._id !== setSelectedShopId)
+      prevShop.filter((shop) => shop._id !== selectedShopID)
       );
       setShowDeleteConfirmation(false); 
     })
@@ -98,7 +98,7 @@ function Shoplist() {
       </div>
       <h1 className='text-center text-4xl font-bold my-4'>Shop List</h1>
       <Container>
-        <table className='w-full text-center' cellPadding={'5px'}>
+        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
           <thead>
             <tr>
               <th>Shop Name</th>

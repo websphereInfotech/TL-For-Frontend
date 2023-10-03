@@ -34,8 +34,8 @@ function Carpenterdetails() {
             
             <Header />
            <Container>
-           <h2 className='text-center fs-3 font-bold'>Carpenter DETAILS</h2>
-            <table className='w-full md:w-50 table-bordered border mt-5' align='center'>
+           <h2 className='text-center fs-3 font-bold'>Carpenter Detalis</h2>
+            <table className='mx-auto lg:w-1/2 w-full  table-bordered border mt-5' align='center'>
                 <tr>
                     <td className='font-bold'>Carpenter Name:</td>
                     <td>{carpenter.carpentersName}</td>

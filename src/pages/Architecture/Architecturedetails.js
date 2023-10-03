@@ -12,7 +12,7 @@ function Architecturedetails() {
     useEffect(() => {
         const saved = localStorage.getItem(process.env.KEY);
 
-        axios.get(`http://localhost:2002/api/carpenter/viewdata/${id}`, {
+        axios.get(`http://localhost:2002/api/architec/viewdata/${id}`, {
             headers: {
                 "Authorization": `Bearer ${saved}`
             }
@@ -35,8 +35,8 @@ function Architecturedetails() {
             
             <Header />
            <Container>
-           <h2 className='text-center fs-3 font-bold'>Architecture DETAILS</h2>
-            <table className='w-full md:w-50 table-bordered border mt-5' align='center'>
+           <h2 className='text-center fs-3 font-bold'>Architecture Detalis</h2>
+            <table className='mx-auto lg:w-1/2 w-full  table-bordered border mt-5' align='center'>
                 <tr>
                     <td className='font-bold'>Architecture Name:</td>
                     <td>{architecture.architecsName}</td>

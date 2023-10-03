@@ -60,7 +60,7 @@ function Dashboard() {
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
-        <div className="container mb-3 flex just py-3">
+        <div className="container mb-3 flex justify-between py-3 px-5">
           <p className="text-2xl font-bold">TIMBERLAND</p>
 
           <button className="bg-light text-black mx-1 px-3 py-1 rounded-full" onClick={handleLogout}>

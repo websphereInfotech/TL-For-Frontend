@@ -111,8 +111,6 @@ function QuotationForm() {
             })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
                         setMessage('Quotation Data Update successful');
                         setShowModal(true);
                     } else {
@@ -138,8 +136,6 @@ function QuotationForm() {
             })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
                         setMessage('Quotation Data Create successful');
                         setShowModal(true);
                     } else {
@@ -182,7 +178,7 @@ function QuotationForm() {
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-                 {id ? 'Update Quotation Form' : 'Create Quotation Form'}
+                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleQuotation}>
@@ -236,7 +232,7 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, quantity: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Rate:</Form.Label>
+                        <Form.Label className='font-bold'>Rate :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Rate :"

@@ -32,8 +32,8 @@ function Userdetails() {
         <>
             <Header />
            <Container>
-           <h2 className='text-center fs-3 font-bold'>USER DETAILS</h2>
-            <table className='w-full md:w-50 table-bordered border mt-5' align='center'>
+           <h2 className='text-center fs-3 font-bold'>User Detalis</h2>
+            <table className='mx-auto lg:w-1/2 w-full table-bordered border mt-5' align='center'>
                 <tr>
                     <td className='font-bold'>SR NO.:</td>
                     <td>{user.serialNumber}</td>
