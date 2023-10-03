@@ -1,7 +1,7 @@
-import React, { useEffect, useState,useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Breadcrumb, Container, Form } from 'react-bootstrap'
 import Header from '../../components/Header'
-import {  useParams ,useNavigate} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { Modal } from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ function Architectureform() {
     useEffect(() => {
         if (id) {
             const saved = localStorage.getItem(process.env.KEY);
+            console.log(saved);
             axios
                 .get(`http://localhost:2002/api/architec/viewdata/${id}`, {
                     headers: {
@@ -39,8 +40,8 @@ function Architectureform() {
     const handleArchitecture = (e) => {
         e.preventDefault();
         const saved = localStorage.getItem(process.env.KEY);
+        console.log(saved);
         if (id) {
-            console.log(id);
             axios
                 .put(`http://localhost:2002/api/architec/data/update/${id}`, {
                     architecsName: architecsName,
@@ -53,8 +54,6 @@ function Architectureform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
                         setMessage('Architecture Data Update successful');
                         setShowModal(true);
                     } else {
@@ -68,6 +67,7 @@ function Architectureform() {
                     setShowModal(true);
                 });
         } else {
+            const saved = localStorage.getItem(process.env.KEY);
             axios.post(`http://localhost:2002/api/architec/data/create`, {
                 architecsName: architecsName,
                 mobileNo: mobileNo,
@@ -101,16 +101,16 @@ function Architectureform() {
             navigate('/dashboard');
         }
     }, [message, navigate]);
-    
+
     useEffect(() => {
         if (showModal) {
-          const timer = setTimeout(() => {
-            handleClose(); 
-          }, 3000); 
-    
-          return () => {
-            clearTimeout(timer); 
-          };
+            const timer = setTimeout(() => {
+                handleClose();
+            }, 3000);
+
+            return () => {
+                clearTimeout(timer);
+            };
         }
     }, [showModal, handleClose]);
     return (
@@ -123,28 +123,40 @@ function Architectureform() {
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-            {id ? 'Update  Architecture Form' : 'Create Architecture Form'}
+                {id ? 'Update  ArchitectureForm' : 'Create ArchitectureForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleArchitecture}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className='font-bold'>Architecture Name :</Form.Label>
-                        <Form.Control type="text" placeholder="Architecture Name" value={architecsName} onChange={(e) => setArchitecs(e.target.value)} />
+                        <Form.Control
+                            type="text"
+                            placeholder="Architecture Name"
+                            value={architecsName}
+                            onChange={(e) => setArchitecs(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label className='font-bold'>Moblie No. :</Form.Label>
-                        <Form.Control type="text" placeholder="Moblie No" value={mobileNo} onChange={(e) => setMoblieNo(e.target.value)} />
+                        <Form.Control
+                            type="text"
+                            placeholder="Moblie No"
+                            value={mobileNo}
+                            onChange={(e) => setMoblieNo(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label className='font-bold'>Address :</Form.Label>
-                        <Form.Control type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                        <Form.Control
+                            type="text"
+                            placeholder="Address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)} />
                     </Form.Group>
                     <button type="submit" className='btn bg-black text-white w-full'>Submit</button>
                 </Form>
             </Container>
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-               
+
             </Modal>
         </>
     )

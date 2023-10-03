@@ -53,8 +53,6 @@ function Carpenterform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
                         setMessage('Carpenter Data Update successful');
                         setShowModal(true);
                         
@@ -80,8 +78,6 @@ function Carpenterform() {
         })
             .then(function (response) {
                 if (response.data && response.data.status === 'Success') {
-                    const saved = response.data.token;
-                    localStorage.setItem(process.env.KEY, saved);
                     setMessage('Carpenter Data Create successful');
                     setShowModal(true);
                 } else {
@@ -120,11 +116,11 @@ function Carpenterform() {
             <div className='md:ps-24 ps-10'>
                 <Breadcrumb className='font-bold'>
                     <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/carpenterform">Carpenter Form</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/carpenterform">CarpenterForm</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-            {id ? 'Update Carpenter Form' : 'Create Carpenter Form'}
+            {id ? 'Update CarpenterForm' : 'Create CarpenterForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleCarpenter}>

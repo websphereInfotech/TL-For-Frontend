@@ -54,8 +54,6 @@ function Shopform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
                         setMessage('Shop Data Update successful');
                         setShowModal(true);
                     } else {
@@ -121,11 +119,11 @@ function Shopform() {
             <div className='md:ps-24 ps-10'>
                 <Breadcrumb className='font-bold'>
                     <Breadcrumb.Item href="/dashboard">Dashboard</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/Shopform">Shopform</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/Shopform">ShopForm</Breadcrumb.Item>
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-            {id ? 'Update Shop Form' : 'Create Shop Form'}
+            {id ? 'Update ShopForm' : 'Create ShopForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleShop}>

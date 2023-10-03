@@ -55,16 +55,16 @@ useEffect(() => {
 }, [showModal, handleClose]);
     return (
       <>
-        <Container>
+        <Container className='px-10'>
           <Row>
             <Col lg={4} md={6} sm={12} className='my-10 p-0 rounded-md bg-dark text-white'>
-              <div className='text-left text-3xl xl:px-24 lg:px-14 md:px-20 px-24 md:my-48 my-10'>
+              <div className='text-left text-3xl xl:px-24 lg:px-14 md:px-20 px-20 md:my-48 my-10'>
                 <p>Timberland</p>
                 <p>Super</p>
                 <p>Admin Login</p>
               </div>
             </Col>
-            <Col lg={8} md={6} sm={12} className='mx-auto my-32'>
+            <Col lg={8} md={6} sm={12} className='mx-auto md:my-32'>
               <p className='text-4xl mb-4 font-bold text-center'>Welcome,back!<span className='text-2xl'>{emoji}</span></p>
               <Form className='w-50 md:w-72 sm:w-96 mx-auto' onSubmit={handleSubmit} >
                 <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -81,8 +81,7 @@ useEffect(() => {
           </Row>
         </Container>
         <Modal show={showModal} onHide={handleClose}>
-        <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-       
+        <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body> 
       </Modal>
       </>
     )

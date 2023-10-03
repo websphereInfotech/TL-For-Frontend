@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Col, Container, Modal, Row } from 'react-bootstrap'
+import { Breadcrumb, Col, Container, Modal, Row } from 'react-bootstrap'
 import { BiSearch,BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
@@ -98,7 +98,7 @@ function Carpenterlist() {
       </div>
       <h1 className='text-center text-4xl font-bold my-4'>Carpenter List</h1>
       <Container>
-        <table className='w-full text-center' cellPadding={'5px'}>
+        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
           <thead>
             <tr>
               <th>Carpenter Name</th>
@@ -128,12 +128,12 @@ function Carpenterlist() {
           Are you sure you want to delete this item?
         </Modal.Body>
         <div className="modal-buttons">
-          <Button onClick={() => setShowDeleteConfirmation(false)}>
+          <button className=" rounded-full" onClick={() => setShowDeleteConfirmation(false)}>
             No
-          </Button>
-          <Button onClick={handleDelete}>
+          </button>
+          <button className=" rounded-full" onClick={handleDelete}>
             Yes
-          </Button>
+          </button>
         </div>
       </Modal>
     </>

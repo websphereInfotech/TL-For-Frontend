@@ -15,6 +15,7 @@ import Userdetails from './pages/Quotation/Userdetails';
 import Carpenterdetails from './pages/Carpenter/Carpenterdetails';
 import Architecturedetails from './pages/Architecture/Architecturedetails';
 import Shopdetails from './pages/Shop/Shopdetails';
+import Protected from './Services/Protected';
 
 
 function App() {
@@ -22,24 +23,34 @@ function App() {
    <>
       <BrowserRouter>
         <Routes>
-          <Route path='/'  element={<AdminLogin />}/>
+          <Route exact path='/login'  element={<AdminLogin />}/>
+          {/* <Route path='/'>
+          <Redirect to="/login" />
+          </Route>
+          <Route path="/login" component={AdminLogin} /> */}
+           <Route element={<Protected />}>
           <Route path='/dashboard' element={ <Dashboard />}/>
+
           <Route path='/Shopform' element={<Shopform/>}/>
           <Route path='/Shopform/:id' element={<Shopform/>}/>
+          <Route path='/shoplist' element={<Shoplist/>}/>
+          <Route path='/shoplist/shopdetails/:id' element={<Shopdetails/>}/>
+
           <Route path='/architecture' element={<Architectureform/>}/>
           <Route path='/architecture/:id' element={<Architectureform/>}/>
+          <Route path='/architecturelist' element={<Architecturelist/>}/>
+          <Route path='/architecturelist/architecturedetails/:id' element={<Architecturedetails/>}/>
+
           <Route path='/carpenterform' element={<Carpenterform/>}/>
           <Route path='/carpenterform/:id' element={<Carpenterform/>}/>
+          <Route path='/carpenterlist' element={<Carpenterlist/>}/>
+          <Route path='/carpenterlist/carpenterdetails/:id' element={<Carpenterdetails/>}/>
+
           <Route path='/quotation' element={<QuotationFrom/>}/>
           <Route path='/quotation/:id' element={<QuotationFrom/>}/>
           <Route path='/quotationlist' element={<Quotationlist/>}/>
-          <Route path='/architecturelist' element={<Architecturelist/>}/>
-          <Route path='/carpenterlist' element={<Carpenterlist/>}/>
-          <Route path='/shoplist' element={<Shoplist/>}/>
           <Route path='/quotationlist/userdetails/:id' element={<Userdetails/>}/>
-          <Route path='/carpenterlist/carpenterdetails/:id' element={<Carpenterdetails/>}/>
-          <Route path='/architecturelist/architecturedetails/:id' element={<Architecturedetails/>}/>
-          <Route path='/shoplist/shopdetails/:id' element={<Shopdetails/>}/>
+          </Route>
         </Routes>
       </BrowserRouter>
    </>
