@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Col, Container, Row } from 'react-bootstrap'
+import { Breadcrumb, Button, Col, Container, Modal, Row } from 'react-bootstrap'
 import { BiSearch,BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
@@ -9,6 +9,8 @@ import { MdDeleteForever } from 'react-icons/md';
 function Carpenterlist() {
   const [carpenter, setCarpenter] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedCarpenterId, setSelectedCarpenterId] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(process.env.KEY);
@@ -28,18 +30,20 @@ function Carpenterlist() {
       })
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete  = () => {
     const saved = localStorage.getItem(process.env.KEY);
-    id = id._id
-    axios.delete(`http://localhost:2002/api/carpenter/data/delete/${id}`, {
+    axios.delete(`http://localhost:2002/api/carpenter/data/delete/${selectedCarpenterId}`, {
       headers: {
         "Authorization": `Bearer ${saved}`
       }
     })
-      .then(function (response) {
-        console.log(response.data.data)
-        window.location.reload();
-      })
+    .then(function (response) {
+      console.log(response.data.data);
+      setCarpenter((prevCarpenters) =>
+        prevCarpenters.filter((carpenter) => carpenter._id !== selectedCarpenterId)
+      );
+      setShowDeleteConfirmation(false); 
+    })
       .catch(function (error) {
         console.log(error);
       })
@@ -54,6 +58,7 @@ function Carpenterlist() {
       .then(function (response) {
         console.log(response.data.data)
         setCarpenter(response.data.data)
+        setShowDeleteConfirmation(true);
       })
       .catch(function (error) {
         console.log(error)
@@ -62,7 +67,10 @@ function Carpenterlist() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
+  const confirmDelete = (id) => {
+    setSelectedCarpenterId(id);
+    setShowDeleteConfirmation(true);
+  }
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -106,7 +114,7 @@ function Carpenterlist() {
                   <tr key={user._id} className=' my-10'>
                     <td>{user.carpentersName}</td>
                     <td><Link to={`carpenterdetails/${user._id}`}>Carpenter</Link></td>
-                    <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => handleDelete(user)} /></td>
+                    <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => confirmDelete(user._id)} /></td>
                     <td className='fs-4'><Link to={`/carpenterform/${user._id}`}><BiEdit className='mx-auto'/></Link></td>
                   </tr>
                 )
@@ -115,6 +123,19 @@ function Carpenterlist() {
           </tbody>
         </table>
       </Container>
+      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
+        <Modal.Body>
+          Are you sure you want to delete this item?
+        </Modal.Body>
+        <div className="modal-buttons">
+          <Button onClick={() => setShowDeleteConfirmation(false)}>
+            No
+          </Button>
+          <Button onClick={handleDelete}>
+            Yes
+          </Button>
+        </div>
+      </Modal>
     </>
   )
 }

@@ -1,12 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Col, Container, Row } from 'react-bootstrap';
+import { Breadcrumb, Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import { MdDeleteForever } from 'react-icons/md';
 import { BiEdit, BiSearch } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 
 function Quotationlist() {
     const [quotation, setQuotation] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedQuotationID, setSelectedQuotationId] = useState(null);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
     useEffect(() => {
         const saved = localStorage.getItem(process.env.KEY);
         axios.get(`http://localhost:2002/api/quotation/listdata`, {
@@ -17,25 +21,28 @@ function Quotationlist() {
             .then(function (response) {
                 console.log(response.data.data);
                 setQuotation(response.data.data)
-
+                setIsLoading(false);
             })
             .catch(function (error) {
                 console.log(error);
+                setIsLoading(false);
             })
     }, []);
 
-    const handleDelete = (id) => {
+    const handleDelete = () => {
         const saved = localStorage.getItem(process.env.KEY);
-        id = id._id
-        axios.delete(`http://localhost:2002/api/quotation/delete/data/${id}`, {
+        axios.delete(`http://localhost:2002/api/quotation/delete/data/${selectedQuotationID}`, {
             headers: {
                 "Authorization": `Bearer ${saved}`
             }
         })
-            .then(function (response) {
-                console.log(response.data.data)
-                window.location.reload();
-            })
+        .then(function (response) {
+            console.log(response.data.data);
+            setQuotation((prevQuotation) =>
+            prevQuotation.filter((quotation) => quotation._id !== setSelectedQuotationId)
+            );
+            setShowDeleteConfirmation(false); 
+          })
             .catch(function (error) {
                 console.log(error);
             })
@@ -47,14 +54,21 @@ function Quotationlist() {
                 "Authorization": `Bearer ${saved}`
             }
         })
-        .then(function(response) {
-            console.log(response.data.data)
-            setQuotation(response.data.data)
-        })
-        .catch(function(error) {
-            console.log(error)
-        })
+            .then(function (response) {
+                console.log(response.data.data)
+                setQuotation(response.data.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
     }
+    if (isLoading) {
+      return <div>Loading...</div>;
+    }
+    const confirmDelete = (id) => {
+        setSelectedQuotationId(id);
+        setShowDeleteConfirmation(true);
+      }
     return (
         <>
             <div className="bg-dark text-white rounded-br-full">
@@ -100,8 +114,8 @@ function Quotationlist() {
                                         <td>{user.serialNumber}</td>
                                         <td>{user.userName}</td>
                                         <td><Link to={`userdetails/${user._id}`}>User</Link></td>
-                                        <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => handleDelete(user)} /></td>
-                                        <td className='fs-4'><Link to={`/quotation/${user._id}`} ><BiEdit className='mx-auto'/></Link></td>
+                                        <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => confirmDelete(user._id)} /></td>
+                                        <td className='fs-4'><Link to={`/quotation/${user._id}`} ><BiEdit className='mx-auto' /></Link></td>
                                     </tr>
                                 )
                             })
@@ -109,6 +123,20 @@ function Quotationlist() {
                     </tbody>
                 </table>
             </Container>
+            <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
+                <Modal.Body>
+                    Are you sure you want to delete this item?
+                </Modal.Body>
+                <div className="modal-buttons">
+                    <Button onClick={() => setShowDeleteConfirmation(false)}>
+                        No
+                    </Button>
+                    <Button onClick={handleDelete}>
+                        Yes
+                    </Button>
+                </div>
+            </Modal>
+
         </>
     )
 }

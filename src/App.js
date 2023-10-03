@@ -22,7 +22,7 @@ function App() {
    <>
       <BrowserRouter>
         <Routes>
-          <Route exact path='/'  element={<AdminLogin />}/>
+          <Route path='/'  element={<AdminLogin />}/>
           <Route path='/dashboard' element={ <Dashboard />}/>
           <Route path='/Shopform' element={<Shopform/>}/>
           <Route path='/Shopform/:id' element={<Shopform/>}/>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Col, Container, Row } from 'react-bootstrap'
-import { BiSearch,BiEdit } from 'react-icons/bi';
+import { Breadcrumb, Button, Col, Container, Modal, Row } from 'react-bootstrap'
+import { BiSearch, BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
 
@@ -9,10 +9,8 @@ import { MdDeleteForever } from 'react-icons/md';
 function Shoplist() {
   const [shop, setShop] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const [shopName, setShopName] = useState('');
-  // const [mobileNo, setMoblieNo] = useState('');
-  // const [address, setAddress] = useState('');
-  // const { id } = useParams('')
+  const [selectedShopID, setSelectedShopId] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem(process.env.KEY);
@@ -34,16 +32,18 @@ function Shoplist() {
 
   const handleDelete = (id) => {
     const saved = localStorage.getItem(process.env.KEY);
-    id = id._id
-    axios.delete(`http://localhost:2002/api/shop/data/delete/${id}`, {
+    axios.delete(`http://localhost:2002/api/shop/data/delete/${selectedShopID}`, {
       headers: {
         "Authorization": `Bearer ${saved}`
       }
     })
-      .then(function (response) {
-        console.log(response.data.data)
-        window.location.reload();
-      })
+    .then(function (response) {
+      console.log(response.data.data);
+      setShop((prevShop) =>
+      prevShop.filter((shop) => shop._id !== setSelectedShopId)
+      );
+      setShowDeleteConfirmation(false); 
+    })
       .catch(function (error) {
         console.log(error);
       })
@@ -63,32 +63,13 @@ function Shoplist() {
         console.log(error)
       })
   }
-//   const handleUpdate = () => {
-//     const saved = localStorage.getItem(process.env.KEY);
-
-//     axios.put(`http://localhost:2002/api/shop/data/update/${id}`,{
-//       shopName: shopName,
-//       mobileNo: mobileNo,
-//       address: address
-//   }, {
-//   headers: {
-//       "Authorization": `Bearer ${saved}`
-//   }
-// }
-//     .then(function (response) {
-//       console.log("Data updated:",response.data.data);
-//       setShopName(response.data.data.setShopName)
-//       setMoblieNo(response.data.data.setMoblieNo)
-//       setAddress(response.data.data.setAddress)
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     })
-//   )}
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
+  const confirmDelete = (id) => {
+    setSelectedShopId(id);
+    setShowDeleteConfirmation(true);
+  }
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -132,8 +113,8 @@ function Shoplist() {
                   <tr key={user._id} className=' my-10'>
                     <td>{user.shopName}</td>
                     <td><Link to={`shopdetails/${user._id}`}>Shop</Link></td>
-                    <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => handleDelete(user)} /></td>
-                    <td className='fs-4'><Link to={`/shopform/${user._id}`}><BiEdit className='mx-auto'/></Link></td>
+                    <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => confirmDelete(user._id)} /></td>
+                    <td className='fs-4'><Link to={`/shopform/${user._id}`}><BiEdit className='mx-auto' /></Link></td>
                   </tr>
                 )
               })
@@ -141,6 +122,19 @@ function Shoplist() {
           </tbody>
         </table>
       </Container>
+      <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
+        <Modal.Body>
+          Are you sure you want to delete this item?
+        </Modal.Body>
+        <div className="modal-buttons">
+          <Button onClick={() => setShowDeleteConfirmation(false)}>
+            No
+          </Button>
+          <Button onClick={handleDelete}>
+            Yes
+          </Button>
+        </div>
+      </Modal>
     </>
   )
 }
