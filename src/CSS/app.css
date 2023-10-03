@@ -5,15 +5,15 @@
 /*****************************Login Form*******************************/
 .modal-success {
     background-color: #28a745 !important;
+    border-radius: 50px;
     color: white;
 }
 .modal-error {
     background-color: #dc3545 !important;
+    border-radius: 50px;
     color: white;
 }
-.btn {
-    color: white !important;
-}
+
 /*****************************Logout****************************/
 /* CSS for the logout modal */
 .logout-modal {
@@ -22,7 +22,6 @@
     left: 25%;
     width: 50%;
     height: 100%;
-    /* background: rgba(0, 0, 0, 0.5); */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,7 +29,7 @@
   .modal-content {
     background: #fff;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 100px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: center;
   }

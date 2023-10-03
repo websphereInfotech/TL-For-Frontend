@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useCallback } from 'react'
 import { Breadcrumb, Container, Form } from 'react-bootstrap'
 import Header from '../../components/Header'
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal} from 'react-bootstrap';
 
 function Carpenterform() {
     const [carpentersName, setCarpenter] = useState('');
@@ -57,6 +57,7 @@ function Carpenterform() {
                         localStorage.setItem(process.env.KEY, saved);
                         setMessage('Carpenter Data Update successful');
                         setShowModal(true);
+                        
                     } else {
                         setMessage(response.data.message);
                         setShowModal(true);
@@ -95,12 +96,24 @@ function Carpenterform() {
             })
         }
     }
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setShowModal(false);
         if (message.includes('successful')) {
             navigate('/dashboard');
         }
-    };
+    }, [message, navigate]);
+    
+    useEffect(() => {
+        if (showModal) {
+          const timer = setTimeout(() => {
+            handleClose(); 
+          }, 3000); 
+    
+          return () => {
+            clearTimeout(timer); 
+          };
+        }
+    }, [showModal, handleClose]);
     return (
         <>
             <Header />
@@ -147,11 +160,6 @@ function Carpenterform() {
             </Container>
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-                <Modal.Footer className={message.includes('successful') ? 'modal-success' : 'modal-error'}>
-                    <Button variant='light' onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </>
     )

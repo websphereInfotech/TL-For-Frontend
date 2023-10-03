@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 import Header from '../../components/Header';
 import Select from 'react-select';
 import { Breadcrumb, Container, Form } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 function QuotationForm() {
     const { id } = useParams();
@@ -154,12 +154,24 @@ function QuotationForm() {
                 })
         }
     }
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setShowModal(false);
         if (message.includes('successful')) {
             navigate('/dashboard');
         }
-    };
+    }, [message, navigate]);
+    
+    useEffect(() => {
+        if (showModal) {
+          const timer = setTimeout(() => {
+            handleClose(); 
+          }, 3000); 
+    
+          return () => {
+            clearTimeout(timer); 
+          };
+        }
+    }, [showModal, handleClose]);
     return (
         <>
             <Header />
@@ -257,11 +269,7 @@ function QuotationForm() {
             </Container>
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-                <Modal.Footer className={message.includes('successful') ? 'modal-success' : 'modal-error'}>
-                    <Button variant='light' onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
+                
             </Modal>
         </>
     );
