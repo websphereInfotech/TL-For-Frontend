@@ -16,13 +16,13 @@ import Carpenterdetails from './pages/Carpenter/Carpenterdetails';
 import Architecturedetails from './pages/Architecture/Architecturedetails';
 import Shopdetails from './pages/Shop/Shopdetails';
 
-
 function App() {
+ 
   return (
    <>
       <BrowserRouter>
         <Routes>
-          <Route path='/'  element={<AdminLogin />}/>
+          <Route path='/login'  element={<AdminLogin />}/>
           <Route path='/dashboard' element={ <Dashboard />}/>
           <Route path='/Shopform' element={<Shopform/>}/>
           <Route path='/Shopform/:id' element={<Shopform/>}/>

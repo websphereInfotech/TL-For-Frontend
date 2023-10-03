@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap"
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaPowerOff } from 'react-icons/fa';
+
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -20,25 +21,25 @@ function Dashboard() {
             "Authorization": `Bearer ${saved}`
           }
         });
-        setArchitectureCount(architecCountRes.data.data.length);
+        setArchitectureCount(architecCountRes.data.count);
         const carpenterCountRes = await axios.get(`http://localhost:2002/api/carpenter/listdata?timestamp=${timestamp}`, {
           headers: {
             "Authorization": `Bearer ${saved}`
           }
         });
-        setCarpenterCount(carpenterCountRes.data.data.length);
+        setCarpenterCount(carpenterCountRes.data.count);
         const shopCountRes = await axios.get(`http://localhost:2002/api/shop/listdata?timestamp=${timestamp}`, {
           headers: {
             "Authorization": `Bearer ${saved}`
           }
         });
-        setShopCount(shopCountRes.data.data.length);
+        setShopCount(shopCountRes.data.count);
         const quotationRes = await axios.get(`http://localhost:2002/api/quotation/listdata?timestamp=${timestamp}`, {
           headers: {
             "Authorization": `Bearer ${saved}`
           }
         });
-        setQuotation(quotationRes.data.data.length);
+        setQuotation(quotationRes.data.count);
       } catch (error) {
         console.error(error);
       }
@@ -59,14 +60,12 @@ function Dashboard() {
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
-        <div className="container mb-3 flex justify-between py-3">
+        <div className="container mb-3 flex just py-3">
           <p className="text-2xl font-bold">TIMBERLAND</p>
-<<<<<<< HEAD
-          <button className="bg-light text-black mx-1 px-3 py-1 rounded-lg" onClick={handleLogout}>
-=======
+
           <button className="bg-light text-black mx-1 px-3 py-1 rounded-full" onClick={handleLogout}>
->>>>>>> e1add8f769161943fd72440e8df889079ce63439
-            LOG OUT
+ 
+           <FaPowerOff/>
           </button>
         </div>
       </div>
@@ -141,8 +140,8 @@ function Dashboard() {
       </Container>
       {isLogoutModalOpen && (
         <div className="logout-modal ">
-          <div className="modal-content ">
-            <p>Are you sure you want to log out?</p>
+          <div className="logout">
+            <p >Are you sure you want to log out?</p>
             <div className="modal-buttons">
               <button className=" rounded-full" onClick={handleLogoutConfirm}>OK</button>
               <button className=" rounded-full" onClick={handleLogoutCancel}>Cancel</button>

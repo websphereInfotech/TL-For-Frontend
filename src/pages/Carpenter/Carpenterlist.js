@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Breadcrumb, Button, Col, Container, Modal, Row } from 'react-bootstrap'
+import { Breadcrumb, Col, Container, Modal, Row } from 'react-bootstrap'
 import { BiSearch,BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
@@ -124,17 +124,22 @@ function Carpenterlist() {
         </table>
       </Container>
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
-        <Modal.Body>
-          Are you sure you want to delete this item?
-        </Modal.Body>
-        <div className="modal-buttons">
-          <Button onClick={() => setShowDeleteConfirmation(false)}>
-            No
-          </Button>
-          <Button onClick={handleDelete}>
-            Yes
-          </Button>
-        </div>
+      <div className='logout-model'>
+       <div className="logout">
+        
+        <p >
+         Are you sure you want to delete this item?
+         </p>       
+         <div className="modal-buttons">
+           <button className=" rounded-full" onClick={() => setShowDeleteConfirmation(false)}>
+             No
+           </button>
+           <button className=" rounded-full" onClick={handleDelete}>
+             Yes
+           </button>
+         </div>
+         </div>   
+       </div>
       </Modal>
     </>
   )
