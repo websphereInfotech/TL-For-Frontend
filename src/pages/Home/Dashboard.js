@@ -61,7 +61,7 @@ function Dashboard() {
       <div className="bg-dark text-white rounded-br-full">
         <div className="container mb-3 flex justify-between py-3">
           <p className="text-2xl font-bold">TIMBERLAND</p>
-          <button className="bg-light text-black mx-1 px-3 py-1" onClick={handleLogout}>
+          <button className="bg-light text-black mx-1 px-3 py-1 rounded-full" onClick={handleLogout}>
             LOG OUT
           </button>
         </div>
@@ -136,12 +136,12 @@ function Dashboard() {
         </Row>
       </Container>
       {isLogoutModalOpen && (
-        <div className="logout-modal">
-          <div className="modal-content">
+        <div className="logout-modal ">
+          <div className="modal-content ">
             <p>Are you sure you want to log out?</p>
             <div className="modal-buttons">
-              <button onClick={handleLogoutConfirm}>OK</button>
-              <button onClick={handleLogoutCancel}>Cancel</button>
+              <button className=" rounded-full" onClick={handleLogoutConfirm}>OK</button>
+              <button className=" rounded-full" onClick={handleLogoutCancel}>Cancel</button>
             </div>
           </div>
         </div>

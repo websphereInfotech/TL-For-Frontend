@@ -1,8 +1,8 @@
-  import React, { useState } from 'react'
+  import React, { useState,useCallback,useEffect } from 'react'
   import { Col, Container, Form, Row } from 'react-bootstrap'
   import axios from 'axios';
   import { useNavigate } from 'react-router-dom'; 
-  import { Modal, Button } from 'react-bootstrap';
+  import { Modal } from 'react-bootstrap';
 
   function AdminLogin() {
     const emoji = String.fromCodePoint(128075);
@@ -35,12 +35,24 @@
         setShowModal(true);
       })
   }
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setShowModal(false);
     if (message.includes('successful')) {
-      navigate('/dashboard');
+        navigate('/dashboard');
     }
-  };
+}, [message, navigate]);
+
+useEffect(() => {
+    if (showModal) {
+      const timer = setTimeout(() => {
+        handleClose(); 
+      }, 3000); 
+
+      return () => {
+        clearTimeout(timer); 
+      };
+    }
+}, [showModal, handleClose]);
     return (
       <>
         <Container>
@@ -70,11 +82,7 @@
         </Container>
         <Modal show={showModal} onHide={handleClose}>
         <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-        <Modal.Footer className={message.includes('successful') ? 'modal-success' : 'modal-error'}>
-          <Button variant='light' onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
+       
       </Modal>
       </>
     )

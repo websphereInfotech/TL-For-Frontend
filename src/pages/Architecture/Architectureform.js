@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useCallback } from 'react'
 import { Breadcrumb, Container, Form } from 'react-bootstrap'
 import Header from '../../components/Header'
-import {  useParams } from "react-router-dom";
+import {  useParams ,useNavigate} from "react-router-dom";
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 function Architectureform() {
     const [architecsName, setArchitecs] = useState('');
@@ -11,6 +11,7 @@ function Architectureform() {
     const [address, setAddress] = useState('');
     const [message, setMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
@@ -94,9 +95,24 @@ function Architectureform() {
                 })
         }
     }
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setShowModal(false);
-    };
+        if (message.includes('successful')) {
+            navigate('/dashboard');
+        }
+    }, [message, navigate]);
+    
+    useEffect(() => {
+        if (showModal) {
+          const timer = setTimeout(() => {
+            handleClose(); 
+          }, 3000); 
+    
+          return () => {
+            clearTimeout(timer); 
+          };
+        }
+    }, [showModal, handleClose]);
     return (
         <>
             <Header />
@@ -128,11 +144,7 @@ function Architectureform() {
             </Container>
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-                <Modal.Footer className={message.includes('successful') ? 'modal-success' : 'modal-error'}>
-                    <Button variant='light' onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
+               
             </Modal>
         </>
     )
