@@ -59,14 +59,15 @@ function Dashboard() {
   };
   return (
     <>
-      <div className="bg-dark text-white rounded-br-full">
-        <div className="container mb-3 flex justify-between py-3 px-5">
-          <p className="text-2xl font-bold">TIMBERLAND</p>
-
-          <button className="bg-light text-black mx-1 px-3 py-1 rounded-full" onClick={handleLogout}>
+      <div className="bg-dark text-white flex justify-between mb-3 rounded-br-full">
+        <div className="md:pl-12 pr-6 md:py-4 py-2 pl-2">
+          <p className="md:text-2xl text-1xl font-bold">TIMBERLAND</p>
+        </div>
+        <div className="md:pr-10 pr-6 md:py-4 py-2 ">
+        <button className="bg-light text-black mx-1 px-3 py-1 rounded-full" onClick={handleLogout}>
  
-           <FaPowerOff/>
-          </button>
+ <FaPowerOff/>
+</button>
         </div>
       </div>
       <div className="container">

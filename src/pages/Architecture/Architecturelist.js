@@ -4,6 +4,7 @@ import { Breadcrumb, Col, Container, Modal, Row } from 'react-bootstrap'
 import { BiSearch,BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
+import {FaStreetView} from "react-icons/fa";
 
 
 function Architecturelist() {
@@ -11,6 +12,7 @@ function Architecturelist() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedArchitectureId, setSelectedArchitectureId] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedArchitecDetails, setselectedArchitecDetails] = useState(null);
 
 
   useEffect(() => {
@@ -75,6 +77,22 @@ function Architecturelist() {
     setSelectedArchitectureId(id);
     setShowDeleteConfirmation(true);
   }
+  const handleviewdata = (id) => {
+    const saved = localStorage.getItem(process.env.KEY);
+  
+    axios.get(`http://localhost:2002/api/architec/viewdata/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${saved}`
+      }
+    })
+    .then(function (response) {
+      console.log(response.data.data);
+      setselectedArchitecDetails(response.data.data); // Set the shop details
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -100,9 +118,10 @@ function Architecturelist() {
           <Breadcrumb.Item href="/architecturelist">Architecture List</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <h1 className='text-center text-4xl font-bold my-4'>Architecture List</h1>
-      <Container>
-        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
+      <div  className='container text-center md:mx-auto mx-auto'>
+      <h1 className=' text-4xl font-bold my-4'>Architecture List</h1>
+      
+        <table className='mx-auto w-full	table-fixed	' cellPadding={'10px'}>
           <thead>
             <tr>
               <th>Architecture Name</th>
@@ -117,7 +136,12 @@ function Architecturelist() {
                 return (
                   <tr key={user._id} className=' my-10'>
                     <td>{user.architecsName}</td>
-                    <td><Link to={`architecturedetails/${user._id}`}>Architecture</Link></td>
+                    <td><FaStreetView className='mx-auto'
+                    
+                    onClick={()=>handleviewdata(user._id)}
+                    />
+                    
+                    </td>
                     <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => confirmDelete(user._id)} /></td>
                     <td className='fs-4'><Link to={`/architecture/${user._id}`}><BiEdit className='mx-auto'/></Link></td>
                   </tr>
@@ -126,7 +150,7 @@ function Architecturelist() {
             }
           </tbody>
         </table>
-      </Container>
+        </div>
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
       <div className='logout-model'>
        <div className="logout">
@@ -145,6 +169,40 @@ function Architecturelist() {
          </div>   
        </div>
       </Modal>
+
+      
+<Modal show={selectedArchitecDetails !== null} onHide={() => setselectedArchitecDetails(null)}>
+  
+  <Modal.Body className='bg-white rounded'>
+    {selectedArchitecDetails  ?(
+      <div  className='  md:pl-6' >
+        <table className='m-auto w-full table-fixed '>
+          <tr >
+            <th className='py-2'>Architecture Name</th>
+            <td> {selectedArchitecDetails.architecsName}</td>
+          </tr>
+          <tr>
+            <th  className='py-2'>Mobile No</th>
+            <td> {selectedArchitecDetails.mobileNo}</td>
+            </tr>
+            <tr  >
+            <th className='py-2'>Address</th>
+            <td className='overflow-scroll '> {selectedArchitecDetails.address}</td>
+            </tr>
+        </table>
+       
+      </div>
+    ):(
+      <p>....Loading</p>
+    )}
+   <div className='flex justify-center mt-2'>
+   <div className='btn bg-black text-white rounded-full py-2 px-4 mt-2 ' onClick={() => setselectedArchitecDetails(null)}>
+      Close
+    </div>
+   </div>
+  </Modal.Body>
+  
+</Modal>
     </>
   )
 }
