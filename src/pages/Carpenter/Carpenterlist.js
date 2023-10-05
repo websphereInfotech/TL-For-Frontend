@@ -74,7 +74,7 @@ function Carpenterlist() {
     setShowDeleteConfirmation(true);
   }
   const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
   
     axios.get(`http://localhost:2002/api/carpenter/viewdata/${id}`, {
       headers: {
@@ -117,7 +117,7 @@ function Carpenterlist() {
       
       <div className='text-center container md:mx-auto mx-auto'>
       <h1 className=' text-4xl font-bold my-4'>Carpenter List</h1>
-        <table className='mx-auto w-full  table-fixed' cellPadding={'10px'}>
+        <table className='w-full  table-fixed' cellPadding={'5px'}>
           <thead>
             <tr>
               <th>Carpenter Name</th>
@@ -148,17 +148,6 @@ function Carpenterlist() {
         </table>
     </div>
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
-        <Modal.Body>
-          Are you sure you want to delete this item?
-        </Modal.Body>
-        <div className="modal-buttons">
-          <button className=" rounded-full" onClick={() => setShowDeleteConfirmation(false)}>
-            No
-          </button>
-          <button className=" rounded-full" onClick={handleDelete}>
-            Yes
-          </button>
-        </div>
       <div className='logout-model'>
        <div className="logout">
         
@@ -181,7 +170,7 @@ function Carpenterlist() {
   <Modal.Body className='bg-white rounded'>
     {selectedCarpenterDetails  ?(
       <div >
-        <table className='m-auto w-full table-fixed '>
+        <table className='w-full table-fixed '>
           <tr >
             <th className='py-2'>carpenter Name</th>
             <td> {selectedCarpenterDetails.carpentersName}</td>
@@ -190,9 +179,9 @@ function Carpenterlist() {
             <th  className='py-2'>Mobile No</th>
             <td> {selectedCarpenterDetails.mobileNo}</td>
             </tr>
-            <tr  >
+            <tr>
             <th className='py-2'>Address</th>
-            <td className='overflow-scroll'> {selectedCarpenterDetails.address}</td>
+            <td className='break-words'>{selectedCarpenterDetails.address}</td>
             </tr>
         </table>
        

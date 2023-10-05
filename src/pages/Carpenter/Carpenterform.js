@@ -1,9 +1,9 @@
-import React, { useEffect, useState,useCallback } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Breadcrumb, Container, Form } from 'react-bootstrap'
 import Header from '../../components/Header'
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
-import { Modal} from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 
 function Carpenterform() {
     const [carpentersName, setCarpenter] = useState('');
@@ -31,7 +31,7 @@ function Carpenterform() {
                 })
                 .catch(function (error) {
                     console.log(error);
-                    setMessage('An error occurred while fetching carpenter data.');
+                    setMessage(error.response.data.message);
                     setShowModal(true);
                 });
         }
@@ -53,9 +53,9 @@ function Carpenterform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        setMessage('Carpenter Data Update successful');
+                        setMessage('Carpenter  Update successful');
                         setShowModal(true);
-                        
+
                     } else {
                         setMessage(response.data.message);
                         setShowModal(true);
@@ -67,29 +67,29 @@ function Carpenterform() {
                     setShowModal(true);
                 });
         } else {
-        axios.post(`http://localhost:2002/api/carpenter/data/create`, {
-            carpentersName: carpentersName,
-            mobileNo: mobileNo,
-            address: address
-        }, {
-            headers: {
-                "Authorization": `Bearer ${saved}`
-            }
-        })
-            .then(function (response) {
-                if (response.data && response.data.status === 'Success') {
-                    setMessage('Carpenter Data Create successful');
-                    setShowModal(true);
-                } else {
-                    setMessage(response.data.message);
-                    setShowModal(true);
+            axios.post(`http://localhost:2002/api/carpenter/data/create`, {
+                carpentersName: carpentersName,
+                mobileNo: mobileNo,
+                address: address
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${saved}`
                 }
             })
-            .catch(function (error) {
-                console.log(error);
-                setMessage(error.response.data.message)
-                setShowModal(true);
-            })
+                .then(function (response) {
+                    if (response.data && response.data.status === 'Success') {
+                        setMessage('Carpenter  Create successful');
+                        setShowModal(true);
+                    } else {
+                        setMessage(response.data.message);
+                        setShowModal(true);
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    setMessage(error.response.data.message)
+                    setShowModal(true);
+                })
         }
     }
     const handleClose = useCallback(() => {
@@ -98,16 +98,16 @@ function Carpenterform() {
             navigate('/dashboard');
         }
     }, [message, navigate]);
-    
+
     useEffect(() => {
         if (showModal) {
-          const timer = setTimeout(() => {
-            handleClose(); 
-          }, 3000); 
-    
-          return () => {
-            clearTimeout(timer); 
-          };
+            const timer = setTimeout(() => {
+                handleClose();
+            }, 3000);
+
+            return () => {
+                clearTimeout(timer);
+            };
         }
     }, [showModal, handleClose]);
     return (
@@ -120,12 +120,14 @@ function Carpenterform() {
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-            {id ? 'Update CarpenterForm' : 'Create CarpenterForm'}
+                {id ? 'Update CarpenterForm' : 'Create CarpenterForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleCarpenter}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-bold'>Carpenter Name :</Form.Label>
+                        <Form.Label className='font-bold'>Carpenter Name
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Carpenter Name"
@@ -134,7 +136,9 @@ function Carpenterform() {
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Moblie No. :</Form.Label>
+                        <Form.Label className='font-bold'>Moblie No.
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Moblie No"

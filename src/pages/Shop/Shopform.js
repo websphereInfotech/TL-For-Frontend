@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useCallback} from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Header from '../../components/Header'
 import { Breadcrumb, Container, Form } from 'react-bootstrap'
 import axios from 'axios';
@@ -31,7 +31,7 @@ function Shopform() {
                 })
                 .catch(function (error) {
                     console.log(error);
-                    setMessage('An error occurred while fetching shop data.');
+                    setMessage(error.message);
                     setShowModal(true);
                 });
         }
@@ -39,6 +39,11 @@ function Shopform() {
 
     const handleShop = (e) => {
         e.preventDefault();
+        // if (!shopName || !mobileNo) {
+        //     setMessage('Please Fill Required Fields');
+        //     setShowModal(true);
+        //     return;
+        // }
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         if (id) {
             console.log(id);
@@ -54,7 +59,7 @@ function Shopform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        setMessage('Shop Data Update successful');
+                        setMessage('Shop  Update successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -79,9 +84,7 @@ function Shopform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        const saved = response.data.token;
-                        localStorage.setItem(process.env.REACT_APP_KEY, saved);
-                        setMessage('Shop Data Create successful');
+                        setMessage('Shop Create successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -101,16 +104,16 @@ function Shopform() {
             navigate('/dashboard');
         }
     }, [message, navigate]);
-    
+
     useEffect(() => {
         if (showModal) {
-          const timer = setTimeout(() => {
-            handleClose(); 
-          }, 3000); 
-    
-          return () => {
-            clearTimeout(timer); 
-          };
+            const timer = setTimeout(() => {
+                handleClose();
+            }, 3000);
+
+            return () => {
+                clearTimeout(timer);
+            };
         }
     }, [showModal, handleClose]);
     return (
@@ -123,12 +126,14 @@ function Shopform() {
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-            {id ? 'Update ShopForm' : 'Create ShopForm'}
+                {id ? 'Update ShopForm' : 'Create ShopForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleShop}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-bold'>Shop Name :</Form.Label>
+                        <Form.Label className='font-bold'>Shop Name
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Shop Name :"
@@ -137,7 +142,9 @@ function Shopform() {
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Moblie No. :</Form.Label>
+                        <Form.Label className='font-bold'>Moblie No.
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Moblie No :"

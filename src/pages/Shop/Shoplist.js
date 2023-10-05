@@ -73,7 +73,7 @@ function Shoplist() {
   }
 
   const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
   
     axios.get(`http://localhost:2002/api/shop/viewdata/${id}`, {
       headers: {
@@ -82,7 +82,7 @@ function Shoplist() {
     })
     .then(function (response) {
       console.log(response.data.data);
-      setSelectedShopDetails(response.data.data); // Set the shop details
+      setSelectedShopDetails(response.data.data);
     })
     .catch(function (error) {
       console.log(error);
@@ -170,10 +170,10 @@ function Shoplist() {
   <Modal.Body className='bg-white rounded pl-10 pr-10'>
     {selectedShopDetails  ?(
       <div className=' pl-10 md:pl-24' >
-        <table className='m-auto w-full table-fixed'>
+        <table className='w-full table-fixed'>
           <tr >
             <th className='py-2 '>Shop Name</th>
-            <td > {selectedShopDetails.shopName}</td>
+            <td className='break-words '> {selectedShopDetails.shopName}</td>
           </tr>
           <tr>
             <th className='py-2 ' >Mobile No</th>
@@ -181,7 +181,7 @@ function Shoplist() {
             </tr>
             <tr  >
             <th className='py-2 '>Address</th>
-            <td className='overflow-scroll'> {selectedShopDetails.address}</td>
+            <td className='break-words '> {selectedShopDetails.address}</td>
             </tr>
         </table>
        

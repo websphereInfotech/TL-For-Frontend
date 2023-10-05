@@ -81,7 +81,7 @@ function Quotationlist() {
         setShowDeleteConfirmation(true);
     }
     const handleviewdata = (id) => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
         axios.get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
             headers: {
@@ -90,7 +90,7 @@ function Quotationlist() {
         })
             .then(function (response) {
                 console.log(response.data.data);
-                setselectedQuotationDetails(response.data.data); // Set the shop details
+                setselectedQuotationDetails(response.data.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -175,23 +175,23 @@ function Quotationlist() {
 
                 <Modal.Body className='bg-white rounded'>
                     {selectedQuotationDetails ? (
-                        <div  className=' pl-10 md:pl-24'>
-                            <table className='  m-auto w-full table-fixed'>
+                        <div  className='pl-10'>
+                            <table className='w-full table-fixed'>
                             <tr >
                                     <th className='py-2 '>Sr No</th>
                                     <td > {selectedQuotationDetails.serialNumber}</td>
                                 </tr>
                                 <tr >
                                     <th className='py-2'>User Name</th>
-                                    <td> {selectedQuotationDetails.userName}</td>
+                                    <td className='break-words '> {selectedQuotationDetails.userName}</td>
                                 </tr>
                                 <tr>
-                                    <th className='py-2'>Mobile No</th>
+                                    <th className='py-2 '>Mobile No</th>
                                     <td> {selectedQuotationDetails.mobileNo}</td>
                                 </tr>
                                 <tr  >
                                     <th className='py-2'>Address</th>
-                                    <td className='overflow-scroll'> {selectedQuotationDetails.address}</td>
+                                    <td className='break-words'> {selectedQuotationDetails.address}</td>
                                 </tr>
                                 <tr >
                                     <th className='py-2'>Quantity</th>
@@ -203,7 +203,7 @@ function Quotationlist() {
                                 </tr>
                                 <tr >
                                     <th className='py-2'>Description</th>
-                                    <td> {selectedQuotationDetails.description}</td>
+                                    <td className='break-words'> {selectedQuotationDetails.description}</td>
                                 </tr> <tr >
                                     <th className='py-2'>Architecture Id</th>
                                     <td> {selectedQuotationDetails.architecture_id}</td>

@@ -12,7 +12,6 @@ function QuotationForm() {
         userName: '',
         mobileNo: '',
         address: '',
-        serialNumber: '',
         rate: '',
         description: '',
         quantity: '',
@@ -52,9 +51,9 @@ function QuotationForm() {
                 const carpenterData = await carpenterResponse.data.data.map(item => item.carpentersName);
                 const shopData = await shopResponse.data.data.map(item => item.shopName);
 
-                    setArchitecture(architectureData);
-                    setCarpenter(carpenterData);
-                    setShop(shopData);
+                setArchitecture(architectureData);
+                setCarpenter(carpenterData);
+                setShop(shopData);
             } catch (error) {
                 console.error(error);
             }
@@ -85,7 +84,7 @@ function QuotationForm() {
                     const architectureData = quotationData.architecture_id ? quotationData.architecture_id.split(', ').map(name => ({ label: name, value: name })) : [];
                     const carpenterData = quotationData.carpenter_id ? quotationData.carpenter_id.split(', ').map(name => ({ label: name, value: name })) : [];
                     const shopData = quotationData.shop_id ? quotationData.shop_id.split(', ').map(name => ({ label: name, value: name })) : [];
-                
+
                     setSelectedArchitecture(architectureData);
                     selectsetCarpenter(carpenterData);
                     selectsetShop(shopData);
@@ -117,7 +116,7 @@ function QuotationForm() {
             })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        setMessage('Quotation Data Update successful');
+                        setMessage('Quotation  Update successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -142,7 +141,7 @@ function QuotationForm() {
             })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        setMessage('Quotation Data Create successful');
+                        setMessage('Quotation  Create successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -154,6 +153,7 @@ function QuotationForm() {
                     setMessage(error.response.data.message);
                     setShowModal(true);
                 })
+              
         }
     }
     const handleClose = useCallback(() => {
@@ -185,12 +185,13 @@ function QuotationForm() {
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
-                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleQuotation}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-bold'>User Name :</Form.Label>
+                        <Form.Label className='font-bold'>User Name
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="User Name :"
@@ -198,7 +199,9 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, userName: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Mobile No. :</Form.Label>
+                        <Form.Label className='font-bold'>Mobile No.
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Mobile No. :"
@@ -206,7 +209,9 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, mobileNo: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Address :</Form.Label>
+                        <Form.Label className='font-bold'>Address
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Address :"
@@ -214,15 +219,19 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, address: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-bold'>Sr No. :</Form.Label>
+                        <Form.Label className='font-bold'>Sr No.
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Sr No. :"
-                            value={formValues.serialNumber}
-                            onChange={(e) => setFormValues({ ...formValues, serialNumber: e.target.value })} />
+                            readOnly
+                        />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Description :</Form.Label>
+                        <Form.Label className='font-bold'>Description
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             as="textarea"
                             placeholder="Description :"
@@ -231,7 +240,9 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, description: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Quantity :</Form.Label>
+                        <Form.Label className='font-bold'>Quantity
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Quantity :"
@@ -239,7 +250,9 @@ function QuotationForm() {
                             onChange={(e) => setFormValues({ ...formValues, quantity: e.target.value })} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Rate :</Form.Label>
+                        <Form.Label className='font-bold'>Rate
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Rate :"

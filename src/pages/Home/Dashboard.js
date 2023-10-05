@@ -58,11 +58,11 @@ function Dashboard() {
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
   };
- 
+
 
   return (
     <>
-      <div className="bg-dark text-white flex justify-between mb-3 rounded-br-full">
+      <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
         <div className="md:pl-12 pr-6 md:py-4 py-2 pl-2">
           <p className="md:text-2xl text-1xl font-bold">TIMBERLAND</p>
         </div>
@@ -115,7 +115,9 @@ function Dashboard() {
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div><img src={require('../../Images/shop-1.png')} alt="" className="w-40" /></div>
                 <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Shop</p>
-                <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3 text-2xl" /></div>
+                <div className="plus border-1 bg-white">
+                  <FaPlus className="ms-3 my-3 text-2xl" />
+                </div>
               </div>
             </Link>
           </Col>

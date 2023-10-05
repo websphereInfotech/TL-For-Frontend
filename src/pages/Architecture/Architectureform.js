@@ -32,7 +32,7 @@ function Architectureform() {
                 })
                 .catch(function (error) {
                     console.log(error);
-                    setMessage('An error occurred while fetching carpenter data.');
+                    setMessage(error.response.data.message);
                     setShowModal(true);
                 });
         }
@@ -54,7 +54,7 @@ function Architectureform() {
                 })
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
-                        setMessage('Architecture Data Update successful');
+                        setMessage('Architecture Update successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -67,7 +67,6 @@ function Architectureform() {
                     setShowModal(true);
                 });
         } else {
-            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             axios.post(`http://localhost:2002/api/architec/data/create`, {
                 architecsName: architecsName,
                 mobileNo: mobileNo,
@@ -81,7 +80,7 @@ function Architectureform() {
                     if (response.data && response.data.status === 'Success') {
                         const saved = response.data.token;
                         localStorage.setItem(process.env.REACT_APP_KEY, saved);
-                        setMessage('Architecture Data Create successful');
+                        setMessage('Architecture Create successful');
                         setShowModal(true);
                     } else {
                         setMessage(response.data.message);
@@ -128,7 +127,9 @@ function Architectureform() {
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleArchitecture}>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className='font-bold'>Architecture Name :</Form.Label>
+                        <Form.Label className='font-bold'>Architecture Name
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Architecture Name"
@@ -136,7 +137,9 @@ function Architectureform() {
                             onChange={(e) => setArchitecs(e.target.value)} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label className='font-bold'>Moblie No. :</Form.Label>
+                        <Form.Label className='font-bold'>Moblie No.
+                            <span className='text-red-600'> &#8727; </span>
+                            :</Form.Label>
                         <Form.Control
                             type="text"
                             placeholder="Moblie No"

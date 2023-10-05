@@ -78,7 +78,7 @@ function Architecturelist() {
     setShowDeleteConfirmation(true);
   }
   const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
   
     axios.get(`http://localhost:2002/api/architec/viewdata/${id}`, {
       headers: {
@@ -87,7 +87,7 @@ function Architecturelist() {
     })
     .then(function (response) {
       console.log(response.data.data);
-      setselectedArchitecDetails(response.data.data); // Set the shop details
+      setselectedArchitecDetails(response.data.data); 
     })
     .catch(function (error) {
       console.log(error);
@@ -120,10 +120,10 @@ function Architecturelist() {
       </div>
       <div className='container text-center md:mx-auto mx-auto'>
       <h1 className=' text-4xl font-bold my-4'>Architecture List</h1>
-        <table className=' mx-auto  w-full table-fixed ' cellPadding={'10px'}>
+        <table className='w-full table-fixed ' cellPadding={'5px'}>
           <thead>
             <tr>
-              <th>Architecture Name</th>
+              <th className='break-words'>Architecture Name</th>
               <th>Detalis</th>
               <th>Delete</th>
               <th>Edit</th>
@@ -134,7 +134,7 @@ function Architecturelist() {
               architecture.map((user) => {
                 return (
                   <tr key={user._id} className=' my-10'>
-                    <td>{user.architecsName}</td>
+                    <td >{user.architecsName}</td>
                     <td><FaStreetView className='mx-auto'
                     
                     onClick={()=>handleviewdata(user._id)}
@@ -174,19 +174,19 @@ function Architecturelist() {
   
   <Modal.Body className='bg-white rounded'>
     {selectedArchitecDetails  ?(
-      <div  className='  md:pl-6' >
-        <table className='m-auto w-full table-fixed '>
+      <div  className='pl-10 md:pl-24 ' >
+        <table className='w-full table-fixed '>
           <tr >
-            <th className='py-2'>Architecture Name</th>
+            <th className='py-2 '>Architecture Name</th>
             <td> {selectedArchitecDetails.architecsName}</td>
           </tr>
           <tr>
             <th  className='py-2'>Mobile No</th>
             <td> {selectedArchitecDetails.mobileNo}</td>
             </tr>
-            <tr  >
+            <tr >
             <th className='py-2'>Address</th>
-            <td className='overflow-scroll '> {selectedArchitecDetails.address}</td>
+            <td className='break-words'> {selectedArchitecDetails.address}</td>
             </tr>
         </table>
        
