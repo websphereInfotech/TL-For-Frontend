@@ -192,7 +192,7 @@ function Carpenterlist() {
             </tr>
             <tr  >
             <th className='py-2'>Address</th>
-            <td> {selectedCarpenterDetails.address}</td>
+            <td className='overflow-scroll'> {selectedCarpenterDetails.address}</td>
             </tr>
         </table>
        

@@ -191,11 +191,11 @@ function Quotationlist() {
                                 </tr>
                                 <tr  >
                                     <th className='py-2'>Address</th>
-                                    <td> {selectedQuotationDetails.address}</td>
+                                    <td className='overflow-scroll'> {selectedQuotationDetails.address}</td>
                                 </tr>
                                 <tr >
                                     <th className='py-2'>Quantity</th>
-                                    <td className='overflow-scroll'> {selectedQuotationDetails.quantity}</td>
+                                    <td > {selectedQuotationDetails.quantity}</td>
                                 </tr>
                                 <tr >
                                     <th className='py-2'>Rate</th>
