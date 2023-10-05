@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Header from '../../components/Header';
 import Select from 'react-select';
 import { Breadcrumb, Container, Form } from 'react-bootstrap';
@@ -29,7 +29,7 @@ function QuotationForm() {
     const [selectShop, selectsetShop] = useState([]);
 
     useEffect(() => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         async function fetchData() {
             try {
                 const timestamp = Date.now();
@@ -52,9 +52,9 @@ function QuotationForm() {
                 const carpenterData = await carpenterResponse.data.data.map(item => item.carpentersName);
                 const shopData = await shopResponse.data.data.map(item => item.shopName);
 
-                setArchitecture(architectureData);
-                setCarpenter(carpenterData);
-                setShop(shopData);
+                    setArchitecture(architectureData);
+                    setCarpenter(carpenterData);
+                    setShop(shopData);
             } catch (error) {
                 console.error(error);
             }
@@ -64,7 +64,7 @@ function QuotationForm() {
     useEffect(() => {
         if (id) {
             console.log(id);
-            const saved = localStorage.getItem(process.env.KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             axios.get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
                 headers: {
                     Authorization: `Bearer ${saved}`,
@@ -82,21 +82,27 @@ function QuotationForm() {
                         description: quotationData.description,
                         quantity: quotationData.quantity,
                     });
+                    const architectureData = quotationData.architecture_id ? quotationData.architecture_id.split(', ').map(name => ({ label: name, value: name })) : [];
+                    const carpenterData = quotationData.carpenter_id ? quotationData.carpenter_id.split(', ').map(name => ({ label: name, value: name })) : [];
+                    const shopData = quotationData.shop_id ? quotationData.shop_id.split(', ').map(name => ({ label: name, value: name })) : [];
+                
+                    setSelectedArchitecture(architectureData);
+                    selectsetCarpenter(carpenterData);
+                    selectsetShop(shopData);
                 })
                 .catch(function (error) {
                     console.log(error);
-                    setMessage('An error occurred while fetching quotation data.');
+                    setMessage(error.response.data.message);
                     setShowModal(true);
                 });
         }
-    }, [id, architecture, carpenter, shop]);
+    }, [id]);
     const handleQuotation = (e) => {
         e.preventDefault();
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         const architectureIds = selectedArchitecture.map(item => item.value).join(', ');
         const carpenterIds = selectCarpenter.map(item => item.value).join(', ');
         const shopIds = selectShop.map(item => item.value).join(', ');
-
 
         if (id) {
             axios.put(`http://localhost:2002/api/quotation/update/${id}`, {
@@ -156,16 +162,16 @@ function QuotationForm() {
             navigate('/dashboard');
         }
     }, [message, navigate]);
-    
+
     useEffect(() => {
         if (showModal) {
-          const timer = setTimeout(() => {
-            handleClose(); 
-          }, 3000); 
-    
-          return () => {
-            clearTimeout(timer); 
-          };
+            const timer = setTimeout(() => {
+                handleClose();
+            }, 3000);
+
+            return () => {
+                clearTimeout(timer);
+            };
         }
     }, [showModal, handleClose]);
     return (
@@ -178,7 +184,7 @@ function QuotationForm() {
                 </Breadcrumb>
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
-                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
+                {id ? 'Update QuotationForm' : 'Create QuotationForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleQuotation}>
@@ -265,7 +271,7 @@ function QuotationForm() {
             </Container>
             <Modal show={showModal} onHide={handleClose}>
                 <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body>
-                
+
             </Modal>
         </>
     );

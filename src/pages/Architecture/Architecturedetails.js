@@ -10,7 +10,7 @@ function Architecturedetails() {
     const [architecture, setArchitecture] = useState('');
 
     useEffect(() => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
         axios.get(`http://localhost:2002/api/architec/viewdata/${id}`, {
             headers: {

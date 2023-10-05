@@ -16,7 +16,7 @@ function Architectureform() {
 
     useEffect(() => {
         if (id) {
-            const saved = localStorage.getItem(process.env.KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             console.log(saved);
             axios
                 .get(`http://localhost:2002/api/architec/viewdata/${id}`, {
@@ -39,7 +39,7 @@ function Architectureform() {
     }, [id]);
     const handleArchitecture = (e) => {
         e.preventDefault();
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         console.log(saved);
         if (id) {
             axios
@@ -67,7 +67,7 @@ function Architectureform() {
                     setShowModal(true);
                 });
         } else {
-            const saved = localStorage.getItem(process.env.KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             axios.post(`http://localhost:2002/api/architec/data/create`, {
                 architecsName: architecsName,
                 mobileNo: mobileNo,
@@ -80,7 +80,7 @@ function Architectureform() {
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
                         const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
+                        localStorage.setItem(process.env.REACT_APP_KEY, saved);
                         setMessage('Architecture Data Create successful');
                         setShowModal(true);
                     } else {

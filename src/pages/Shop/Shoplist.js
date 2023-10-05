@@ -13,7 +13,7 @@ function Shoplist() {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios.get(`http://localhost:2002/api/shop/listdata`, {
       headers: {
         "Authorization": `Bearer ${saved}`
@@ -31,7 +31,7 @@ function Shoplist() {
   }, []);
 
   const handleDelete = () => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios.delete(`http://localhost:2002/api/shop/data/delete/${selectedShopID}`, {
       headers: {
         "Authorization": `Bearer ${saved}`
@@ -49,7 +49,7 @@ function Shoplist() {
       })
   }
   const handleSearch = (shopName) => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios.get(`http://localhost:2002/api/shop/searchdata?shopName=${shopName}`, {
       headers: {
         "Authorization": `Bearer ${saved}`

@@ -16,7 +16,7 @@ function Carpenterform() {
 
     useEffect(() => {
         if (id) {
-            const saved = localStorage.getItem(process.env.KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             axios
                 .get(`http://localhost:2002/api/carpenter/viewdata/${id}`, {
                     headers: {
@@ -38,7 +38,7 @@ function Carpenterform() {
     }, [id]);
     const handleCarpenter = (e) => {
         e.preventDefault();
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         if (id) {
             console.log(id);
             axios

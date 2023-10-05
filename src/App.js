@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CSS/app.css';
 import AdminLogin from './pages/Login/AdminLogin';
@@ -15,46 +15,43 @@ import Userdetails from './pages/Quotation/Userdetails';
 import Carpenterdetails from './pages/Carpenter/Carpenterdetails';
 import Architecturedetails from './pages/Architecture/Architecturedetails';
 import Shopdetails from './pages/Shop/Shopdetails';
-import Protected from './Services/Protected';
+import Protected from './Service/Protected';
 
 
 function App() {
   return (
-   <>
+    <>
       <BrowserRouter>
         <Routes>
-          <Route exact path='/login'  element={<AdminLogin />}/>
-          {/* <Route path='/'>
-          <Redirect to="/login" />
-          </Route>
-          <Route path="/login" component={AdminLogin} /> */}
-           <Route element={<Protected />}>
-          <Route path='/dashboard' element={ <Dashboard />}/>
+          <Route exct path="/login" element={<AdminLogin />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+  
+          <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
 
-          <Route path='/Shopform' element={<Shopform/>}/>
-          <Route path='/Shopform/:id' element={<Shopform/>}/>
-          <Route path='/shoplist' element={<Shoplist/>}/>
-          <Route path='/shoplist/shopdetails/:id' element={<Shopdetails/>}/>
+          <Route path='/Shopform' element={<Protected><Shopform /></Protected>} />
+          <Route path='/Shopform/:id' element={<Protected><Shopform /></Protected>} />
+          <Route path='/shoplist' element={<Protected><Shoplist /></Protected>} />
+          <Route path='/shoplist/shopdetails/:id' element={<Protected><Shopdetails /></Protected>} />
 
-          <Route path='/architecture' element={<Architectureform/>}/>
-          <Route path='/architecture/:id' element={<Architectureform/>}/>
-          <Route path='/architecturelist' element={<Architecturelist/>}/>
-          <Route path='/architecturelist/architecturedetails/:id' element={<Architecturedetails/>}/>
+          <Route path='/architecture' element={<Protected><Architectureform /></Protected>} />
+          <Route path='/architecture/:id' element={<Protected><Architectureform /></Protected>} />
+          <Route path='/architecturelist' element={<Protected><Architecturelist /></Protected>} />
+          <Route path='/architecturelist/architecturedetails/:id' element={<Protected><Architecturedetails /></Protected>} />
 
-          <Route path='/carpenterform' element={<Carpenterform/>}/>
-          <Route path='/carpenterform/:id' element={<Carpenterform/>}/>
-          <Route path='/carpenterlist' element={<Carpenterlist/>}/>
-          <Route path='/carpenterlist/carpenterdetails/:id' element={<Carpenterdetails/>}/>
+          <Route path='/carpenterform' element={<Protected><Carpenterform /></Protected>} />
+          <Route path='/carpenterform/:id' element={<Protected><Carpenterform /></Protected>} />
+          <Route path='/carpenterlist' element={<Protected><Carpenterlist /></Protected>} />
+          <Route path='/carpenterlist/carpenterdetails/:id' element={<Protected><Carpenterdetails /></Protected>} />
 
-          <Route path='/quotation' element={<QuotationFrom/>}/>
-          <Route path='/quotation/:id' element={<QuotationFrom/>}/>
-          <Route path='/quotationlist' element={<Quotationlist/>}/>
-          <Route path='/quotationlist/userdetails/:id' element={<Userdetails/>}/>
-          </Route>
+          <Route path='/quotation' element={<Protected><QuotationFrom /></Protected>} />
+          <Route path='/quotation/:id' element={<Protected><QuotationFrom /></Protected>} />
+          <Route path='/quotationlist' element={<Protected><Quotationlist /></Protected>} />
+          <Route path='/quotationlist/userdetails/:id' element={<Protected><Userdetails /></Protected>} />
+
         </Routes>
       </BrowserRouter>
-   </>
+    </>
   );
-  }
+}
 
 export default App;

@@ -16,7 +16,7 @@ function Shopform() {
 
     useEffect(() => {
         if (id) {
-            const saved = localStorage.getItem(process.env.KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
             axios
                 .get(`http://localhost:2002/api/shop/viewdata/${id}`, {
                     headers: {
@@ -39,7 +39,7 @@ function Shopform() {
 
     const handleShop = (e) => {
         e.preventDefault();
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         if (id) {
             console.log(id);
             axios
@@ -80,7 +80,7 @@ function Shopform() {
                 .then(function (response) {
                     if (response.data && response.data.status === 'Success') {
                         const saved = response.data.token;
-                        localStorage.setItem(process.env.KEY, saved);
+                        localStorage.setItem(process.env.REACT_APP_KEY, saved);
                         setMessage('Shop Data Create successful');
                         setShowModal(true);
                     } else {

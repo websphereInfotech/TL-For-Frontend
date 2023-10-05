@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap"
 import { FaPlus } from 'react-icons/fa'
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -9,9 +10,9 @@ function Dashboard() {
   const [carpenterCount, setCarpenterCount] = useState(0);
   const [shopCount, setShopCount] = useState(0);
   const [quotation, setQuotation] = useState(0);
-
+  
   useEffect(() => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     async function fetchData() {
       try {
         const timestamp = Date.now();
@@ -56,6 +57,20 @@ function Dashboard() {
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
   };
+  useEffect(() => {
+    window.history.forward();
+    const preventBackspaceNavigation = (e) => {
+      if (e.keyCode === 8) {
+        e.preventDefault();
+        window.history.forward();
+      }
+    };
+    window.addEventListener('keydown', preventBackspaceNavigation);
+    return () => {
+      window.removeEventListener('keydown', preventBackspaceNavigation);
+    };
+  }, []);
+
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -95,43 +110,43 @@ function Dashboard() {
       <Container>
         <Row>
           <Col md={6} sm={12}>
-            <a href="/quotation">
+            <Link to={`/quotation`}>
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div> <img src={require('../../Images/form-1.jpg')} alt="" className="w-40" />
                   <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Quotation</p>
-                  <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3  text-2xl" /></div>
+                  <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3  text-2xl " /></div>
                 </div>
               </div>
-            </a>
+            </Link>
           </Col>
           <Col md={6} sm={12}>
-            <a href="/Shopform">
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div><img src={require('../../Images/shop-1.png')} alt="" className="w-40" /></div>
                 <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Shop</p>
+                <Link to={`/Shopform`} class="stretched-link">
                 <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3 text-2xl" /></div>
+                </Link>
               </div>
-            </a>
           </Col>
         </Row>
         <Row>
           <Col md={6} sm={12}>
-            <a href="/carpenterform">
               <div className="bg-zinc-600 md:m-10 my-3 sm:m-0  rounded-lg py-8 xl:px-44 lg:px-32 md:px-10 md:py-6 px-24 create">
                 <div> <img src={require('../../Images/images.png')} alt="" className="w-40" /></div>
                 <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Carpenter</p>
+                <Link to={`/carpenterform`} class="stretched-link">
                 <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3 text-2xl" /></div>
+                </Link>
               </div>
-            </a>
           </Col>
           <Col md={6} sm={12}>
-            <a href="/architecture">
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div> <img src={require('../../Images/architecture.jpg')} alt="" className="w-40" /></div>
                 <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Architecture</p>
+                <Link to={`/architecture`} class="stretched-link">
                 <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3 text-2xl" /></div>
+                </Link>
               </div>
-            </a>
           </Col>
         </Row>
       </Container>

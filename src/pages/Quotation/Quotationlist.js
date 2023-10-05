@@ -12,7 +12,7 @@ function Quotationlist() {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     useEffect(() => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         axios.get(`http://localhost:2002/api/quotation/listdata`, {
             headers: {
                 "Authorization": `Bearer ${saved}`
@@ -30,7 +30,7 @@ function Quotationlist() {
     }, []);
 
     const handleDelete = () => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         axios.delete(`http://localhost:2002/api/quotation/delete/data/${selectedQuotationID}`, {
             headers: {
                 "Authorization": `Bearer ${saved}`
@@ -48,7 +48,7 @@ function Quotationlist() {
             })
     }
     const handleSearch = (userName) => {
-        const saved = localStorage.getItem(process.env.KEY);
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         axios.get(`http://localhost:2002/api/quotation/searchdata?userName=${userName}`, {
             headers: {
                 "Authorization": `Bearer ${saved}`

@@ -14,7 +14,7 @@ function Architecturelist() {
 
 
   useEffect(() => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     console.log(saved);
     axios.get(`http://localhost:2002/api/architec/listdata`, {
       headers: {
@@ -34,7 +34,7 @@ function Architecturelist() {
   }, []);
 
   const handleDelete = () => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     console.log(saved);
     axios.delete(`http://localhost:2002/api/architec/data/delete/${selectedArchitectureId}`, {
       headers: {
@@ -53,7 +53,7 @@ function Architecturelist() {
       })
   }
   const handleSearch = (architecName) => {
-    const saved = localStorage.getItem(process.env.KEY);
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios.get(`http://localhost:2002/api/architec/searchdata?architecName=${architecName}`, {
       headers: {
         "Authorization": `Bearer ${saved}`

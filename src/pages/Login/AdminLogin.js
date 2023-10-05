@@ -21,7 +21,7 @@
       .then(function (response) {
         if (response.data && response.data.status === 'Success') {
           const saved = response.data.token;
-          localStorage.setItem(process.env.KEY, saved);
+          localStorage.setItem(process.env.REACT_APP_KEY, saved);
           setMessage('Login successful');
           setShowModal(true);
         } else {
@@ -65,7 +65,7 @@ useEffect(() => {
               </div>
             </Col>
             <Col lg={8} md={6} sm={12} className='mx-auto md:my-32'>
-              <p className='text-4xl mb-4 font-bold text-center'>Welcome,back!<span className='text-2xl'>{emoji}</span></p>
+              <p className='md:text-4xl mb-4 font-bold text-center text-2xl'>Welcome,back!<span className='text-2xl'>{emoji}</span></p>
               <Form className='w-50 md:w-72 sm:w-96 mx-auto' onSubmit={handleSubmit} >
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label className='font-bold'>Login Id :</Form.Label>
