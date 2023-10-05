@@ -185,6 +185,7 @@ function QuotationForm() {
             </div>
             <p className='md:text-4xl text-2xl font-bold text-center mb-3'>
                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
+                 {id ? 'Update QuotationForm' : 'Create QuotationForm'}
             </p>
             <Container>
                 <Form className='w-50 mx-auto' onSubmit={handleQuotation}>

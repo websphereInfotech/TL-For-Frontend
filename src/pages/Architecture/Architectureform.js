@@ -162,4 +162,4 @@ function Architectureform() {
     )
 }
 
-export default Architectureform
+export default Architectureform;

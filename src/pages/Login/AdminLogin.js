@@ -1,5 +1,5 @@
   import React, { useState,useCallback,useEffect } from 'react'
-  import { Col, Container, Form, Row } from 'react-bootstrap'
+  import { Col, Form, Row } from 'react-bootstrap'
   import axios from 'axios';
   import { useNavigate } from 'react-router-dom'; 
   import { Modal } from 'react-bootstrap';
@@ -55,8 +55,8 @@ useEffect(() => {
 }, [showModal, handleClose]);
     return (
       <>
-        <Container className='px-10'>
-          <Row>
+        <div className='px-10 container mx-auto'>
+          <Row className='lg:pl-12 xl:pl-12 lg:pr-10 px-0'>
             <Col lg={4} md={6} sm={12} className='my-10 p-0 rounded-md bg-dark text-white'>
               <div className='text-left text-3xl xl:px-24 lg:px-14 md:px-20 px-20 md:my-48 my-10'>
                 <p>Timberland</p>
@@ -65,7 +65,7 @@ useEffect(() => {
               </div>
             </Col>
             <Col lg={8} md={6} sm={12} className='mx-auto md:my-32'>
-              <p className='md:text-4xl mb-4 font-bold text-center text-2xl'>Welcome,back!<span className='text-2xl'>{emoji}</span></p>
+              <p className='text-2xl md:text-4xl mb-4 font-bold text-center'>Welcome,back!<span className='text-2xl'>{emoji}</span></p>
               <Form className='w-50 md:w-72 sm:w-96 mx-auto' onSubmit={handleSubmit} >
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label className='font-bold'>Login Id :</Form.Label>
@@ -79,7 +79,7 @@ useEffect(() => {
               </Form>
             </Col>
           </Row>
-        </Container>
+        </div>
         <Modal show={showModal} onHide={handleClose}>
         <Modal.Body className={message.includes('successful') ? 'modal-success' : 'modal-error'}>{message}</Modal.Body> 
       </Modal>

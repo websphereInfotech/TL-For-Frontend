@@ -4,13 +4,15 @@ import { Breadcrumb, Col, Container, Modal, Row } from 'react-bootstrap'
 import { BiSearch,BiEdit } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { MdDeleteForever } from 'react-icons/md';
-
+import {FaStreetView} from "react-icons/fa";
 
 function Carpenterlist() {
   const [carpenter, setCarpenter] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCarpenterId, setSelectedCarpenterId] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [selectedCarpenterDetails, setSelectedCarpenterDetails] = useState(null);
+
 
   useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -71,6 +73,22 @@ function Carpenterlist() {
     setSelectedCarpenterId(id);
     setShowDeleteConfirmation(true);
   }
+  const handleviewdata = (id) => {
+    const saved = localStorage.getItem(process.env.KEY);
+  
+    axios.get(`http://localhost:2002/api/carpenter/viewdata/${id}`, {
+      headers: {
+        "Authorization": `Bearer ${saved}`
+      }
+    })
+    .then(function (response) {
+      console.log(response.data.data);
+      setSelectedCarpenterDetails(response.data.data); 
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  };
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -96,9 +114,10 @@ function Carpenterlist() {
           <Breadcrumb.Item href="/carpenterlist">Carpenter List</Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <h1 className='text-center text-4xl font-bold my-4'>Carpenter List</h1>
-      <Container>
-        <table className='mx-auto lg:w-1/2 w-full text-center table border' cellPadding={'5px'}>
+      
+      <div className='text-center container md:mx-auto mx-auto'>
+      <h1 className=' text-4xl font-bold my-4'>Carpenter List</h1>
+        <table className='mx-auto w-full  table-fixed' cellPadding={'10px'}>
           <thead>
             <tr>
               <th>Carpenter Name</th>
@@ -113,7 +132,12 @@ function Carpenterlist() {
                 return (
                   <tr key={user._id} className=' my-10'>
                     <td>{user.carpentersName}</td>
-                    <td><Link to={`carpenterdetails/${user._id}`}>Carpenter</Link></td>
+                    <td><FaStreetView className='mx-auto'
+                    
+                    onClick={()=>handleviewdata(user._id)}
+                    />
+                    
+                    </td>
                     <td className='fs-4'><MdDeleteForever className='mx-auto' onClick={() => confirmDelete(user._id)} /></td>
                     <td className='fs-4'><Link to={`/carpenterform/${user._id}`}><BiEdit className='mx-auto'/></Link></td>
                   </tr>
@@ -122,7 +146,7 @@ function Carpenterlist() {
             }
           </tbody>
         </table>
-      </Container>
+    </div>
       <Modal show={showDeleteConfirmation} onHide={() => setShowDeleteConfirmation(false)}>
         <Modal.Body>
           Are you sure you want to delete this item?
@@ -135,7 +159,55 @@ function Carpenterlist() {
             Yes
           </button>
         </div>
+      <div className='logout-model'>
+       <div className="logout">
+        
+        <p >
+         Are you sure you want to delete this item?
+         </p>       
+         <div className="modal-buttons">
+           <button className=" rounded-full" onClick={() => setShowDeleteConfirmation(false)}>
+             No
+           </button>
+           <button className=" rounded-full" onClick={handleDelete}>
+             Yes
+           </button>
+         </div>
+         </div>   
+       </div>
       </Modal>
+      <Modal show={selectedCarpenterDetails !== null} onHide={() => setSelectedCarpenterDetails(null)}>
+  
+  <Modal.Body className='bg-white rounded'>
+    {selectedCarpenterDetails  ?(
+      <div >
+        <table className='m-auto w-full table-fixed '>
+          <tr >
+            <th className='py-2'>carpenter Name</th>
+            <td> {selectedCarpenterDetails.carpentersName}</td>
+          </tr>
+          <tr>
+            <th  className='py-2'>Mobile No</th>
+            <td> {selectedCarpenterDetails.mobileNo}</td>
+            </tr>
+            <tr  >
+            <th className='py-2'>Address</th>
+            <td> {selectedCarpenterDetails.address}</td>
+            </tr>
+        </table>
+       
+      </div>
+    ):(
+      <p>....Loading</p>
+    )}
+   <div className='flex justify-center mt-2'>
+   <div className='btn bg-black text-white rounded-full py-2 px-4 mt-2 ' onClick={() => setSelectedCarpenterDetails(null)}>
+      Close
+    </div>
+   </div>
+  </Modal.Body>
+  
+</Modal>
     </>
   )
 }

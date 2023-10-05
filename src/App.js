@@ -11,14 +11,11 @@ import Quotationlist from './pages/Quotation/Quotationlist';
 import Architecturelist from './pages/Architecture/Architecturelist';
 import Carpenterlist from './pages/Carpenter/Carpenterlist';
 import Shoplist from './pages/Shop/Shoplist';
-import Userdetails from './pages/Quotation/Userdetails';
-import Carpenterdetails from './pages/Carpenter/Carpenterdetails';
-import Architecturedetails from './pages/Architecture/Architecturedetails';
-import Shopdetails from './pages/Shop/Shopdetails';
 import Protected from './Service/Protected';
 
 
 function App() {
+ 
   return (
     <>
       <BrowserRouter>
@@ -31,22 +28,18 @@ function App() {
           <Route path='/Shopform' element={<Protected><Shopform /></Protected>} />
           <Route path='/Shopform/:id' element={<Protected><Shopform /></Protected>} />
           <Route path='/shoplist' element={<Protected><Shoplist /></Protected>} />
-          <Route path='/shoplist/shopdetails/:id' element={<Protected><Shopdetails /></Protected>} />
 
           <Route path='/architecture' element={<Protected><Architectureform /></Protected>} />
           <Route path='/architecture/:id' element={<Protected><Architectureform /></Protected>} />
           <Route path='/architecturelist' element={<Protected><Architecturelist /></Protected>} />
-          <Route path='/architecturelist/architecturedetails/:id' element={<Protected><Architecturedetails /></Protected>} />
 
           <Route path='/carpenterform' element={<Protected><Carpenterform /></Protected>} />
           <Route path='/carpenterform/:id' element={<Protected><Carpenterform /></Protected>} />
           <Route path='/carpenterlist' element={<Protected><Carpenterlist /></Protected>} />
-          <Route path='/carpenterlist/carpenterdetails/:id' element={<Protected><Carpenterdetails /></Protected>} />
 
           <Route path='/quotation' element={<Protected><QuotationFrom /></Protected>} />
           <Route path='/quotation/:id' element={<Protected><QuotationFrom /></Protected>} />
           <Route path='/quotationlist' element={<Protected><Quotationlist /></Protected>} />
-          <Route path='/quotationlist/userdetails/:id' element={<Protected><Userdetails /></Protected>} />
 
         </Routes>
       </BrowserRouter>
