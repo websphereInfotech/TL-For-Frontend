@@ -120,13 +120,13 @@ function Dashboard() {
             </Link>
           </Col>
           <Col md={6} sm={12}>
+                <Link to={`/Shopform`} >
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div><img src={require('../../Images/shop-1.png')} alt="" className="w-40" /></div>
                 <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">Shop</p>
-                <Link to={`/Shopform`} class="stretched-link">
                 <div className="plus border-1 bg-white"><FaPlus className="ms-3 my-3 text-2xl" /></div>
-                </Link>
               </div>
+                </Link>
           </Col>
         </Row>
         <Row>
