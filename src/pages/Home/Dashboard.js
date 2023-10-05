@@ -57,20 +57,6 @@ function Dashboard() {
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
   };
-  useEffect(() => {
-    window.history.forward();
-    const preventBackspaceNavigation = (e) => {
-      if (e.keyCode === 8) {
-        e.preventDefault();
-        window.history.forward();
-      }
-    };
-    window.addEventListener('keydown', preventBackspaceNavigation);
-    return () => {
-      window.removeEventListener('keydown', preventBackspaceNavigation);
-    };
-  }, []);
-
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
