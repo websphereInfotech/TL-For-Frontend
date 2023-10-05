@@ -58,11 +58,8 @@ function Dashboard() {
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
   };
-<<<<<<< HEAD
  
 
-=======
->>>>>>> 43a4bd2b79cb748a58fcc07270a1627e99c13319
   return (
     <>
       <div className="bg-dark text-white flex justify-between mb-3 rounded-br-full">
