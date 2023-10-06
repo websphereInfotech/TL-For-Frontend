@@ -12,6 +12,7 @@ function QuotationForm() {
         userName: '',
         mobileNo: '',
         address: '',
+        serialNumber:'',
         rate: '',
         description: '',
         quantity: '',
@@ -98,6 +99,12 @@ function QuotationForm() {
     }, [id]);
     const handleQuotation = (e) => {
         e.preventDefault();
+        const allFieldsEmpty = Object.values(formValues).every(value => value === '');
+        if (allFieldsEmpty) {
+            setMessage('Please Fill Required Fields');
+            setShowModal(true);
+          return;
+        }
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         const architectureIds = selectedArchitecture.map(item => item.value).join(', ');
         const carpenterIds = selectCarpenter.map(item => item.value).join(', ');
@@ -225,7 +232,8 @@ function QuotationForm() {
                         <Form.Control
                             type="text"
                             placeholder="Sr No. :"
-                            readOnly
+                           value={formValues.serialNumber}
+                           onChange={(e)=>setFormValues({...formValues,serialNumber:e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">

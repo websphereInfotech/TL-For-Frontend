@@ -39,11 +39,11 @@ function Shopform() {
 
     const handleShop = (e) => {
         e.preventDefault();
-        // if (!shopName || !mobileNo) {
-        //     setMessage('Please Fill Required Fields');
-        //     setShowModal(true);
-        //     return;
-        // }
+        if (!shopName && !mobileNo) {
+            setMessage('Please Fill Required Fields');
+            setShowModal(true);
+            return;
+        }
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         if (id) {
             console.log(id);
