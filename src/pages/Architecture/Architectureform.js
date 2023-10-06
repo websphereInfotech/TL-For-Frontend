@@ -39,6 +39,11 @@ function Architectureform() {
     }, [id]);
     const handleArchitecture = (e) => {
         e.preventDefault();
+        if (!architecsName && !mobileNo) {
+            setMessage('Please Fill Required Fields');
+            setShowModal(true);
+            return;
+        }
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         console.log(saved);
         if (id) {

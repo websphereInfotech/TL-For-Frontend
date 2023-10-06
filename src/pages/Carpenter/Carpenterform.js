@@ -38,6 +38,11 @@ function Carpenterform() {
     }, [id]);
     const handleCarpenter = (e) => {
         e.preventDefault();
+        if(!carpentersName && !mobileNo){
+            setMessage('Please Fill Required Fields');
+            setShowModal(true);
+            return;
+        }
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         if (id) {
             console.log(id);
