@@ -12,6 +12,7 @@ function QuotationForm() {
         userName: '',
         mobileNo: '',
         address: '',
+        serialNumber:'',
         rate: '',
         description: '',
         quantity: '',
@@ -54,6 +55,8 @@ function QuotationForm() {
                 setArchitecture(architectureData);
                 setCarpenter(carpenterData);
                 setShop(shopData);
+
+                
             } catch (error) {
                 console.error(error);
             }
@@ -88,6 +91,7 @@ function QuotationForm() {
                     setSelectedArchitecture(architectureData);
                     selectsetCarpenter(carpenterData);
                     selectsetShop(shopData);
+
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -96,12 +100,15 @@ function QuotationForm() {
                 });
         }
     }, [id]);
+    
     const handleQuotation = (e) => {
         e.preventDefault();
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         const architectureIds = selectedArchitecture.map(item => item.value).join(', ');
         const carpenterIds = selectCarpenter.map(item => item.value).join(', ');
         const shopIds = selectShop.map(item => item.value).join(', ');
+
+
 
         if (id) {
             axios.put(`http://localhost:2002/api/quotation/update/${id}`, {
@@ -225,7 +232,8 @@ function QuotationForm() {
                         <Form.Control
                             type="text"
                             placeholder="Sr No. :"
-                            readOnly
+                            value={formValues.serialNumber}
+                            onChange={(e)=> setFormValues({ ...formValues, serialNumber: e.target.value})}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicPassword">
