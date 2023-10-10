@@ -3,6 +3,7 @@ import { Col, Form, Row } from 'react-bootstrap'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import routeUrls from '../../constants/routeUrls';
 
 function AdminLogin() {
   const emoji = String.fromCodePoint(128075);
@@ -38,7 +39,7 @@ function AdminLogin() {
   const handleClose = useCallback(() => {
     setShowModal(false);
     if (message.includes('successful')) {
-      navigate('/dashboard');
+      navigate(routeUrls.DASHBOARD);
     }
   }, [message, navigate]);
 

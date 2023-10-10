@@ -6,12 +6,13 @@ import Shopform from './pages/Shop/Shopform';
 import Architectureform from './pages/Architecture/Architectureform';
 import Carpenterform from './pages/Carpenter/Carpenterform';
 import Dashboard from './pages/Home/Dashboard';
-import QuotationFrom from './pages/Quotation/Quotationfrom';
-import Quotationlist from './pages/Quotation/Quotationlist';
 import Architecturelist from './pages/Architecture/Architecturelist';
 import Carpenterlist from './pages/Carpenter/Carpenterlist';
 import Shoplist from './pages/Shop/Shoplist';
 import Protected from './Service/Protected';
+import routeUrls from './constants/routeUrls';
+import QuotationForm from './pages/Quotation/QuotationForm';
+import Quotationlist from './pages/Quotation/Quotationlist';
 
 
 function App() {
@@ -20,27 +21,26 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route exct path="/login" element={<AdminLogin />} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route exct path={routeUrls.LOGIN} element={<AdminLogin />} />
+          <Route path="/" element={<Navigate to={routeUrls.LOGIN} />} />
   
-          <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+          <Route path={routeUrls.DASHBOARD} element={<Protected><Dashboard /></Protected>} />
 
-          <Route path='/Shopform' element={<Protected><Shopform /></Protected>} />
-          <Route path='/Shopform/:id' element={<Protected><Shopform /></Protected>} />
-          <Route path='/shoplist' element={<Protected><Shoplist /></Protected>} />
+          <Route path={routeUrls.SHOPFORM} element={<Protected><Shopform /></Protected>} />
+          <Route path={`${routeUrls.SHOPFORM}/:id`} element={<Protected><Shopform /></Protected>} />
+          <Route path={routeUrls.SHOPLIST} element={<Protected><Shoplist /></Protected>} />
 
-          <Route path='/architecture' element={<Protected><Architectureform /></Protected>} />
-          <Route path='/architecture/:id' element={<Protected><Architectureform /></Protected>} />
-          <Route path='/architecturelist' element={<Protected><Architecturelist /></Protected>} />
+          <Route path={routeUrls.ARCHITECTURE} element={<Protected><Architectureform /></Protected>} />
+          <Route path={`${routeUrls.ARCHITECTURE}/:id`} element={<Protected><Architectureform /></Protected>} />
+          <Route path={routeUrls.ARCHITECTURELIST} element={<Protected><Architecturelist /></Protected>} />
 
-          <Route path='/carpenterform' element={<Protected><Carpenterform /></Protected>} />
-          <Route path='/carpenterform/:id' element={<Protected><Carpenterform /></Protected>} />
-          <Route path='/carpenterlist' element={<Protected><Carpenterlist /></Protected>} />
+          <Route path={routeUrls.CARPENTERFORM} element={<Protected><Carpenterform /></Protected>} />
+          <Route path={`${routeUrls.CARPENTERFORM}/:id`} element={<Protected><Carpenterform /></Protected>} />
+          <Route path={routeUrls.CARPENTERLIST} element={<Protected><Carpenterlist /></Protected>} />
 
-          <Route path='/quotation' element={<Protected><QuotationFrom /></Protected>} />
-          <Route path='/quotation/:id' element={<Protected><QuotationFrom /></Protected>} />
-          <Route path='/quotationlist' element={<Protected><Quotationlist /></Protected>} />
-
+          <Route path={routeUrls.QUOTATION} element={<Protected><QuotationForm /></Protected>} />
+          <Route path={`${routeUrls.QUOTATION}/:id`} element={<Protected><QuotationForm /></Protected>} />
+          <Route path={routeUrls.QUOTATIONLIST} element={<Protected><Quotationlist /></Protected>} />
         </Routes>
       </BrowserRouter>
     </>
