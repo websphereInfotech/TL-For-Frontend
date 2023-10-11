@@ -60,22 +60,6 @@ function Dashboard() {
     }
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-  //   axios
-  //     .get(`http://localhost:2002/api/quotation/listdata`, {
-  //       headers: {
-  //         Authorization: `Bearer ${saved}`,
-  //       },
-  //     })
-  //     .then(function (response) {
-  //       setQuotation(response.data.data.length);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // }, []);
   const handleLogout = () => {
     setLogoutModalOpen(true);
   };
@@ -91,7 +75,7 @@ function Dashboard() {
   return (
     <>
       <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
-        <div className="md:pl-12 pr-6 md:py-4 py-2 pl-2">
+        <div className="md:pl-12 pr-6 md:py-4 py-3 pl-2">
           <p className="md:text-2xl text-1xl font-bold">TIMBERLAND</p>
         </div>
         <div className="md:pr-10 pr-6 md:py-4 py-2 ">

@@ -131,6 +131,7 @@ function Row(props) {
                         <TableCell align="center" style={{width:"30%"}}>Address</TableCell>
                       </TableRow>
                     </TableHead>
+                      {row.architecture && row.architecture.length > 0 && (
                     <TableBody>
                       {row.architecture?.map((architectureRow, index) => (
                         <TableRow key={index}>
@@ -148,7 +149,8 @@ function Row(props) {
                           </TableCell>
                         </TableRow>
                       ))}
-                    </TableBody>
+                      </TableBody>
+                      )}
                   </Table>
                 </div>
               </Box>
@@ -302,15 +304,15 @@ function Row(props) {
                     </td>
                   </tr>{" "}
                   <tr>
-                    <th className="py-2">Architecture Id</th>
+                    <th className="py-2">Architec</th>
                     <td> {selectedQuotationDetails.architecture}</td>
                   </tr>{" "}
                   <tr>
-                    <th className="py-2">Carpenter Id</th>
+                    <th className="py-2">Carpenter</th>
                     <td> {selectedQuotationDetails.carpenter}</td>
                   </tr>{" "}
                   <tr>
-                    <th className="py-2">shop Id</th>
+                    <th className="py-2">shop</th>
                     <td> {selectedQuotationDetails.shop}</td>
                   </tr>
                 </tbody>
@@ -346,6 +348,7 @@ export default function Quotationlist() {
       })
       .then(function (response) {
         setQuotation(response.data.data);
+        console.log(response.data.data);
         setIsLoading(false);
       })
       .catch(function (error) {

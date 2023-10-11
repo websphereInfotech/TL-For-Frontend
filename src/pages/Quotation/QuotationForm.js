@@ -266,15 +266,30 @@ function QuotationForm() {
       </p>
       <Container>
         <Form className="w-50 mx-auto" onSubmit={handleQuotation}>
+        {!id && (
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label className="font-bold">
+                Token No.
+                <span className="text-red-600"> &#8727; </span>:
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Sr No. :"
+                value={serialNub}
+                readOnly
+              />
+            </Form.Group>
+          )}
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label className="font-bold">
-              User Name
+                 Name
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="User Name :"
+              placeholder="Name :"
               value={formValues.userName}
+              className="uppercase"
               onChange={(e) =>
                 setFormValues({ ...formValues, userName: e.target.value })
               }
@@ -308,20 +323,6 @@ function QuotationForm() {
               }
             />
           </Form.Group>
-          {!id && (
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label className="font-bold">
-                Sr No.
-                <span className="text-red-600"> &#8727; </span>:
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Sr No. :"
-                value={serialNub}
-                readOnly
-              />
-            </Form.Group>
-          )}
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">
               Description

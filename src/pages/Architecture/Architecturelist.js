@@ -82,7 +82,7 @@ function Row(props) {
   const handleSubmit = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/listdata/${id}`, {
+      .get(`http://localhost:2002/api/architec/listdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -145,47 +145,47 @@ function Row(props) {
                         <TableCell align="center">Address</TableCell>
                         <TableCell align="center">Quantity</TableCell>
                         <TableCell align="center">serialNumber</TableCell>
-                        <TableCell align="center">Rate</TableCell>
+                        {/* <TableCell align="center">Rate</TableCell> */}
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {user.user?.map((userRow, index) => (
+                      {user.user?.map((userRow) => (
                         <TableRow key={userRow._id}>
                           <TableCell
                             component="th"
                             scope="row"
                             align="center"
-                            style={{ width: "30%" }}
+                            style={{ width: "15%" }}
                           >
                             {userRow.userName}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "30%" }}>
+                          <TableCell align="center" style={{ width: "15%" }}>
                             {userRow.mobileNo}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width: "30%" }}
+                            style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {userRow.address}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width: "30%" }}
+                            style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {userRow.quantity}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width: "30%" }}
+                            style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {userRow.serialNumber}
                           </TableCell>
-                          <TableCell
+                          {/* <TableCell
                             align="center"
                             style={{ wordBreak: "break-word", width: "30%" }}
                           >
                             {userRow.rate}
-                          </TableCell>
+                          </TableCell> */}
                         </TableRow>
                       ))}
                     </TableBody>
