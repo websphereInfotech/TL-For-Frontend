@@ -9,6 +9,8 @@ const routeUrls = {
   CARPENTERLIST: "/carpenterlist",
   QUOTATION: "/quotation",
   QUOTATIONLIST: "/quotationlist",
+  SALEFORM:"/Salesform",
+  SALELIST:"/Saleslist"
 };
 
 export default routeUrls;

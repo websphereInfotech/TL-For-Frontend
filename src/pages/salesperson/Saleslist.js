@@ -23,28 +23,33 @@ import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+import{AiOutlinePlus}from"react-icons/ai"
 import Spinner from 'react-bootstrap/Spinner';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
+
 
 function Row(props) {
-  const { row, setShop } = props;
+  const { row ,setSalesperson,startDate,endDate,selectedFilter} = props;
   const [open, setOpen] = React.useState(false);
-  const [selectedShopID, setSelectedShopId] = React.useState(null);
+  const [salespersonID, setSalespersonId] = React.useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
     React.useState(false);
-  const [selectedShopDetails, setSelectedShopDetails] = React.useState(null);
+  const [selectedSalesperson, setSelectedSalesperson] = React.useState(null);
   const [user, setUser] = React.useState([]);
+  
+  
 
   const handleviewdata = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/viewdata/${id}`, {
+      .get(`http://localhost:2002/api/salesPerson/view/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       .then(function (response) {
         console.log(response.data.data);
-        setSelectedShopDetails(response.data.data);
+        setSelectedSalesperson(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -53,15 +58,15 @@ function Row(props) {
   const handleDelete = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .delete(`http://localhost:2002/api/shop/data/delete/${selectedShopID}`, {
+      .delete(`http://localhost:2002/api/salesPerson/delete/${salespersonID}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       .then(function (response) {
         console.log(response.data.data);
-        setShop((prevShop) =>
-          prevShop.filter((shop) => shop._id !== selectedShopID)
+        setSalesperson((prevSalesperson) =>
+          prevSalesperson.filter((salesperson) => salesperson._id !== salespersonID)
         );
         setShowDeleteConfirmation(false);
       })
@@ -70,32 +75,59 @@ function Row(props) {
       });
   };
   const confirmDelete = (id) => {
-    setSelectedShopId(id);
+    setSalespersonId(id);
     setShowDeleteConfirmation(true);
   };
-  const handleSubmit = (id) => {
+ 
+  const handleSubmit = (id,startDate,endDate,status) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    let apiUrl = `http://localhost:2002/api/salesPerson/salespersonid/${id}?`;
+
+    if (startDate && endDate) {
+      apiUrl += `startDate=${startDate}&endDate=${endDate}`;
+    }
+    if(status){
+      apiUrl += `&status=${selectedFilter}`
+    }
+    console.log("API URL:", apiUrl); 
     axios
-      .get(`http://localhost:2002/api/shop/listdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        setUser({ user: response.data.data }); 
-        console.log({ user: response.data.data });
+    .get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${saved}`,
+      },
+    })
+    .then(function (response) {
+      console.log("API Response:", response.data);
+      setUser({user:response.data.data[0].connectedUsers});
+      console.log("user", response.data.data[0].connectedUsers[0].followDetails);
+      console.log(">>>>>>>>>", startDate, endDate, id,status);
+
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-
+ 
+  function getTrueStatus(followDetails) {
+    if (!followDetails || !Array.isArray(followDetails)) {
+      return 'Status not available';
+    }
+  
+    if (followDetails.some((detail) => detail.Approve)) {
+      return 'Approve';
+    }
+    
+    if (followDetails.some((detail) => detail.Reject)) {
+      return 'Reject';
+    }    
+    return 'Follow Up';
+  }
   return (
     <>
-    
       <React.Fragment>
+    
         <TableRow style={{borderBottom:'3px solid rgba(224, 224, 224, 1)'}}>
-          <TableCell onClick={() => handleSubmit(row._id)}>
+          <TableCell onClick={() => handleSubmit(row._id,startDate,endDate,selectedFilter)}>
             <IconButton
               aria-label="expand row"
               size="small"
@@ -105,7 +137,7 @@ function Row(props) {
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
-            {row.shopName}
+          {row.Name}
           </TableCell>
           <TableCell align="center">
             <FaStreetView
@@ -115,12 +147,12 @@ function Row(props) {
           </TableCell>
           <TableCell align="right">
             <MdDeleteForever
+               onClick={() => confirmDelete(row._id)}
               className="mx-auto"
-              onClick={() => confirmDelete(row._id)}
             />
           </TableCell>
           <TableCell align="right">
-            <Link to={`${routeUrls.SHOPFORM}/${row._id}`}>
+            <Link to={`${routeUrls.SALEFORM}/${row._id}`}>
               <BiEdit className="mx-auto" />
             </Link>
           </TableCell>
@@ -130,45 +162,61 @@ function Row(props) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-               Quotation
+                  Quotation
                 </Typography>
-                <div className="md:nested-table-container">
+                <div className="">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
+                        <TableCell align="center">Token Number</TableCell>
                         <TableCell align="center">Name</TableCell>
                         <TableCell align="center">Mobile No.</TableCell>
                         <TableCell align="center">Address</TableCell>
-                        <TableCell align="center">Token Number</TableCell>
+                        <TableCell align="center">Detalis</TableCell>
+                        <TableCell align="center">status</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {user.user?.map((userRow) => (
-                        <TableRow key={userRow._id}>
+                      {user.user?.map((Salerow) => (
+                        
+                        <TableRow key={Salerow._id}>
                           <TableCell
                             component="th"
                             scope="row"
                             align="center"
-                            style={{ width: "15%",textTransform:"uppercase" }}
-                          >
-                            {userRow.userName}
+                            style={{  width:'15%'}}
+                            >
+                            {Salerow.serialNumber}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%" }}>
-                            {userRow.mobileNo}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ wordBreak: "break-word", width: "15%" }}
-                          >
-                            {userRow.address}
+                          <TableCell align="center" 
+                            style={{  width:'15%',textTransform:"uppercase" }}>
+                              {Salerow.userName}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width: "15%" }}
-                          >
-                            {userRow.serialNumber}
+                            style={{ wordBreak: "break-word", width:'15%' }}
+                            >
+                            {Salerow.mobileNo}
                           </TableCell>
-                          
+                         
+                          <TableCell
+                            align="center"
+                            style={{ wordBreak: "break-word", width:'15%'  }}
+                            >
+                            {Salerow.address}
+                          </TableCell>
+                        
+                        
+                        <TableCell align="center"  style={{ wordBreak: "break-word", width:'15%'  }}>
+                        <FaStreetView align="center" className="fs-5 mx-auto"/>
+                        </TableCell>
+                        <TableCell
+                           align="center"
+                           style={{ wordBreak: "break-word", width:'15%'  }}
+                           >
+      {getTrueStatus(Salerow.followDetails)}
+
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -202,40 +250,33 @@ function Row(props) {
       </Modal>
 
       <Modal
-        show={selectedShopDetails !== null}
-        onHide={() => setSelectedShopDetails(null)}
+        show={selectedSalesperson !== null}
+        onHide={() => setSelectedSalesperson(null)}
       >
         <Modal.Body className="bg-white rounded pl-10 pr-10">
-          {selectedShopDetails ? (
+          {selectedSalesperson ? (
             <div className=" pl-10 md:pl-24">
               <table className="w-full table-fixed">
                 <tr>
-                  <th className="py-2 ">Shop Name</th>
+                  <th className="py-2 ">Name</th>
                   <td className="break-words ">
-                    {" "}
-                    {selectedShopDetails.shopName}
+                   
+                    {selectedSalesperson.Name}
                   </td>
                 </tr>
                 <tr>
                   <th className="py-2 ">Mobile No</th>
-                  <td> {selectedShopDetails.mobileNo}</td>
-                </tr>
-                <tr>
-                  <th className="py-2 ">Address</th>
-                  <td className="break-words ">
-                    {" "}
-                    {selectedShopDetails.address}
-                  </td>
+                  <td> {selectedSalesperson.mobileNo}</td>
                 </tr>
               </table>
             </div>
           ) : (
-            <p>....Loading</p>
+            <p>loading...</p>
           )}
           <div className="flex justify-center mt-2">
             <div
               className="btn bg-black text-white rounded-full py-2 px-4 mt-2 "
-              onClick={() => setSelectedShopDetails(null)}
+              onClick={() => setSelectedSalesperson(null)}
             >
               Close
             </div>
@@ -246,20 +287,24 @@ function Row(props) {
   );
 }
 
-export default function Shoplist() {
-  const [shop, setShop] = React.useState([]);
+export default function Saleslist() {
+  const [salesperson, setSalesperson] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [startDate, setStartDate] = React.useState('');
+  const [endDate, setEndDate] =React.useState('');
+  const [selectedFilter, setSelectedFilter] =React.useState('');
+
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/list`, {
+      .get(`http://localhost:2002/api/salesPerson/AllList`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       .then(function (response) {
-        console.log(response.data.data);
-        setShop(response.data.data);
+        console.log("??????????????S",response.data.data);
+        setSalesperson(response.data.data);
         setIsLoading(false);
       })
       .catch(function (error) {
@@ -267,27 +312,45 @@ export default function Shoplist() {
         setIsLoading(false);
       });
   }, []);
-  const handleSearch = (shopName) => {
+ 
+
+const handleStartDateChange = (e) => {
+  const newStartDate = e.target.value; 
+  setStartDate(newStartDate);
+};
+
+const handleEndDateChange = (e) => {
+  const newEndDate = e.target.value; 
+  setEndDate(newEndDate);
+};
+
+const handleFilterChange = (filter) => {
+  setSelectedFilter(filter);
+  console.log(">>>>>>",filter,selectedFilter);
+};
+
+  const handleSearch = (SalesPersonName) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/searchdata?shopName=${shopName}`, {
+      .get(`http://localhost:2002/api/salesPerson/search/?SalesPersonName=${SalesPersonName}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       .then(function (response) {
         console.log(response.data.data);
-        setShop(response.data.data);
+        setSalesperson(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
   if (isLoading) {
-    return<div className="d-flex justify-content-center align-items-center vh-100">
-    <Spinner animation="border" variant="dark" />
-  </div>;
+    return <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="border" variant="dark" />
+          </div>;
   }
+
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -313,26 +376,70 @@ export default function Shoplist() {
           </div>
         </Container>
       </div>
-      <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
-          <Breadcrumb.Item
-            linkAs={Link}
-            linkProps={{ to: routeUrls.DASHBOARD }}
-          >
-            Dashboard
-          </Breadcrumb.Item>
-          <Breadcrumb.Item linkAs={Link} linkProps={{ to: routeUrls.SHOPLIST }}>
-            Shop List
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
+      <Container>
+  <div className="row md:mx-auto mx-auto align-items-center">
+    <Col xs={12} md={4} lg={6} >
+      <Breadcrumb className="font-bold pb-1">
+        <Breadcrumb.Item
+          linkAs={Link}
+          linkProps={{ to: routeUrls.DASHBOARD }}
+        >
+          Dashboard
+        </Breadcrumb.Item>
+        <Breadcrumb.Item linkAs={Link} linkProps={{ to: routeUrls.SALELIST }}>
+          Sales Person List
+        </Breadcrumb.Item>
+      </Breadcrumb>
+    </Col>
+    <Col xs={12} md={4} lg={3} className="d-flex align-items-center px-0">
+
+    <p className="leading-normal">From</p>
+    <input
+      type="date"
+      className="border-solid border-2 border-black rounded px-1 mx-2"
+      value={startDate}
+      onChange={handleStartDateChange}
+    />
+    <p>To</p>
+    <input
+      type="date"
+      className="border-solid border-2 border-black rounded px-1 mx-2"
+      value={endDate}
+      onChange={handleEndDateChange}
+    />
+
+    </Col>
+    <Col xs={12} md={4} lg={3} className="flex px-0 items-center md:my-0 my-2">
+    <DropdownButton
+  id="filter-dropdown"
+  title="Filter By"
+  variant="white"
+  className=" border-black px-2 mx-2"
+>
+  <Dropdown.Item onClick={() => handleFilterChange('approve')}>Approve</Dropdown.Item>
+  <Dropdown.Item onClick={() => handleFilterChange('reject')}>Reject</Dropdown.Item>
+  <Dropdown.Item onClick={() => handleFilterChange('follow-up')}>Follow Up</Dropdown.Item>
+  <Dropdown.Item onClick={() => handleFilterChange('none')}>None</Dropdown.Item>
+</DropdownButton>
+
+      <Link to={`${routeUrls.SALEFORM}`}>
+            <div className="flex items-center border-solid border-2 border-black rounded px-1">
+            <p className="leading-normal pr-1">Add Sales Person</p>
+            <AiOutlinePlus className="fs-5" />
+            </div>
+          </Link>
+    </Col>
+  </div>
+</Container>
+
+ 
       <div className="container my-5 table-auto">
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell>Shop Name</TableCell>
+                <TableCell> Name</TableCell>
                 <TableCell align="center" className="font-bold">
                   Detalis
                 </TableCell>
@@ -341,10 +448,11 @@ export default function Shoplist() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {shop
-                ? shop.map((row) =>
-                    row && row.shopName ? (
-                      <Row key={row._id} row={row} setShop={setShop} />
+              {salesperson
+                ? salesperson.map((row) =>
+                    row && row.Name ? (
+                      <Row key={row._id} row={row} setSalesperson={setSalesperson}   startDate={startDate}
+                      endDate={endDate} selectedFilter={selectedFilter}/>
                     ) : null
                   )
                 : null}
