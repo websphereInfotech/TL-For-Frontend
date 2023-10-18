@@ -109,16 +109,17 @@
 .css-177gid-MuiTableCell-root {
   font-size: 1.5rem !important;
 }
-@media (max-width: 425px) {
+@media (max-width: 767px) {
   .table-auto td,
   .table-auto th {
     padding: 5px;
-    font-size: 12px;
+    font-size: 10px;
   }
   .table-auto {
     overflow-x: auto;
   }
 }
+
 .css-18k87ye-MuiTypography-root {
   font-weight: 900 !important;
 }
@@ -149,6 +150,7 @@
     font-size: 12px;
   }
 }
+<<<<<<< HEAD
 @media screen and (max-width: 320px) {
   .table-container table th,
   .table-container table td {
@@ -205,4 +207,104 @@
   .table-container{
     width: 300px;
   }
+=======
+.nested-table-container  {
+  margin: 0  !important;
+}
+.breadcrumb{
+  margin-bottom: 0px;
+}
+.btn:hover{
+  /* background-color: #fff; */
+  border:1px solid black 
+}
+.btn{
+  color: #333;
+  border-color: #333;
+  --bs-btn-padding-x:0px !important;
+  --bs-btn-padding-y:0px !important;
+  padding: 0px 5px;
+}
+*{
+  --tw-ring-color: none;
+
+}
+.dropdown-toggle btn{
+  padding: 0px;
+}
+
+.custom-select option {
+  background-color: white;
+  color: black;
+  padding: 10px !important;
+}
+
+/* Define the hover style for other options */
+.custom-select option:not([value="yellow"]):hover {
+  background-color:black;
+}
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+
+  cursor: pointer;
+}
+
+.css-1ex1afd-MuiTableCell-root{
+  border-bottom: none !important;
+}
+@media (max-width: 425px) {
+ .nameinfo{
+  font-size:12px ;
+ }
+}
+/* ============================== */
+
+.status-cell {
+ font-size: 13px !important;
+}
+
+.download-icon-cell {
+font-size: 12px;
+}
+.edit-icon{
+  font-size: 25px;
+}
+.delete-icon{
+  font-size: 28px;
+}
+@media (max-width: 425px) {
+  .status-cell {
+    font-size: 10px ; 
+  }
+  .edit-icon{
+    font-size: 18px;
+  }
+  .delete-icon{
+    font-size: 20px;
+  }
+  .download-icon-cell {
+   font-size: 10px;
+  }
+  .hidden-on-small-screens {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
+  .status-cell {
+   font-size: 10px;
+  }
+
+  .download-icon-cell {
+  font-size: 10px;
+  }
+}
+option:hover {
+  background-color: initial !important; 
+  color: initial !important;
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
 }

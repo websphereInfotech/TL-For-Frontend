@@ -23,6 +23,9 @@ import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+import Spinner from 'react-bootstrap/Spinner';
+import { AiOutlineDownload } from "react-icons/ai"
+
 
 function Row(props) {
   const { row, setQuotation } = props;
@@ -32,7 +35,16 @@ function Row(props) {
     React.useState(false);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
+<<<<<<< HEAD
   const [Loading, setLoading] = React.useState(false);
+=======
+    const [approve, setApprove] =React.useState('');  
+    const [reject, setReject] =React.useState('');    
+    const [followUp, setFollowUp] =React.useState(true);
+  const [disableDropdown, setDisableDropdown] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState("Follow Up")
+
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
 
   const handleviewdata = (id) => {
     setLoading(true);
@@ -151,10 +163,169 @@ function Row(props) {
     setSelectedQuotationId(id);
     setShowDeleteConfirmation(true);
   };
+  const handleApprove = async (id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    try {
+      const response = await axios.post(
+        `http://localhost:2002/api/follow/approve/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      );
+      if (response.data.status === "Success") {
+        const {Approve,Reject}=response.data.data
+        setApprove(Approve);
+        setReject(Reject);
+        setFollowUp(false);
+        localStorage.setItem(`status_${id}`, 'Approve');
+      
+      } else {
+       console.log(">>",approve,reject,followUp);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleReject = async (id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    try {
+      const response = await axios.post(
+        `http://localhost:2002/api/follow/reject/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      );
+      if (response.data.status === "Success") {
+        setApprove(false);
+        setReject(true);
+        setFollowUp(false);
+        localStorage.setItem(`status_${id}`, 'Reject');
+      } else {
+       console.log(">>>reject",reject,approve,followUp);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const handleDownloadPDF = (id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+      .get(`http://localhost:2002/api/quatation/pdf/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(">>>>>>>>>", response);
+          const binaryData = atob(response.data.data);
+
+          const byteArray = new Uint8Array(binaryData.length);
+          for (let i = 0; i < binaryData.length; i++) {
+            byteArray[i] = binaryData.charCodeAt(i);
+          }
+
+          const blob = new Blob([byteArray], { type: 'application/pdf' })
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.style.display = 'none';
+
+          a.download = 'document.pdf';
+
+          a.href = url;
+          document.body.appendChild(a);
+          a.click();
+
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+          console.log('PDF downloaded successfully');
+        } else {
+          console.error('PDF download failed:', response.status, response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error('Error downloading PDF:', error);
+      });
+  };
+ 
+
+  const handleSelectChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedValue(selectedValue);
+
+    if (selectedValue === 'Approve') {
+      handleApprove(row._id);
+      setDisableDropdown(true);
+    } else if (selectedValue === 'Reject') {
+      handleReject(row._id);
+      setDisableDropdown(true);
+    }
+    localStorage.setItem(`selectedValue_${row._id}`, selectedValue);
+  };
+  const fetchDatabaseValue = (selectedValue, id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios.get(`http://localhost:2002/api/follow/${selectedValue.toLowerCase()}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${saved}`,
+      },
+    })
+    .then(function (response) {
+      if (response.data.status === "Success") {
+        if (selectedValue === 'Approve') {
+          setApprove(response.data.data.Approve);
+          setReject(response.data.data.Reject);
+        } else if (selectedValue === 'Reject') {
+          setReject(response.data.data.Reject);
+          setApprove(response.data.data.Approve);
+        }
+        setFollowUp(false);
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  React.useEffect(() => {
+    const savedSelectedValue = localStorage.getItem(`status_${row._id}`);
+    if (savedSelectedValue) {
+      setSelectedValue(savedSelectedValue);
+      if (savedSelectedValue === 'Approve' || savedSelectedValue === 'Reject') {
+        setDisableDropdown(true);
+        if (savedSelectedValue === 'Approve') {
+          fetchDatabaseValue('Approve', row._id); 
+        } else if (savedSelectedValue === 'Reject') {
+          fetchDatabaseValue('Reject', row._id); 
+        }
+      }
+    }
+  }, [row._id]);
+
+  function getTrueStatus(followDetails) {
+    if (!followDetails || !Array.isArray(followDetails)) {
+      return 'Status not available';
+    }
+  
+    if (followDetails.some((detail) => detail.Approve)) {
+      return 'Approve';
+    }
+    
+    if (followDetails.some((detail) => detail.Reject)) {
+      return 'Reject';
+    }    
+    return 'Follow Up';
+  }
   return (
     <>
       <React.Fragment>
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableRow style={{ borderBottom: '3px solid rgba(224, 224, 224, 1)' }} >
           <TableCell>
             <IconButton
               aria-label="expand row"
@@ -172,33 +343,61 @@ function Row(props) {
           </TableCell>
           <TableCell align="center">
             <FaStreetView
-              className="mx-auto"
+              className="mx-auto edit-icon"
+              style={{ cursor: "pointer" }}
               onClick={() => handleviewdata(row._id)}
             />
           </TableCell>
           <TableCell align="right">
             <MdDeleteForever
-              className="mx-auto"
+              className="mx-auto delete-icon"
+              style={{ cursor: "pointer" }}
               onClick={() => confirmDelete(row._id)}
             />
           </TableCell>
           <TableCell align="right">
             <Link to={`${routeUrls.QUOTATION}/${row._id}`}>
-              <BiEdit className="mx-auto" />{" "}
+              <BiEdit className="mx-auto edit-icon" style={{ cursor: "pointer" }} />
             </Link>
+          </TableCell>
+          <TableCell align="center" className="status-cell">
+  {getTrueStatus(row.followDetails) === 'Follow Up' ? (
+    <select
+      className="text-sm py-2 status-cell"
+      style={{
+        backgroundColor: "white",
+        color: "black",
+      }}
+      value={selectedValue}
+      onChange={handleSelectChange}
+      disabled={disableDropdown}
+    >
+      <option value="Follow Up">Follow Up</option>
+      <option value="Approve">Approve</option>
+      <option value="Reject">Reject</option>
+    </select>
+  ) : (
+    <TableCell align="center" className="status-cell" style={{ wordBreak: "break-word", width: '15%' }}>
+      {getTrueStatus(row.followDetails)}
+    </TableCell>
+  )}
+</TableCell>
+          <TableCell  className="download-icon-cell">
+            <AiOutlineDownload className="fs-4" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  Architecture
+                  Architec
                 </Typography>
-                <div className="nested-table-container">
+                <div className="md:nested-table-container">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
+<<<<<<< HEAD
                         <TableCell align="center" style={{ width: "30%" }}>
                           Architecture Name
                         </TableCell>
@@ -208,12 +407,18 @@ function Row(props) {
                         <TableCell align="center" style={{ width: "30%" }}>
                           Address
                         </TableCell>
+=======
+                        <TableCell align="center" >Architec Name</TableCell>
+                        <TableCell align="center" >Mobile No.</TableCell>
+                        <TableCell align="center" >Address</TableCell>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     {row.architecture && row.architecture.length > 0 && (
                       <TableBody>
                         {row.architecture?.map((architectureRow, index) => (
                           <TableRow key={index}>
+<<<<<<< HEAD
                             <TableCell
                               component="th"
                               scope="row"
@@ -223,11 +428,21 @@ function Row(props) {
                               {architectureRow.architecsName}
                             </TableCell>
                             <TableCell align="center" style={{ width: "30%" }}>
+=======
+                            <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
+                              {architectureRow.architecsName}
+                            </TableCell>
+                            <TableCell align="center" style={{ width: "15%" }}>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                               {architectureRow.mobileNo}
                             </TableCell>
                             <TableCell
                               align="center"
+<<<<<<< HEAD
                               style={{ wordBreak: "break-word", width: "30%" }}
+=======
+                              style={{ wordBreak: "break-word", width: "15%" }}
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             >
                               {architectureRow.address}
                             </TableCell>
@@ -242,12 +457,13 @@ function Row(props) {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
                   Carpenter
                 </Typography>
+<<<<<<< HEAD
                 <div className="nested-table-container">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
@@ -261,11 +477,23 @@ function Row(props) {
                         <TableCell align="center" style={{ width: "30%" }}>
                           Address
                         </TableCell>
+=======
+                <div className="md:nested-table-container">
+                  <Table
+                    size="small"
+                    aria-label="purchases" >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center" >Carpenter Name</TableCell>
+                        <TableCell align="center" >Mobile No.</TableCell>
+                        <TableCell align="center" >Address</TableCell>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.carpenter?.map((carpenterRow) => (
                         <TableRow>
+<<<<<<< HEAD
                           <TableCell
                             component="th"
                             scope="row"
@@ -278,6 +506,15 @@ function Row(props) {
                             {carpenterRow.mobileNo}
                           </TableCell>
                           <TableCell align="center" style={{ width: "30%" }}>
+=======
+                          <TableCell component="th" scope="row" align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                            {carpenterRow.carpentersName}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                            {carpenterRow.mobileNo}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             {carpenterRow.address}
                           </TableCell>
                         </TableRow>
@@ -290,12 +527,13 @@ function Row(props) {
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
                   Shop
                 </Typography>
+<<<<<<< HEAD
                 <div className="nested-table-container">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
@@ -309,11 +547,23 @@ function Row(props) {
                         <TableCell align="center" style={{ width: "30%" }}>
                           Address
                         </TableCell>
+=======
+                <div className="md:nested-table-container">
+                  <Table
+                    size="small"
+                    aria-label="purchases" >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell align="center" >Shop Name</TableCell>
+                        <TableCell align="center" >Mobile No.</TableCell>
+                        <TableCell align="center" >Address</TableCell>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.shop?.map((shopRow) => (
                         <TableRow>
+<<<<<<< HEAD
                           <TableCell
                             component="th"
                             scope="row"
@@ -326,8 +576,18 @@ function Row(props) {
                             {shopRow.mobileNo}
                           </TableCell>
                           <TableCell align="center" style={{ width: "30%" }}>
+=======
+                          <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
+                            {shopRow.shopName}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                            {shopRow.mobileNo}
+                          </TableCell>
+                          <TableCell align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             {shopRow.address}
                           </TableCell>
+
                         </TableRow>
                       ))}
                     </TableBody>
@@ -471,11 +731,19 @@ export default function Quotationlist() {
         setIsLoading(false);
       });
   }, []);
-  const handleSearch = (userName) => {
+ 
+  const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    const url = userName
-      ? `http://localhost:2002/api/quotation/searchdata?userName=${userName}`
-      : "http://localhost:2002/api/quotation/listdata";
+    let url = "http://localhost:2002/api/quotation/listdata";
+
+    const isNumber = !isNaN(inputValue);
+
+    if (isNumber) {
+      url = `http://localhost:2002/api/quotation/searchdata?serialNumber=${inputValue}`;
+    } else {
+      url = `http://localhost:2002/api/quotation/searchdata?userName=${inputValue}`;
+    }
+
     axios
       .get(url, {
         headers: {
@@ -492,8 +760,11 @@ export default function Quotationlist() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="d-flex justify-content-center align-items-center vh-100">
+      <Spinner animation="border" variant="dark" />
+    </div>;
   }
+
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -546,6 +817,7 @@ export default function Quotationlist() {
                 <TableCell align="center">Detalis</TableCell>
                 <TableCell align="center">Delete</TableCell>
                 <TableCell align="center">Edit</TableCell>
+                <TableCell align="center">Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

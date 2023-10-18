@@ -12,7 +12,12 @@ import Shoplist from './pages/Shop/Shoplist';
 import Protected from './Service/Protected';
 import routeUrls from './constants/routeUrls';
 import Quotationlist from './pages/Quotation/Quotationlist';
+<<<<<<< HEAD
 import QuotationForm from './pages/Quotation/Quotationfrom';
+=======
+import Salesform from './pages/salesperson/Salesfom';
+import Saleslist from './pages/salesperson/Saleslist';
+>>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
 
 
 function App() {
@@ -41,6 +46,13 @@ function App() {
           <Route path={routeUrls.QUOTATION} element={<Protected><QuotationForm /></Protected>} />
           <Route path={`${routeUrls.QUOTATION}/:id`} element={<Protected><QuotationForm /></Protected>} />
           <Route path={routeUrls.QUOTATIONLIST} element={<Protected><Quotationlist /></Protected>} />
+
+          <Route path={`${routeUrls.SALEFORM}`} element={<Protected><Salesform/></Protected>} />
+          <Route path={`${routeUrls.SALEFORM}/:id`} element={<Protected><Salesform/></Protected>} />
+
+          <Route path={routeUrls.SALELIST} element={<Protected><Saleslist /></Protected>} />
+
+
         </Routes>
       </BrowserRouter>
     </>
