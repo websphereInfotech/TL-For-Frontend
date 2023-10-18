@@ -4,13 +4,16 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
+import Spinner from 'react-bootstrap/Spinner';
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [architecCount, setArchitectureCount] = useState(0);
   const [carpenterCount, setCarpenterCount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [shopCount, setShopCount] = useState(0);
   const [quotation, setQuotation] = useState(0);
+  const [salesperson,setSalesperson]=useState(0)
 
   useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -53,9 +56,21 @@ function Dashboard() {
           }
         );
         setQuotation(quotationRes.data.count);
+        const salesperson = await axios.get(
+          `http://localhost:2002/api/salesPerson/AllList?timestamp=${timestamp}`,
+          {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          }
+        );
+        setSalesperson(salesperson.data.count);
+        setLoading(false);
       }
+      
       catch (error) {
         console.error(error);
+        setLoading(false);
       }
     }
     fetchData();
@@ -74,7 +89,14 @@ function Dashboard() {
 
   return (
     <>
-      <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
+      {loading ? (
+       <div className="d-flex justify-content-center align-items-center vh-100">
+       <Spinner animation="border" variant="dark" />
+     </div>
+      ) : (
+       
+        <>
+        <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
         <div className="md:pl-12 pr-6 md:py-4 py-3 pl-2">
           <p className="md:text-2xl text-1xl font-bold">TIMBERLAND</p>
         </div>
@@ -87,7 +109,7 @@ function Dashboard() {
           </button>
         </div>
       </div>
-      <div className="container">
+      <div className="container nameinfo">
         <div className="bg-dark text-white rounded-md">
           <ul className="flex	align-middle	justify-around">
             <Link to={routeUrls.QUOTATIONLIST}>
@@ -110,8 +132,14 @@ function Dashboard() {
             </Link>
             <Link to={routeUrls.ARCHITECTURELIST}>
               <li>
-                Architecture
+                Architec
                 <p className="text-center">{architecCount}</p>
+              </li>
+            </Link>
+            <Link to={routeUrls.SALELIST}>
+              <li className="break-words">
+                Sales Person
+                <p className="text-center">{salesperson}</p>
               </li>
             </Link>
           </ul>
@@ -216,6 +244,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
+      )}
+        </>
       )}
     </>
   );

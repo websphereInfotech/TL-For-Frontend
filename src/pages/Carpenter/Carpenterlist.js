@@ -24,6 +24,7 @@ import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+import Spinner from 'react-bootstrap/Spinner';
 
 function Row(props) {
   const { row, setCarpenter } = props;
@@ -98,7 +99,7 @@ function Row(props) {
   return (
     <>
       <React.Fragment>
-        <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableRow style={{borderBottom:'3px solid rgba(224, 224, 224, 1)'}}>
           <TableCell  onClick={() => handleSubmit(row._id)}>
             <IconButton
               aria-label="expand row"
@@ -134,18 +135,16 @@ function Row(props) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  User
+               Quotation
                 </Typography>
-                <div className="nested-table-container">
+                <div>
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center">User Name</TableCell>
+                        <TableCell align="center">Name</TableCell>
                         <TableCell align="center">Mobile No.</TableCell>
                         <TableCell align="center">Address</TableCell>
-                        <TableCell align="center">Quantity</TableCell>
-                        <TableCell align="center">serialNumber</TableCell>
-                        {/* <TableCell align="center">Rate</TableCell> */}
+                        <TableCell align="center">Token Number</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -155,7 +154,7 @@ function Row(props) {
                             component="th"
                             scope="row"
                             align="center"
-                            style={{ width: "15%" }}
+                            style={{ width: "15%" ,textTransform:"uppercase"}}
                           >
                             {userRow.userName}
                           </TableCell>
@@ -172,20 +171,9 @@ function Row(props) {
                             align="center"
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
-                            {userRow.quantity}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ wordBreak: "break-word", width: "15%" }}
-                          >
                             {userRow.serialNumber}
                           </TableCell>
-                          {/* <TableCell
-                            align="center"
-                            style={{ wordBreak: "break-word", width: "30%" }}
-                          >
-                            {userRow.rate}
-                          </TableCell> */}
+                        
                         </TableRow>
                       ))}
                     </TableBody>
@@ -272,7 +260,6 @@ export default function Carpenterlist() {
         },
       })
       .then(function (response) {
-        // console.log(response.data.data);
         setCarpenter(response.data.data);
         setIsLoading(false);
       })
@@ -301,7 +288,9 @@ export default function Carpenterlist() {
           });
       };
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="d-flex justify-content-center align-items-center vh-100">
+    <Spinner animation="border" variant="dark" />
+  </div>;
   }
   return (
     <>
