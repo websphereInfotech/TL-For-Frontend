@@ -142,23 +142,23 @@ function Architectureform() {
             linkAs={Link}
             linkProps={{ to: routeUrls.ARCHITECTURE }}
           >
-            ArchitectureForm
+            ArchitecForm
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <p className="md:text-4xl text-2xl font-bold text-center mb-3">
-        {id ? "Update  ArchitectureForm" : "Create ArchitectureForm"}
+        {id ? "Update  ArchitecForm" : "Create ArchitecForm"}
       </p>
       <Container>
         <Form className="w-50 mx-auto" onSubmit={handleArchitecture}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label className="font-bold">
-              Architecture Name
+              Architec Name
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Architecture Name"
+              placeholder="Architec Name"
               value={architecsName}
               onChange={(e) => setArchitecs(e.target.value)}
             />

@@ -11,8 +11,8 @@ import Carpenterlist from './pages/Carpenter/Carpenterlist';
 import Shoplist from './pages/Shop/Shoplist';
 import Protected from './Service/Protected';
 import routeUrls from './constants/routeUrls';
-import QuotationForm from './pages/Quotation/QuotationForm';
 import Quotationlist from './pages/Quotation/Quotationlist';
+import QuotationForm from './pages/Quotation/Quotationfrom';
 
 
 function App() {

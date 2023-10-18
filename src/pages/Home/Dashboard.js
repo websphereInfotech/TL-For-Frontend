@@ -53,8 +53,7 @@ function Dashboard() {
           }
         );
         setQuotation(quotationRes.data.count);
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
       }
     }
@@ -110,7 +109,7 @@ function Dashboard() {
             </Link>
             <Link to={routeUrls.ARCHITECTURELIST}>
               <li>
-                Architecture
+                Architec
                 <p className="text-center">{architecCount}</p>
               </li>
             </Link>
@@ -173,7 +172,7 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Carpenter
               </p>
-              <Link to={routeUrls.CARPENTERFORM} class="stretched-link">
+              <Link to={routeUrls.CARPENTERFORM} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
@@ -193,7 +192,7 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Architecture
               </p>
-              <Link to={routeUrls.ARCHITECTURE} class="stretched-link">
+              <Link to={routeUrls.ARCHITECTURE} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
