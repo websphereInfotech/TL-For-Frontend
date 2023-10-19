@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
+let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -21,7 +22,7 @@ function Dashboard() {
       try {
         const timestamp = Date.now();
         const architecCountRes = await axios.get(
-          `http://localhost:2002/api/architec/list?timestamp=${timestamp}`,
+          `${BaseUrl}/architec/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -30,7 +31,7 @@ function Dashboard() {
         );
         setArchitectureCount(architecCountRes.data.count);
         const carpenterCountRes = await axios.get(
-          `http://localhost:2002/api/carpenter/list?timestamp=${timestamp}`,
+          `${BaseUrl}/carpenter/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -39,7 +40,7 @@ function Dashboard() {
         );
         setCarpenterCount(carpenterCountRes.data.count);
         const shopCountRes = await axios.get(
-          `http://localhost:2002/api/shop/list?timestamp=${timestamp}`,
+          `${BaseUrl}/shop/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -48,7 +49,7 @@ function Dashboard() {
         );
         setShopCount(shopCountRes.data.count);
         const quotationRes = await axios.get(
-          `http://localhost:2002/api/quotation/listdata?timestamp=${timestamp}`,
+          `${BaseUrl}/quotation/listdata?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -57,7 +58,7 @@ function Dashboard() {
         );
         setQuotation(quotationRes.data.count);
         const salesperson = await axios.get(
-          `http://localhost:2002/api/salesPerson/AllList?timestamp=${timestamp}`,
+          `${BaseUrl}/salesPerson/AllList?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,

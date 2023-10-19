@@ -7,7 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-
+let url = process.env.REACT_APP_BASEURL
 function QuotationForm() {
   const { id } = useParams();
   const [formValues, setFormValues] = useState({
@@ -89,7 +89,7 @@ function QuotationForm() {
   useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/quotation/listdata`, {
+      .get(`${url}/quotation/listdata`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -112,7 +112,7 @@ function QuotationForm() {
       try {
         const timestamp = Date.now();
         const architectureResponse = await axios.get(
-          `http://localhost:2002/api/architec/list?timestamp=${timestamp}`,
+          `${url}/architec/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -120,7 +120,7 @@ function QuotationForm() {
           }
         );
         const carpenterResponse = await axios.get(
-          `http://localhost:2002/api/carpenter/list?timestamp=${timestamp}`,
+          `${url}/carpenter/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -128,7 +128,7 @@ function QuotationForm() {
           }
         );
         const shopResponse = await axios.get(
-          `http://localhost:2002/api/shop/list?timestamp=${timestamp}`,
+          `${url}/shop/list?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -136,7 +136,7 @@ function QuotationForm() {
           }
         );
         const saleResponse = await axios.get(
-          `http://localhost:2002/api/salesPerson/AllList?timestamp=${timestamp}`,
+          `${url}/salesPerson/AllList?timestamp=${timestamp}`,
           {
             headers: {
               Authorization: `Bearer ${saved}`,
@@ -158,7 +158,7 @@ function QuotationForm() {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       axios
-        .get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
+        .get(`${url}/quotation/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
@@ -240,7 +240,7 @@ function QuotationForm() {
     try {
       if (id) {
         axios
-          .put(`http://localhost:2002/api/quotation/update/${id}`, data, {
+          .put(`${url}/quotation/update/${id}`, data, {
             headers: {
               Authorization: `Bearer ${saved}`,
             },
@@ -262,7 +262,7 @@ function QuotationForm() {
           });
       } else {
         axios
-          .post("http://localhost:2002/api/quotation/cerate", data, {
+          .post(`${url}/quotation/cerate`, data, {
             headers: {
               Authorization: `Bearer ${saved}`,
             },
@@ -313,7 +313,7 @@ function QuotationForm() {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .post(
-        `http://localhost:2002/api/architec/data/create`,
+        `${url}/architec/data/create`,
         {
           architecsName: newArchitecture.name,
           mobileNo: newArchitecture.mobileNo,
@@ -353,7 +353,7 @@ function QuotationForm() {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .post(
-        `http://localhost:2002/api/carpenter/data/create`,
+        `${url}/carpenter/data/create`,
         {
           carpentersName: newCarpenter.name,
           mobileNo: newCarpenter.mobileNo,
@@ -393,7 +393,7 @@ function QuotationForm() {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .post(
-        `http://localhost:2002/api/shop/data/create`,
+        `${url}/shop/data/create`,
         {
           shopName: newShop.name,
           mobileNo: newShop.mobileNo,

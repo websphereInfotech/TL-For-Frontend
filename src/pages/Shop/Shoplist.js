@@ -33,6 +33,95 @@ function Row(props) {
     React.useState(false);
   const [selectedShopDetails, setSelectedShopDetails] = React.useState(null);
   const [user, setUser] = React.useState([]);
+  const [selectedQuotationDetails, setselectedQuotationDetails] =
+  React.useState(null);
+
+  const handleviewQutotation= (id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    let tableData;
+    axios
+      .get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then(function (response) {
+        const userData = response.data.data1;
+        const timestamp = new Date(userData.Date);
+        console.log(userData);
+        axios
+          .get(`http://localhost:2002/api/total/view/${id}`, {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          })
+          .then(function (response2) {
+            tableData = response2.data.data;
+            let mainTotal = 0;
+            for (const item of tableData) {
+              mainTotal += item.total;
+            }
+            const salesName = userData.sales ? userData.sales.Name : "";
+            if (!Array.isArray(tableData)) {
+              tableData = [tableData];
+            }
+            console.log("tabledataa", tableData);
+            let architecNames = "";
+            let carpenterNames = "";
+            let shopNames = "";
+
+            if (userData.architec) {
+              architecNames = userData.architec
+                .map((architec) => architec.architecsName)
+                .join(", ");
+            }
+            if (userData.carpenter) {
+              carpenterNames = userData.carpenter
+                .map((carpenter) => carpenter.carpentersName)
+                .join(", ");
+            }
+            if (userData.shop) {
+              shopNames = userData.shop.map((shop) => shop.shopName).join(", ");
+            }
+            const innerTableRows = tableData.map((item, index) => (
+              <tr key={index}>
+                <td className="break-words border">{item.description}</td>
+                <td className="break-words border">{item.area}</td>
+                <td className="border ">{item.size}</td>
+                <td className="border ">{item.rate}</td>
+                <td className="border ">{item.quantity}</td>
+                <td className="border ">{item.total}</td>
+              </tr>
+            ));
+            setselectedQuotationDetails({
+              tokenNo: userData.serialNumber,
+              Date: timestamp.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }),
+              name: userData.userName,
+              mobileNo: userData.mobileNo,
+              address: userData.address,
+              innerTable: innerTableRows,
+              mainTotal: mainTotal,
+              architec: architecNames,
+              carpenter: carpenterNames,
+              shop: shopNames,
+              sales: salesName,
+            });
+            // setLoading(false);
+          })
+          .catch(function (error) {
+            console.log(error);
+            // setLoading(false);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+        // setLoading(false);
+      });
+  };
 
   const handleviewdata = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -104,7 +193,7 @@ function Row(props) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell component="th" scope="row" style={{textTransform:"uppercase" }}>
             {row.shopName}
           </TableCell>
           <TableCell align="center">
@@ -136,20 +225,27 @@ function Row(props) {
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
+                        <TableCell align="center">Token Number</TableCell>
                         <TableCell align="center">Name</TableCell>
                         <TableCell align="center">Mobile No.</TableCell>
                         <TableCell align="center">Address</TableCell>
-                        <TableCell align="center">Token Number</TableCell>
+                        <TableCell align="center">Detalis</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {user.user?.map((userRow) => (
                         <TableRow key={userRow._id}>
+                           <TableCell
+                            align="center"
+                            style={{ wordBreak: "break-word", width: "15%" }}
+                          >
+                            {userRow.serialNumber}
+                          </TableCell>
                           <TableCell
                             component="th"
                             scope="row"
                             align="center"
-                            style={{ width: "15%",textTransform:"uppercase" }}
+                            style={{ width: "15%",textTransform:"uppercase"  }}
                           >
                             {userRow.userName}
                           </TableCell>
@@ -162,12 +258,12 @@ function Row(props) {
                           >
                             {userRow.address}
                           </TableCell>
-                          <TableCell
-                            align="center"
-                            style={{ wordBreak: "break-word", width: "15%" }}
-                          >
-                            {userRow.serialNumber}
-                          </TableCell>
+                          <TableCell align="center"  style={{ wordBreak: "break-word", width:'15%'  }}>
+                        <FaStreetView 
+                        align="center" 
+                        className="fs-5 mx-auto"
+                        onClick={() => handleviewQutotation(userRow._id)}/>
+                        </TableCell>
                           
                         </TableRow>
                       ))}
@@ -236,6 +332,91 @@ function Row(props) {
             <div
               className="btn bg-black text-white rounded-full py-2 px-4 mt-2 "
               onClick={() => setSelectedShopDetails(null)}
+            >
+              Close
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={selectedQuotationDetails !== null}
+        onHide={() => setselectedQuotationDetails(null)}
+      >
+        <Modal.Body className="bg-white rounded" >
+          {selectedQuotationDetails ? (
+              <table  className="table-fixed mx-2">
+                <tbody className="table-con">
+                    <tr>
+                      <th className="py-2">Token No</th>
+                      <td> {selectedQuotationDetails.tokenNo}</td>
+                    </tr>
+                    <tr>
+                      <th className="py-2 ">Date</th>
+                      <td> {selectedQuotationDetails.Date}</td>
+                    </tr>
+                    <tr>
+                      <th className="py-2">Name</th>
+                      <td className="break-words uppercase">
+                        {" "}
+                        {selectedQuotationDetails.name}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="py-2 ">Mobile No</th>
+                      <td> {selectedQuotationDetails.mobileNo}</td>
+                    </tr>
+                    <tr>
+                      <th className="py-2">Address</th>
+                      <td className="break-words">
+                        {" "}
+                        {selectedQuotationDetails.address}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th className="py-2">Architec</th>
+                      <td> {selectedQuotationDetails.architec}</td>
+                    </tr>{" "}
+                    <tr>
+                      <th className="py-2">Carpenter</th>
+                      <td> {selectedQuotationDetails.carpenter}</td>
+                    </tr>{" "}
+                    <tr>
+                      <th className="py-2">shop</th>
+                      <td> {selectedQuotationDetails.shop}</td>
+                    </tr>
+                    <tr>
+                      <th className="py-2">Sales Person</th>
+                      <td> {selectedQuotationDetails.sales}</td>
+                    </tr>
+                    <tr className=" text-center">
+                      <table className="table-container border border-separate my-3">
+                        <thead>
+                          <tr>
+                            <th className="border">Description</th>
+                            <th className="border ">Area</th>
+                            <th className="border ">Size</th>
+                            <th className="border ">Rate</th>
+                            <th className="border ">Quantity</th>
+                            <th className="border ">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>{selectedQuotationDetails.innerTable}</tbody>
+                        <tr className="text-right">
+                      <th colSpan="5">Main Total:</th>
+                      <td className="border">{selectedQuotationDetails.mainTotal}</td>
+                    </tr>
+                      </table>
+                    </tr>
+                </tbody>
+              </table>
+           
+          ) : (
+            <p>....Loading</p>
+          )}
+          <div className="flex justify-center mt-2">
+            <div
+              className="btn bg-black text-white rounded-full py-2 px-4 mt-2 "
+              onClick={() => setselectedQuotationDetails(null)}
             >
               Close
             </div>

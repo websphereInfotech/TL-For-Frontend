@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
-
+let BaseUrl = process.env.REACT_APP_BASEURL;
 function Salesform() {
   const [Name, setName] = useState("");
   const [mobileNo, setMoblieNo] = useState("");
@@ -18,7 +18,7 @@ function Salesform() {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       axios
-        .get(`http://localhost:2002/api/salesPerson/view/${id}`, {
+        .get(`${BaseUrl}/salesPerson/view/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
@@ -49,7 +49,7 @@ function Salesform() {
       console.log(id);
       axios
         .put(
-          `http://localhost:2002/api/salesPerson/update/${id}`,
+          `${BaseUrl}/salesPerson/update/${id}`,
           {
             Name: Name,
             mobileNo: mobileNo
@@ -77,7 +77,7 @@ function Salesform() {
     } else {
       axios
         .post(
-          `http://localhost:2002/api/salesPerson/create`,
+          `${BaseUrl}/salesPerson/create`,
           {
             Name: Name,
             mobileNo: mobileNo,

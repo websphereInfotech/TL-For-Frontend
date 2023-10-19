@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Carpenterform() {
   const [carpentersName, setCarpenter] = useState("");
@@ -15,11 +16,12 @@ function Carpenterform() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+
   useEffect(() => {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       axios
-        .get(`http://localhost:2002/api/carpenter/viewdata/${id}`, {
+        .get(`${BaseUrl}/carpenter/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
@@ -49,7 +51,7 @@ function Carpenterform() {
       console.log(id);
       axios
         .put(
-          `http://localhost:2002/api/carpenter/data/update/${id}`,
+          `${BaseUrl}/carpenter/data/update/${id}`,
           {
             carpentersName: carpentersName,
             mobileNo: mobileNo,
@@ -78,7 +80,7 @@ function Carpenterform() {
     } else {
       axios
         .post(
-          `http://localhost:2002/api/carpenter/data/create`,
+          `${BaseUrl}/carpenter/data/create`,
           {
             carpentersName: carpentersName,
             mobileNo: mobileNo,

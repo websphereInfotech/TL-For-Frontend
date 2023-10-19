@@ -15,7 +15,8 @@ function AdminLogin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post(`http://localhost:2002/api/login`, {
+    const url=process.env.REACT_APP_BASEURL
+    axios.post(`${url}/login`, {
       login_id: login_id,
       password: password
     })
@@ -35,6 +36,7 @@ function AdminLogin() {
         setMessage(error.response.data.message);
         setShowModal(true);
       })
+      // console.log(error.config);
   }
   const handleClose = useCallback(() => {
     setShowModal(false);

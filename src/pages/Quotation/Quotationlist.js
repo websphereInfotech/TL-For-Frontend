@@ -25,7 +25,7 @@ import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
 import { AiOutlineDownload } from "react-icons/ai"
-
+let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
   const { row, setQuotation } = props;
@@ -48,7 +48,7 @@ function Row(props) {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
     axios
-      .get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
+      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -58,7 +58,7 @@ function Row(props) {
         const timestamp = new Date(userData.Date);
         console.log(userData);
         axios
-          .get(`http://localhost:2002/api/total/view/${id}`, {
+          .get(`${BaseUrl}/total/view/${id}`, {
             headers: {
               Authorization: `Bearer ${saved}`,
             },
@@ -135,7 +135,7 @@ function Row(props) {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .delete(
-        `http://localhost:2002/api/quotation/delete/data/${selectedQuotationID}`,
+        `${BaseUrl}/quotation/delete/data/${selectedQuotationID}`,
         {
           headers: {
             Authorization: `Bearer ${saved}`,
@@ -163,7 +163,7 @@ function Row(props) {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
       const response = await axios.post(
-        `http://localhost:2002/api/follow/approve/${id}`,
+        `${BaseUrl}/follow/approve/${id}`,
         {},
         {
           headers: {
@@ -189,7 +189,7 @@ function Row(props) {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
       const response = await axios.post(
-        `http://localhost:2002/api/follow/reject/${id}`,
+        `${BaseUrl}/follow/reject/${id}`,
         {},
         {
           headers: {
@@ -213,7 +213,7 @@ function Row(props) {
   const handleDownloadPDF = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/quatation/pdf/${id}`, {
+      .get(`${BaseUrl}/quatation/pdf/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -268,7 +268,7 @@ function Row(props) {
   };
   const fetchDatabaseValue = (selectedValue, id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios.get(`http://localhost:2002/api/follow/${selectedValue.toLowerCase()}/${id}`, {
+    axios.get(`${BaseUrl}/follow/${selectedValue.toLowerCase()}/${id}`, {
       headers: {
         Authorization: `Bearer ${saved}`,
       },
@@ -402,7 +402,7 @@ function Row(props) {
                       <TableBody>
                         {row.architecture?.map((architectureRow, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
+                            <TableCell component="th" scope="row" align="center" style={{ width: "15%" ,textTransform:"uppercase" , wordBreak: "break-word"}}>
                               {architectureRow.architecsName}
                             </TableCell>
                             <TableCell align="center" style={{ width: "15%" }}>
@@ -445,7 +445,7 @@ function Row(props) {
                     <TableBody>
                       {row.carpenter?.map((carpenterRow) => (
                         <TableRow>
-                          <TableCell component="th" scope="row" align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell component="th" scope="row" align="center" style={{ width: "15%", wordBreak: "break-word" ,textTransform:"uppercase" }}>
                             {carpenterRow.carpentersName}
                           </TableCell>
                           <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
@@ -484,7 +484,7 @@ function Row(props) {
                     <TableBody>
                       {row.shop?.map((shopRow) => (
                         <TableRow>
-                          <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
+                          <TableCell component="th" scope="row" align="center" style={{ width: "15%" , textTransform:"uppercase" ,wordBreak: "break-word"}}>
                             {shopRow.shopName}
                           </TableCell>
                           <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
@@ -623,7 +623,7 @@ export default function Quotationlist() {
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/quotation/listdata`, {
+      .get(`${BaseUrl}/quotation/listdata`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -640,14 +640,14 @@ export default function Quotationlist() {
  
   const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let url = "http://localhost:2002/api/quotation/listdata";
+    let url = `${BaseUrl}/quotation/listdata`;
 
     const isNumber = !isNaN(inputValue);
 
     if (isNumber) {
-      url = `http://localhost:2002/api/quotation/searchdata?serialNumber=${inputValue}`;
+      url = `${url}/quotation/searchdata?serialNumber=${inputValue}`;
     } else {
-      url = `http://localhost:2002/api/quotation/searchdata?userName=${inputValue}`;
+      url = `${url}/quotation/searchdata?userName=${inputValue}`;
     }
 
     axios
@@ -718,7 +718,7 @@ export default function Quotationlist() {
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell>SR No.</TableCell>
+                <TableCell>Token No.</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell align="center">Detalis</TableCell>
                 <TableCell align="center">Delete</TableCell>

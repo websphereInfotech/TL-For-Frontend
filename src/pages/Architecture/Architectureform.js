@@ -6,6 +6,8 @@ import axios from "axios";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 
+let BaseUrl = process.env.REACT_APP_BASEURL
+
 function Architectureform() {
   const [architecsName, setArchitecs] = useState("");
   const [mobileNo, setMoblieNo] = useState("");
@@ -20,7 +22,7 @@ function Architectureform() {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       console.log(saved);
       axios
-        .get(`http://localhost:2002/api/architec/viewdata/${id}`, {
+        .get(`${BaseUrl}/architec/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
@@ -50,7 +52,7 @@ function Architectureform() {
     if (id) {
       axios
         .put(
-          `http://localhost:2002/api/architec/data/update/${id}`,
+          `${BaseUrl}/architec/data/update/${id}`,
           {
             architecsName: architecsName,
             mobileNo: mobileNo,
@@ -79,7 +81,7 @@ function Architectureform() {
     } else {
       axios
         .post(
-          `http://localhost:2002/api/architec/data/create`,
+          `${BaseUrl}/architec/data/create`,
           {
             architecsName: architecsName,
             mobileNo: mobileNo,
