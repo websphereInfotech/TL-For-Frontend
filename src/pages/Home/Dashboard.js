@@ -56,9 +56,6 @@ function Dashboard() {
           }
         );
         setQuotation(quotationRes.data.count);
-<<<<<<< HEAD
-      } catch (error) {
-=======
         const salesperson = await axios.get(
           `http://localhost:2002/api/salesPerson/AllList?timestamp=${timestamp}`,
           {
@@ -72,7 +69,6 @@ function Dashboard() {
       }
       
       catch (error) {
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
         console.error(error);
         setLoading(false);
       }

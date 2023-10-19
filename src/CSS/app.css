@@ -150,64 +150,6 @@
     font-size: 12px;
   }
 }
-<<<<<<< HEAD
-@media screen and (max-width: 320px) {
-  .table-container table th,
-  .table-container table td {
-    font-size: 11px;
-  }
-  .table-container{
-    width:inherit;
-  }
-  .table-fixed{
-    width: 250px;
-  }
-}
-@media screen and (max-width: 425px) {
-  .table-con table th,
-  .table-con table td {
-    font-size: 11px;
-  }
-}
-@media screen and (max-width: 1440px) and (min-width: 1024px)  {
-  .table-container{
-    width:450px;
-  }
-.table-fixed{
-  width: 450px;
-}
-}
-@media screen and (max-width: 1024px) and (min-width: 767px)  {
-  .table-fixed {
-    width: 450px;
-  }
-  .table-container{
-    /* width:inherit; */
-    /* margin-left: 32px; */
-  }
-
-}
-@media screen and (max-width: 767px) and (min-width: 426px)  {
-  .table-container {
-    margin-left: 32px ; 
-  }
-}
-@media screen and (max-width: 425px) and (min-width: 376px)  {
-  .table-fixed{
-    width: 360px;
-  }
-  .table-container{
-    width: 350px;
-  }
-}
-@media screen and (max-width: 375px) and (min-width: 321px)  {
-  .table-fixed{
-    width: 300px;
-  }
-  .table-container{
-    width: 300px;
-  }
-=======
 .nested-table-container  {
   margin: 0  !important;
 }
@@ -306,5 +248,4 @@ font-size: 12px;
 option:hover {
   background-color: initial !important; 
   color: initial !important;
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
 }

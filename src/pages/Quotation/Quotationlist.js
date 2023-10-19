@@ -35,19 +35,15 @@ function Row(props) {
     React.useState(false);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
-<<<<<<< HEAD
-  const [Loading, setLoading] = React.useState(false);
-=======
     const [approve, setApprove] =React.useState('');  
     const [reject, setReject] =React.useState('');    
     const [followUp, setFollowUp] =React.useState(true);
   const [disableDropdown, setDisableDropdown] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("Follow Up")
 
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
 
   const handleviewdata = (id) => {
-    setLoading(true);
+    // setLoading(true);
 
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
@@ -122,16 +118,16 @@ function Row(props) {
               shop: shopNames,
               sales: salesName,
             });
-            setLoading(false);
+            // setLoading(false);
           })
           .catch(function (error) {
             console.log(error);
-            setLoading(false);
+            // setLoading(false);
           });
       })
       .catch(function (error) {
         console.log(error);
-        setLoading(false);
+        // setLoading(false);
       });
   };
 
@@ -397,52 +393,24 @@ function Row(props) {
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-<<<<<<< HEAD
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Architecture Name
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Mobile No.
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Address
-                        </TableCell>
-=======
                         <TableCell align="center" >Architec Name</TableCell>
                         <TableCell align="center" >Mobile No.</TableCell>
                         <TableCell align="center" >Address</TableCell>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     {row.architecture && row.architecture.length > 0 && (
                       <TableBody>
                         {row.architecture?.map((architectureRow, index) => (
                           <TableRow key={index}>
-<<<<<<< HEAD
-                            <TableCell
-                              component="th"
-                              scope="row"
-                              align="center"
-                              style={{ width: "30%" }}
-                            >
-                              {architectureRow.architecsName}
-                            </TableCell>
-                            <TableCell align="center" style={{ width: "30%" }}>
-=======
                             <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
                               {architectureRow.architecsName}
                             </TableCell>
                             <TableCell align="center" style={{ width: "15%" }}>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                               {architectureRow.mobileNo}
                             </TableCell>
                             <TableCell
                               align="center"
-<<<<<<< HEAD
-                              style={{ wordBreak: "break-word", width: "30%" }}
-=======
                               style={{ wordBreak: "break-word", width: "15%" }}
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             >
                               {architectureRow.address}
                             </TableCell>
@@ -463,21 +431,6 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   Carpenter
                 </Typography>
-<<<<<<< HEAD
-                <div className="nested-table-container">
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Carpenter Name
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Mobile No.
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Address
-                        </TableCell>
-=======
                 <div className="md:nested-table-container">
                   <Table
                     size="small"
@@ -487,26 +440,11 @@ function Row(props) {
                         <TableCell align="center" >Carpenter Name</TableCell>
                         <TableCell align="center" >Mobile No.</TableCell>
                         <TableCell align="center" >Address</TableCell>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.carpenter?.map((carpenterRow) => (
                         <TableRow>
-<<<<<<< HEAD
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            align="center"
-                            style={{ width: "30%" }}
-                          >
-                            {carpenterRow.carpentersName}
-                          </TableCell>
-                          <TableCell align="center" style={{ width: "30%" }}>
-                            {carpenterRow.mobileNo}
-                          </TableCell>
-                          <TableCell align="center" style={{ width: "30%" }}>
-=======
                           <TableCell component="th" scope="row" align="center" style={{ width: "15%", wordBreak: "break-word" }}>
                             {carpenterRow.carpentersName}
                           </TableCell>
@@ -514,7 +452,6 @@ function Row(props) {
                             {carpenterRow.mobileNo}
                           </TableCell>
                           <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             {carpenterRow.address}
                           </TableCell>
                         </TableRow>
@@ -533,21 +470,6 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   Shop
                 </Typography>
-<<<<<<< HEAD
-                <div className="nested-table-container">
-                  <Table size="small" aria-label="purchases">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Shop Name
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Mobile No.
-                        </TableCell>
-                        <TableCell align="center" style={{ width: "30%" }}>
-                          Address
-                        </TableCell>
-=======
                 <div className="md:nested-table-container">
                   <Table
                     size="small"
@@ -557,26 +479,11 @@ function Row(props) {
                         <TableCell align="center" >Shop Name</TableCell>
                         <TableCell align="center" >Mobile No.</TableCell>
                         <TableCell align="center" >Address</TableCell>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.shop?.map((shopRow) => (
                         <TableRow>
-<<<<<<< HEAD
-                          <TableCell
-                            component="th"
-                            scope="row"
-                            align="center"
-                            style={{ width: "30%" }}
-                          >
-                            {shopRow.shopName}
-                          </TableCell>
-                          <TableCell align="center" style={{ width: "30%" }}>
-                            {shopRow.mobileNo}
-                          </TableCell>
-                          <TableCell align="center" style={{ width: "30%" }}>
-=======
                           <TableCell component="th" scope="row" align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
                             {shopRow.shopName}
                           </TableCell>
@@ -584,7 +491,6 @@ function Row(props) {
                             {shopRow.mobileNo}
                           </TableCell>
                           <TableCell align="center" style={{ width: "15%" , wordBreak: "break-word"}}>
->>>>>>> aa0ee3c09f5aa8f5bdd9346e8099f0c5d08ee3b3
                             {shopRow.address}
                           </TableCell>
 
