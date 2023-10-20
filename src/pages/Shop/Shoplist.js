@@ -24,6 +24,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
+let BaseUrl = process.env.REACT_APP_BASEURL;
 
 function Row(props) {
   const { row, setShop } = props;
@@ -35,12 +36,11 @@ function Row(props) {
   const [user, setUser] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
   React.useState(null);
-
   const handleviewQutotation= (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
     axios
-      .get(`http://localhost:2002/api/quotation/viewdata/${id}`, {
+      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -50,7 +50,7 @@ function Row(props) {
         const timestamp = new Date(userData.Date);
         console.log(userData);
         axios
-          .get(`http://localhost:2002/api/total/view/${id}`, {
+          .get(`${BaseUrl}/total/view/${id}`, {
             headers: {
               Authorization: `Bearer ${saved}`,
             },
@@ -110,23 +110,20 @@ function Row(props) {
               shop: shopNames,
               sales: salesName,
             });
-            // setLoading(false);
           })
           .catch(function (error) {
             console.log(error);
-            // setLoading(false);
           });
       })
       .catch(function (error) {
         console.log(error);
-        // setLoading(false);
       });
   };
 
   const handleviewdata = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/viewdata/${id}`, {
+      .get(`${BaseUrl}/shop/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -142,7 +139,7 @@ function Row(props) {
   const handleDelete = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .delete(`http://localhost:2002/api/shop/data/delete/${selectedShopID}`, {
+      .delete(`${BaseUrl}/shop/data/delete/${selectedShopID}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -165,7 +162,7 @@ function Row(props) {
   const handleSubmit = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/listdata/${id}`, {
+      .get(`${BaseUrl}/shop/listdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -181,7 +178,6 @@ function Row(props) {
 
   return (
     <>
-    
       <React.Fragment>
         <TableRow style={{borderBottom:'3px solid rgba(224, 224, 224, 1)'}}>
           <TableCell onClick={() => handleSubmit(row._id)}>
@@ -433,7 +429,7 @@ export default function Shoplist() {
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
-      .get(`http://localhost:2002/api/shop/list`, {
+      .get(`${BaseUrl}/shop/list`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -448,17 +444,19 @@ export default function Shoplist() {
         setIsLoading(false);
       });
   }, []);
+
   const handleSearch = (shopName) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    let url=`${BaseUrl}/shop/searchdata?shopName=${shopName}`
     axios
-      .get(`http://localhost:2002/api/shop/searchdata?shopName=${shopName}`, {
+      .get(url, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       .then(function (response) {
-        console.log(response.data.data);
         setShop(response.data.data);
+        console.log(">>>>>",shop);
       })
       .catch(function (error) {
         console.log(error);

@@ -5,7 +5,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
-
+let BaseUrl = process.env.REACT_APP_BASEURL;
 function Shopform() {
   const [shopName, setShopName] = useState("");
   const [mobileNo, setMoblieNo] = useState("");
@@ -19,7 +19,7 @@ function Shopform() {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       axios
-        .get(`http://localhost:2002/api/shop/viewdata/${id}`, {
+        .get(`${BaseUrl}/api/shop/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
@@ -50,7 +50,7 @@ function Shopform() {
       console.log(id);
       axios
         .put(
-          `http://localhost:2002/api/shop/data/update/${id}`,
+          `${BaseUrl}/shop/data/update/${id}`,
           {
             shopName: shopName,
             mobileNo: mobileNo,
@@ -79,7 +79,7 @@ function Shopform() {
     } else {
       axios
         .post(
-          `http://localhost:2002/api/shop/data/create`,
+          `${BaseUrl}/shop/data/create`,
           {
             shopName: shopName,
             mobileNo: mobileNo,
@@ -118,7 +118,7 @@ function Shopform() {
     if (showModal) {
       const timer = setTimeout(() => {
         handleClose();
-      }, 3000);
+      }, 2000);
 
       return () => {
         clearTimeout(timer);

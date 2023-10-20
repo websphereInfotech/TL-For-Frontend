@@ -146,8 +146,11 @@
   .box-table {
     margin: 0;
   }
+  
+}
+@media screen and (max-width: 375px){
   .table-con {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 .nested-table-container  {
@@ -249,3 +252,4 @@ option:hover {
   background-color: initial !important; 
   color: initial !important;
 }
+/* ========================================== */

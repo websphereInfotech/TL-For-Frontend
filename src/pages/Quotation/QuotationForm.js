@@ -301,7 +301,7 @@ function QuotationForm() {
     if (showModal) {
       const timer = setTimeout(() => {
         handleClose();
-      }, 3000);
+      }, 2000);
 
       return () => {
         clearTimeout(timer);
@@ -449,7 +449,7 @@ function QuotationForm() {
         </Breadcrumb>
       </div>
       <p className="md:text-4xl text-2xl font-bold text-center mb-3">
-        {id ? "Update QuotationForm" : "Create QuotationForm"}
+        {id ? "Update Quotation Form" : "Create Quotation Form"}
       </p>
       <Container>
         <div>

@@ -531,49 +531,49 @@ function Row(props) {
       >
         <Modal.Body className="bg-white rounded" >
           {selectedQuotationDetails ? (
-            // <div className="overflow-visible">
-              <table  className="table-fixed mx-2">
-                <tbody className="table-con">
-                    <tr>
-                      <th className="py-2">Token No</th>
-                      <td> {selectedQuotationDetails.tokenNo}</td>
+            <div style={{width:'400px',display:'flex'}}>
+              <table  className=" mx-2">
+                {/* <tbody className="table-con"> */}
+                    <tr >
+                      <th style={{width:'200px'}}>Token No :</th>
+                      <td style={{width:'200px'}}> {selectedQuotationDetails.tokenNo}</td>
                     </tr>
                     <tr>
-                      <th className="py-2 ">Date</th>
+                      <th className="py-2 ">Date :</th>
                       <td> {selectedQuotationDetails.Date}</td>
                     </tr>
                     <tr>
-                      <th className="py-2">Name</th>
+                      <th className="py-2">Name :</th>
                       <td className="break-words uppercase">
                         {" "}
                         {selectedQuotationDetails.name}
                       </td>
                     </tr>
                     <tr>
-                      <th className="py-2 ">Mobile No</th>
+                      <th className="py-2 ">Mobile No :</th>
                       <td> {selectedQuotationDetails.mobileNo}</td>
                     </tr>
                     <tr>
-                      <th className="py-2">Address</th>
+                      <th className="py-2">Address :</th>
                       <td className="break-words">
                         {" "}
                         {selectedQuotationDetails.address}
                       </td>
                     </tr>
                     <tr>
-                      <th className="py-2">Architec</th>
+                      <th className="py-2">Architec :</th>
                       <td> {selectedQuotationDetails.architec}</td>
                     </tr>{" "}
                     <tr>
-                      <th className="py-2">Carpenter</th>
+                      <th className="py-2">Carpenter :</th>
                       <td> {selectedQuotationDetails.carpenter}</td>
                     </tr>{" "}
                     <tr>
-                      <th className="py-2">shop</th>
+                      <th className="py-2">shop :</th>
                       <td> {selectedQuotationDetails.shop}</td>
                     </tr>
                     <tr>
-                      <th className="py-2">Sales Person</th>
+                      <th className="py-2">Sales Person :</th>
                       <td> {selectedQuotationDetails.sales}</td>
                     </tr>
                   {/* <div className="mx-auto"> */}
@@ -597,9 +597,9 @@ function Row(props) {
                       </table>
                     </tr>
                   {/* </div> */}
-                </tbody>
+                {/* </tbody> */}
               </table>
-            // </div>
+            </div>
           ) : (
             <p>....Loading</p>
           )}
@@ -640,14 +640,14 @@ export default function Quotationlist() {
  
   const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let url = `${BaseUrl}/quotation/listdata`;
+    let url = `${BaseUrl}/quotation/searchdata?`;
 
     const isNumber = !isNaN(inputValue);
 
     if (isNumber) {
-      url = `${url}/quotation/searchdata?serialNumber=${inputValue}`;
+      url = `${url}serialNumber=${inputValue}`;
     } else {
-      url = `${url}/quotation/searchdata?userName=${inputValue}`;
+    url = `${url}userName=${inputValue}`;
     }
 
     axios

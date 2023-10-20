@@ -119,7 +119,7 @@ function Carpenterform() {
     if (showModal) {
       const timer = setTimeout(() => {
         handleClose();
-      }, 3000);
+      }, 2000);
 
       return () => {
         clearTimeout(timer);
