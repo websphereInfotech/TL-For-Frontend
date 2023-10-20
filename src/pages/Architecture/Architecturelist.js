@@ -341,56 +341,64 @@ function Row(props) {
         </Modal.Body>
       </Modal>
       <Modal
-        show={selectedQuotationDetails !== null}
-        onHide={() => setselectedQuotationDetails(null)}
-      >
-        <Modal.Body className="bg-white rounded" >
-          {selectedQuotationDetails ? (
-              <table  className="table-fixed mx-2">
-                <tbody className="table-con">
-                    <tr>
-                      <th className="py-2">Token No</th>
-                      <td> {selectedQuotationDetails.tokenNo}</td>
-                    </tr>
-                    <tr>
-                      <th className="py-2 ">Date</th>
-                      <td> {selectedQuotationDetails.Date}</td>
-                    </tr>
-                    <tr>
-                      <th className="py-2">Name</th>
-                      <td className="break-words uppercase">
-                        {" "}
-                        {selectedQuotationDetails.name}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="py-2 ">Mobile No</th>
-                      <td> {selectedQuotationDetails.mobileNo}</td>
-                    </tr>
-                    <tr>
-                      <th className="py-2">Address</th>
-                      <td className="break-words">
-                        {" "}
-                        {selectedQuotationDetails.address}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th className="py-2">Architec</th>
-                      <td> {selectedQuotationDetails.architec}</td>
-                    </tr>{" "}
-                    <tr>
-                      <th className="py-2">Carpenter</th>
-                      <td> {selectedQuotationDetails.carpenter}</td>
-                    </tr>{" "}
-                    <tr>
-                      <th className="py-2">shop</th>
-                      <td> {selectedQuotationDetails.shop}</td>
-                    </tr>
-                    <tr>
-                      <th className="py-2">Sales Person</th>
-                      <td> {selectedQuotationDetails.sales}</td>
-                    </tr>
-                    <tr className=" text-center">
+  show={selectedQuotationDetails !== null}
+  onHide={() => setselectedQuotationDetails(null)}
+>
+  <Modal.Body className="bg-white rounded">
+    {selectedQuotationDetails ? (
+      <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+          <tbody>
+            <tr>
+              <th style={{  padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Token No</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.tokenNo}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Date</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.Date}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Name </th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words uppercase">
+                {selectedQuotationDetails.name}
+              </td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Mobile No</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.mobileNo}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Address</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words">
+                {selectedQuotationDetails.address}
+              </td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Architec</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.architec}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Carpenter</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.carpenter}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>shop</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.shop}</td>
+            </tr>
+            <tr>
+              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Sales Person</th>
+              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.sales}</td>
+            </tr>
+            <tr className=" text-center">
                       <table className="table-container border border-separate my-3">
                         <thead>
                           <tr>
@@ -409,21 +417,22 @@ function Row(props) {
                     </tr>
                       </table>
                     </tr>
-                </tbody>
-              </table>
-          ) : (
-            <p>....Loading</p>
-          )}
-          <div className="flex justify-center mt-2">
-            <div
-              className="btn bg-black text-white rounded-full py-2 px-4 mt-2 "
-              onClick={() => setselectedQuotationDetails(null)}
-            >
-              Close
-            </div>
-          </div>
-        </Modal.Body>
-      </Modal>
+                    </tbody>
+        </table>
+      </div>
+    ) : (
+      <p>....Loading</p>
+    )}
+    <div className="flex justify-center mt-2">
+      <div
+        className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+        onClick={() => setselectedQuotationDetails(null)}
+      >
+        Close
+      </div>
+    </div>
+  </Modal.Body>
+</Modal>
     </>
   );
 }
