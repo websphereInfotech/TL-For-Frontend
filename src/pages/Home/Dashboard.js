@@ -216,7 +216,7 @@ function Dashboard() {
                 <img
                   src={require("../../Images/architecture.jpg")}
                   alt=""
-                  className="w-40"
+                  className="w-44"
                 />
               </div>
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">

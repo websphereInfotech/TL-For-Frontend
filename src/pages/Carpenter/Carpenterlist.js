@@ -49,7 +49,6 @@ function Row(props) {
         })
         .then(function (response) {
           const userData = response.data.data1;
-          const timestamp = new Date(userData.Date);
           console.log(userData);
           axios
             .get(`${BaseUrl}/total/view/${id}`, {
@@ -97,11 +96,7 @@ function Row(props) {
               ));
               setselectedQuotationDetails({
                 tokenNo: userData.serialNumber,
-                Date: timestamp.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "2-digit",
-                  day: "2-digit",
-                }),
+                Date: userData.Date,
                 name: userData.userName,
                 mobileNo: userData.mobileNo,
                 address: userData.address,

@@ -19,7 +19,7 @@ function Shopform() {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       axios
-        .get(`${BaseUrl}/api/shop/viewdata/${id}`, {
+        .get(`${BaseUrl}/shop/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },

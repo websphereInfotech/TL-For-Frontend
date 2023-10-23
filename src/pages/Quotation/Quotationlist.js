@@ -27,6 +27,21 @@ import Spinner from 'react-bootstrap/Spinner';
 import { AiOutlineDownload } from "react-icons/ai"
 let BaseUrl = process.env.REACT_APP_BASEURL
 
+function getTrueStatus(followDetails) {
+  if (!followDetails || !Array.isArray(followDetails)) {
+    return 'Status not available';
+  }
+
+  if (followDetails.some((detail) => detail.Approve)) {
+    return 'Approve';
+  }
+  
+  if (followDetails.some((detail) => detail.Reject)) {
+    return 'Reject';
+  }    
+  return 'Follow Up';
+}
+
 function Row(props) {
   const { row, setQuotation } = props;
   const [open, setOpen] = React.useState(false);
@@ -55,7 +70,6 @@ function Row(props) {
       })
       .then(function (response) {
         const userData = response.data.data1;
-        const timestamp = new Date(userData.Date);
         console.log(userData);
         axios
           .get(`${BaseUrl}/total/view/${id}`, {
@@ -103,11 +117,7 @@ function Row(props) {
             ));
             setselectedQuotationDetails({
               tokenNo: userData.serialNumber,
-              Date: timestamp.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              }),
+              Date: userData.Date,
               name: userData.userName,
               mobileNo: userData.mobileNo,
               address: userData.address,
@@ -179,7 +189,7 @@ function Row(props) {
         localStorage.setItem(`status_${id}`, 'Approve');
       
       } else {
-       console.log(">>",approve,reject,followUp);
+       console.log(">>",selectedValue);
       }
     } catch (error) {
       console.log(error);
@@ -266,6 +276,7 @@ function Row(props) {
     }
     localStorage.setItem(`selectedValue_${row._id}`, selectedValue);
   };
+
   const fetchDatabaseValue = (selectedValue, id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios.get(`${BaseUrl}/follow/${selectedValue.toLowerCase()}/${id}`, {
@@ -304,20 +315,6 @@ function Row(props) {
     }
   }, [row._id]);
 
-  function getTrueStatus(followDetails) {
-    if (!followDetails || !Array.isArray(followDetails)) {
-      return 'Status not available';
-    }
-  
-    if (followDetails.some((detail) => detail.Approve)) {
-      return 'Approve';
-    }
-    
-    if (followDetails.some((detail) => detail.Reject)) {
-      return 'Reject';
-    }    
-    return 'Follow Up';
-  }
   return (
     <>
       <React.Fragment>
@@ -364,7 +361,7 @@ function Row(props) {
         backgroundColor: "white",
         color: "black",
       }}
-      value={selectedValue}
+      value={row.selectedValue} 
       onChange={handleSelectChange}
       disabled={disableDropdown}
     >
@@ -378,6 +375,7 @@ function Row(props) {
     </TableCell>
   )}
 </TableCell>
+
           <TableCell  className="download-icon-cell">
             <AiOutlineDownload className="fs-4" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
           </TableCell>
@@ -647,15 +645,17 @@ export default function Quotationlist() {
   const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
-
-    const isNumber = !isNaN(inputValue);
-
-    if (isNumber) {
-      url = `${url}serialNumber=${inputValue}`;
-    } else {
-    url = `${url}userName=${inputValue}`;
+  
+    if (inputValue) {
+      const isNumber = !isNaN(inputValue);
+  
+      if (isNumber) {
+        url = `${url}serialNumber=${inputValue}`;
+      } else {
+        url = `${url}userName=${inputValue}`;
+      }
     }
-
+  
     axios
       .get(url, {
         headers: {
@@ -663,14 +663,23 @@ export default function Quotationlist() {
         },
       })
       .then(function (response) {
-        console.log(response.data.data);
-        setQuotation(response.data.data);
+        const updatedQuotation = response.data.data.map((row) => {
+          const savedSelectedValue = localStorage.getItem(`status_${row._id}`);
+          const status = getTrueStatus(row.followDetails);
+          return {
+            ...row,
+            selectedValue: {savedSelectedValue},
+            status: status,
+            followDetails: row.followDetails,
+          };
+        });
+        setQuotation(updatedQuotation);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-
+  
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
       <Spinner animation="border" variant="dark" />
@@ -735,7 +744,7 @@ export default function Quotationlist() {
             <TableBody>
               {quotation.map((row) =>
                 row && row.userName ? (
-                  <Row key={row._id} row={row} setQuotation={setQuotation} />
+                  <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
                 ) : null
               )}
             </TableBody>
