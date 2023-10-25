@@ -533,53 +533,53 @@ function Row(props) {
         <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
           <tbody>
             <tr>
-              <th style={{  padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Token No</th>
+              <th className="m-table p-0">Token No</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.tokenNo}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.tokenNo}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Date</th>
+              <th sclassname="m-table">Date</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.Date}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.Date}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Name </th>
+              <th sclassname="m-table">Name </th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words uppercase">
+              <td sclassname="m-table" className="break-words uppercase">
                 {selectedQuotationDetails.name}
               </td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Mobile No</th>
+              <th sclassname="m-table">Mobile No</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.mobileNo}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.mobileNo}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Address</th>
+              <th sclassname="m-table">Address</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words">
+              <td sclassname="m-table" className="break-words">
                 {selectedQuotationDetails.address}
               </td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Architec</th>
+              <th sclassname="m-table">Architec</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.architec}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.architec}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Carpenter</th>
+              <th sclassname="m-table">Carpenter</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.carpenter}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.carpenter}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>shop</th>
+              <th sclassname="m-table">shop</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.shop}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.shop}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Sales Person</th>
+              <th sclassname="m-table">Sales Person</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.sales}</td>
+              <td sclassname="m-table">{selectedQuotationDetails.sales}</td>
             </tr>
             <tr className=" text-center">
                       <table className="table-container border border-separate my-3">

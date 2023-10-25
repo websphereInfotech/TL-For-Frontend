@@ -254,7 +254,17 @@ option:hover {
 }
 /* ========================================== */
 /* Add these styles to your CSS */
-
-@media screen and (max-width:767) {
-    
+.m-table{
+  padding: 8px;
+ white-space:nowrap;
+}
+.btn{
+  border: 2px solid black;
+}
+.btn:hover{
+  border: 2px solid black;
+}
+.dropdown-item:active{
+  background-color: #fff;
+  color: black;
 }

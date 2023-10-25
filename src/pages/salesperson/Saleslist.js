@@ -33,11 +33,13 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const [salespersonID, setSalespersonId] = React.useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
-    React.useState(false);
+  React.useState(false);
   const [selectedSalesperson, setSelectedSalesperson] = React.useState(null);
+  const [datesSelected, setDatesSelected] =React.useState(false);
   const [user, setUser] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
   React.useState(null);
+ 
   const handleviewQutotation = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
@@ -159,7 +161,7 @@ function Row(props) {
   };
  
   const handleSubmit = (id,startDate,endDate,selectedFilter) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let apiUrl = `${BaseUrl}/salesPerson/salespersonid/${id}?`;
 
     if (startDate && endDate) {
@@ -180,13 +182,22 @@ function Row(props) {
       setUser({user:response.data.data[0].connectedUsers});
       console.log("user", response.data.data[0].connectedUsers[0].followDetails);
       console.log(">>>>>>>>>", startDate, endDate, id,selectedFilter);
-
       })
       .catch(function (error) {
         console.log(error);
       });
   };
- 
+  console.log(">>>>",datesSelected);
+
+React.useEffect(() => {
+    if ((startDate && endDate) || selectedFilter) {
+      handleSubmit(row._id, startDate, endDate, selectedFilter);
+      setDatesSelected(true); 
+    } else {
+      setDatesSelected(false);
+    }
+  }, [row._id,startDate, endDate, selectedFilter]);
+
   function getTrueStatus(followDetails) {
     if (!followDetails || !Array.isArray(followDetails)) {
       return 'Status not available';
@@ -208,7 +219,7 @@ function Row(props) {
       return followDetails;
     }
   }
-
+ 
   return (
     <>
       <React.Fragment>
@@ -347,7 +358,6 @@ function Row(props) {
                 <tr>
                   <th className="py-2 ">Name</th>
                   <td className="break-words ">
-                   
                     {selectedSalesperson.Name}
                   </td>
                 </tr>
@@ -380,55 +390,55 @@ function Row(props) {
         <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
           <tbody>
             <tr>
-              <th style={{  padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Token No</th>
+              <th classname="m-table">Token No</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.tokenNo}</td>
+              <td className="m-table">{selectedQuotationDetails.tokenNo}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Date</th>
+              <th classname="m-table">Date</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.Date}</td>
+              <td classname="m-table">{selectedQuotationDetails.Date}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Name </th>
+              <th classname="m-table">Name </th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words uppercase">
+              <td classname="m-table" className="break-words uppercase">
                 {selectedQuotationDetails.name}
               </td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Mobile No</th>
+              <th classname="m-table">Mobile No</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.mobileNo}</td>
+              <td classname="m-table">{selectedQuotationDetails.mobileNo}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Address</th>
+              <th classname="m-table">Address</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }} className="break-words">
+              <td classname="m-table" className="break-words">
                 {selectedQuotationDetails.address}
               </td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Architec</th>
+              <th classname="m-table">Architec</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.architec}</td>
+              <td classname="m-table">{selectedQuotationDetails.architec}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Carpenter</th>
+              <th classname="m-table">Carpenter</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.carpenter}</td>
+              <td classname="m-table">{selectedQuotationDetails.carpenter}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>shop</th>
+              <th className="m-table">shop</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.shop}</td>
+              <td className="m-table">{selectedQuotationDetails.shop}</td>
             </tr>
             <tr>
-              <th style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>Sales Person</th>
+              <th className="m-table">Sales Person</th>
               <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td style={{ padding: '8px', textAlign: 'left', whiteSpace: 'nowrap' }}>{selectedQuotationDetails.sales}</td>
+              <td className="m-table">{selectedQuotationDetails.sales}</td>
             </tr>
-            <tr className=" text-center">
+            <tr className="align-middle">
                       <table className="table-container border border-separate my-3">
                         <thead>
                           <tr>
@@ -594,17 +604,19 @@ const handleFilterChange = (filter) => {
 
     </Col>
     <Col xs={12} md={4} lg={3} className="flex px-0 items-center md:my-0 my-2">
+   
     <DropdownButton
   id="filter-dropdown"
   title="Filter By"
   variant="white"
-  className=" border-black px-2 mx-2"
+  className=" px-2 mx-2 "
 >
   <Dropdown.Item onClick={() => handleFilterChange('approve')}>Approve</Dropdown.Item>
   <Dropdown.Item onClick={() => handleFilterChange('reject')}>Reject</Dropdown.Item>
   <Dropdown.Item onClick={() => handleFilterChange('followup')}>Follow Up</Dropdown.Item>
   <Dropdown.Item onClick={() => handleFilterChange('none')}>None</Dropdown.Item>
 </DropdownButton>
+
 
       <Link to={`${routeUrls.SALEFORM}`}>
             <div className="flex items-center border-solid border-2 border-black rounded px-1">
@@ -635,7 +647,7 @@ const handleFilterChange = (filter) => {
               {salesperson
                 ? salesperson.map((row) =>
                     row && row.Name ? (
-                      <Row key={row._id} row={row} setSalesperson={setSalesperson}  startDate={startDate}
+                      <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
                       endDate={endDate} selectedFilter={selectedFilter}/>
                     ) : null
                   )

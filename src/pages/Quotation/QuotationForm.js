@@ -17,16 +17,7 @@ function QuotationForm() {
     address: "",
     Date: "",
   });
-  const [rows, setRows] = useState([
-    {
-      description: "",
-      area: "",
-      size: "0",
-      rate: "0",
-      quantity: "0",
-      total: "0",
-    },
-  ]);
+  const [rows, setRows] = useState([createNewRow()]);
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -48,17 +39,19 @@ function QuotationForm() {
   });
   const addRowTable = () => {
     setRows((prevRows) => [
-      ...prevRows,
-      {
-        description: "",
-        area: "",
-        size: "0",
-        rate: "0",
-        quantity: "0",
-        total: "0",
-      },
+      ...prevRows,createNewRow()
     ]);
   };
+  function createNewRow() {
+    return{
+      description: "",
+      area: "",
+      size: "0",
+      rate: "0",
+      quantity: "0",
+      total: "0",
+    }
+  }
   const handleRowChange = (rowIndex, field, value) => {
     setRows((prevRows) => {
       const newRows = [...prevRows];
@@ -193,7 +186,7 @@ function QuotationForm() {
     }
   }, [id]);
 
-  const handleQuotation = (e) => {
+  const handleQuotation = async (e) => {
     e.preventDefault();
 
     const allFieldsEmpty = Object.values(formValues).every(
@@ -218,54 +211,19 @@ function QuotationForm() {
       sales: saleIds,
       addtotal: rows,
     };
-    try {
-      if (id) {
-        axios
-          .put(`${url}/quotation/update/${id}`, data, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response) {
-            if (response.data && response.data.status === "Success") {
-              console.log("usersbhjabj", response.data);
-              setShowModal(true);
-              setMessage("Quotation Update successful");
-            } else {
-              setMessage(response.data.message);
-              setShowModal(true);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            setMessage(error.response.data.message);
-            setShowModal(true);
-          });
-      } else {
-        axios
-          .post(`${url}/quotation/cerate`, data, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response) {
-            if (response.data && response.data.status === "Success") {
-              setShowModal(true);
-              setMessage("Quotation Create successful");
-            } else {
-              setMessage(response.data.message);
-              setShowModal(true);
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-            setMessage(error.response.data.message);
-            setShowModal(true);
-          });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+       try {
+         const response = id
+           ? await axios.put(`${url}/quotation/update/${id}`, data, { headers: { Authorization: `Bearer ${saved}` } })
+           : await axios.post(`${url}/quotation/cerate`, data, { headers: { Authorization: `Bearer ${saved}` }});
+     
+         const isSuccess = response.data.status === "Success";
+         setShowModal(true);
+         setMessage(isSuccess ? (id ? "Quotation Update successful" : "Quotation Create successful") : response.data.message, isSuccess);
+       } catch (error) {
+         setShowModal(true);
+         setMessage(error.response.data.message, false);
+       }
+   
   };
   const handleClose = useCallback(() => {
     setShowModal(false);
