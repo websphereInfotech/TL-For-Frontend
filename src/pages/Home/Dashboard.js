@@ -1,4 +1,5 @@
 import axios from "axios";
+// import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -6,76 +7,52 @@ import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
 let BaseUrl = process.env.REACT_APP_BASEURL
+// const Dashboard = lazy(() => import('./Dashboard'));
 
 function Dashboard() {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [architecCount, setArchitectureCount] = useState(0);
-  const [carpenterCount, setCarpenterCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [shopCount, setShopCount] = useState(0);
-  const [quotation, setQuotation] = useState(0);
-  const [salesperson,setSalesperson]=useState(0)
+ 
+  const [data, setData] = useState({
+    quotationCount: 0,
+    shopCount: 0,
+    carpenterCount: 0,
+    architecCount: 0,
+    salespersonCount: 0,
+  });
 
   useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    async function fetchData() {
+    const fetchData = async () => {
       try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         const timestamp = Date.now();
-        const architecCountRes = await axios.get(
-          `${BaseUrl}/architec/list?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        setArchitectureCount(architecCountRes.data.count);
-        const carpenterCountRes = await axios.get(
-          `${BaseUrl}/carpenter/list?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        setCarpenterCount(carpenterCountRes.data.count);
-        const shopCountRes = await axios.get(
-          `${BaseUrl}/shop/list?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        setShopCount(shopCountRes.data.count);
-        const quotationRes = await axios.get(
-          `${BaseUrl}/quotation/listdata?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        setQuotation(quotationRes.data.count);
-        const salesperson = await axios.get(
-          `${BaseUrl}/salesPerson/AllList?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        setSalesperson(salesperson.data.count);
+
+        const [quotationResponse, shopResponse, carpenterResponse, architecResponse, salespersonResponse] = await Promise.all([
+          axios.get(`${BaseUrl}/quotation/listdata?timestamp=${timestamp}`, { headers: { Authorization: `Bearer ${saved}` } }),
+          axios.get(`${BaseUrl}/shop/list?timestamp=${timestamp}`, { headers: { Authorization: `Bearer ${saved}` } }),
+          axios.get(`${BaseUrl}/carpenter/list?timestamp=${timestamp}`, { headers: { Authorization: `Bearer ${saved}` } }),
+          axios.get(`${BaseUrl}/architec/list?timestamp=${timestamp}`, { headers: { Authorization: `Bearer ${saved}` } }),
+          axios.get(`${BaseUrl}/salesperson/AllList?timestamp=${timestamp}`, { headers: { Authorization: `Bearer ${saved}` } }),
+        ]);
+
+        setData({
+          quotationCount: quotationResponse.data.count,
+          shopCount: shopResponse.data.count,
+          carpenterCount: carpenterResponse.data.count,
+          architecCount: architecResponse.data.count,
+          salespersonCount: salespersonResponse.data.count,
+        });
+        console.log(">>>>>>>>>",quotationResponse.data);
         setLoading(false);
-      }
-      
-      catch (error) {
+      } catch (error) {
         console.error(error);
         setLoading(false);
       }
-    }
+    };
+
     fetchData();
   }, []);
+
   const handleLogout = () => {
     setLogoutModalOpen(true);
   };
@@ -116,31 +93,31 @@ function Dashboard() {
             <Link to={routeUrls.QUOTATIONLIST}>
               <li>
                 Quotation
-                <p className="text-center">{quotation}</p>
+                <p className="text-center">{data.quotationCount}</p>
               </li>
             </Link>
             <Link to={routeUrls.SHOPLIST}>
               <li>
                 Shop
-                <p className="text-center">{shopCount}</p>
+                <p className="text-center">{data.shopCount}</p>
               </li>
             </Link>
             <Link to={routeUrls.CARPENTERLIST}>
               <li>
                 Carpenter
-                <p className="text-center">{carpenterCount}</p>
+                <p className="text-center">{data.carpenterCount}</p>
               </li>
             </Link>
             <Link to={routeUrls.ARCHITECTURELIST}>
               <li>
                 Architec
-                <p className="text-center">{architecCount}</p>
+                <p className="text-center">{data.architecCount}</p>
               </li>
             </Link>
             <Link to={routeUrls.SALELIST}>
               <li className="break-words">
                 Sales Person
-                <p className="text-center">{salesperson}</p>
+                <p className="text-center">{data.salespersonCount}</p>
               </li>
             </Link>
           </ul>
@@ -149,7 +126,7 @@ function Dashboard() {
       <Container>
         <Row>
           <Col md={6} sm={12}>
-            <Link to={routeUrls.QUOTATION}>
+            <Link to={isLogoutModalOpen ? '#' :routeUrls.QUOTATION}>
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div>
                   {" "}
@@ -169,7 +146,7 @@ function Dashboard() {
             </Link>
           </Col>
           <Col md={6} sm={12}>
-            <Link to={routeUrls.SHOPFORM}>
+            <Link to={isLogoutModalOpen ? '#' :routeUrls.SHOPFORM}>
               <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div>
                   <img
@@ -202,7 +179,7 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Carpenter
               </p>
-              <Link to={routeUrls.CARPENTERFORM} className="stretched-link">
+              <Link to={isLogoutModalOpen ? '#' :routeUrls.CARPENTERFORM} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
@@ -222,7 +199,7 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Architecture
               </p>
-              <Link to={routeUrls.ARCHITECTURE} className="stretched-link">
+              <Link to={isLogoutModalOpen ? '#' :routeUrls.ARCHITECTURE} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>

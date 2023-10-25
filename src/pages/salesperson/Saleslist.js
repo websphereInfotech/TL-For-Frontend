@@ -178,10 +178,15 @@ function Row(props) {
       },
     })
     .then(function (response) {
-      console.log("API Response:", response.data);
-      setUser({user:response.data.data[0].connectedUsers});
-      console.log("user", response.data.data[0].connectedUsers[0].followDetails);
-      console.log(">>>>>>>>>", startDate, endDate, id,selectedFilter);
+      if (response.data.data && response.data.data.length > 0) {
+        setUser({ user: response.data.data[0].connectedUsers });
+      } else {
+        setUser([]); 
+      }
+      // console.log("API Response:", response.data);
+      // setUser({user:response.data.data[0].connectedUsers});
+      // console.log("user", response.data.data[0].connectedUsers[0].followDetails);
+      // console.log(">>>>>>>>>", startDate, endDate, id,selectedFilter);
       })
       .catch(function (error) {
         console.log(error);

@@ -7,11 +7,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-let url = process.env.REACT_APP_BASEURL
+const url = process.env.REACT_APP_BASEURL
 function QuotationForm() {
   const { id } = useParams();
   const [formValues, setFormValues] = useState({
-    serialNumber:"",
     userName: "",
     mobileNo: "",
     address: "",
@@ -30,6 +29,7 @@ function QuotationForm() {
   const [selectShop, selectsetShop] = useState([]);
   const [sale, setSale] = useState([]);
   const [selectSale, selectsetSale] = useState(null);
+  const[serialNub,setSerialNub]=useState(1)
 
   const [isCreatingArchitecture, setIsCreatingArchitecture] = useState(false);
   const [newArchitecture, setNewArchitecture] = useState({
@@ -127,10 +127,7 @@ function QuotationForm() {
     }
     fetchData();
   }, []);
-      const formatDate = (dateStr) => {
-        const [day, month, year] = dateStr.split('-');
-        return `${year}-${month}-${day}`;
-      };  
+  
   useEffect(() => {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -177,6 +174,7 @@ function QuotationForm() {
           selectsetCarpenter(carpenterOptions);
           selectsetShop(shopOptions);
           selectsetSale(saleOptions);
+          setSerialNub(quotationData.serialNumber)
         })
         .catch(function (error) {
           console.log(error);
@@ -185,6 +183,35 @@ function QuotationForm() {
         });
     }
   }, [id]);
+  useEffect(() => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+      .get(`${url}/quotation/listdata`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then(function (response) {
+        const res = response.data.data;
+        console.log(res);
+        if (res) {
+          const usedTokenNumbers = res.map((item) => item.serialNumber);
+          let newTokenNumber = 1;
+          while (usedTokenNumbers.includes(newTokenNumber)) {
+            newTokenNumber++;
+          }
+          setSerialNub(newTokenNumber);
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split("-");
+    return `${year}-${month}-${day}`;
+  };
 
   const handleQuotation = async (e) => {
     e.preventDefault();
@@ -205,6 +232,7 @@ function QuotationForm() {
 
     const data = {
       ...formValues,
+      serialNumber:serialNub.toString(),
       architec: architectureIds,
       carpenter: carpenterIds,
       shop: shopIds,
@@ -405,8 +433,8 @@ function QuotationForm() {
                 <Form.Control
                   type="text"
                   placeholder="Token No. :"
-                  onChange={(e)=>setFormValues({...formValues,serialNumber:e.target.value})}
-                  value={formValues.serialNumber}
+                  onChange={(e)=>setSerialNub(e.target.value)}
+                  value={serialNub}
                 />
               </Form.Group>
               <Form.Group
