@@ -490,9 +490,8 @@ export default function Saleslist() {
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] =React.useState('');
   const [selectedFilter, setSelectedFilter] =React.useState('');
-  const [currentPage, setCurrentPage] =React.useState(1);
-  const itemsPerPage = 10;
-
+  const [page, setPage] = React.useState(1);
+  const rowsPerPage = 10;
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -512,15 +511,13 @@ export default function Saleslist() {
       });
   }, []);
  
-  const totalPages = Math.ceil(salesperson.length / itemsPerPage);
-  const handlePageChange = (event, page) => {
-    setCurrentPage(page);
-  };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const itemsToDisplay = salesperson.slice(startIndex, endIndex);
-
+  const indexOfLastItem = page * rowsPerPage;
+  const indexOfFirstItem = indexOfLastItem - rowsPerPage;
+  const displayedSalesperson = salesperson.slice(indexOfFirstItem, indexOfLastItem);
+  
+  const handlePageChange = (event, value) => {
+    setPage(value);
+};
 const handleStartDateChange = (e) => {
   const newStartDate = e.target.value; 
   setStartDate(newStartDate);
@@ -667,20 +664,34 @@ const handleFilterChange = (filter) => {
               </TableRow>
             </TableHead>
             <TableBody>
-        {itemsToDisplay.map((row) =>
-          row && row.Name ? (
-            <Row key={row._id} row={row} setSalesperson={setSalesperson} followDetails={row.followDetails} />
-          ) : null
-        )}
-      </TableBody>
+              {/* {salesperson
+                ? salesperson.map((row) =>
+                    row && row.Name ? (
+                      <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
+                      endDate={endDate} selectedFilter={selectedFilter}/>
+                    ) : null
+                  )
+                : null} */}
+                 {displayedSalesperson.map((row) =>
+      row && row.Name ? (
+          <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
+          endDate={endDate} selectedFilter={selectedFilter} />
+      ) : null
+  )}
+            </TableBody>
           </Table>
         </TableContainer>
       </div>
-      <div className="d-flex justify-center my-3">
-     <Stack spacing={2}>
-     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+   <div className="d-flex justify-center">
+   <Stack spacing={2}>
+   <Pagination
+        count={Math.ceil(salesperson.length / rowsPerPage)}
+        page={page}
+        onChange={handlePageChange}
+        variant="outlined"
+    />
     </Stack>
-     </div>
+   </div>
     </>
   );
 }
