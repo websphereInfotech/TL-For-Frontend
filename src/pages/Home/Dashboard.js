@@ -2,7 +2,7 @@ import axios from "axios";
 // import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
@@ -10,6 +10,7 @@ let BaseUrl = process.env.REACT_APP_BASEURL
 // const Dashboard = lazy(() => import('./Dashboard'));
 
 function Dashboard() {
+  const navigate = useNavigate(); 
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
  
@@ -56,10 +57,11 @@ function Dashboard() {
   const handleLogout = () => {
     setLogoutModalOpen(true);
   };
-  const handleLogoutConfirm = () => {
+  const handleLogoutConfirm = (event) => {
+    event.stopPropagation();
     localStorage.clear();
     setLogoutModalOpen(false);
-    window.location.href = routeUrls.LOGIN;
+    navigate(routeUrls.LOGIN);
   };
   const handleLogoutCancel = () => {
     setLogoutModalOpen(false);
@@ -167,6 +169,7 @@ function Dashboard() {
         </Row>
         <Row>
           <Col md={6} sm={12}>
+                <Link to={isLogoutModalOpen ? '#' :routeUrls.CARPENTERFORM}>
             <div className="bg-zinc-600 md:m-10 my-3 sm:m-0  rounded-lg py-8 xl:px-44 lg:px-32 md:px-10 md:py-6 px-24 create">
               <div>
                 {" "}
@@ -179,14 +182,14 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Carpenter
               </p>
-              <Link to={isLogoutModalOpen ? '#' :routeUrls.CARPENTERFORM} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
-              </Link>
             </div>
+              </Link>
           </Col>
           <Col md={6} sm={12}>
+              <Link to={isLogoutModalOpen ? '#' :routeUrls.ARCHITECTURE}>
             <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
               <div>
                 {" "}
@@ -199,12 +202,11 @@ function Dashboard() {
               <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
                 Architecture
               </p>
-              <Link to={isLogoutModalOpen ? '#' :routeUrls.ARCHITECTURE} className="stretched-link">
                 <div className="plus border-1 bg-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
-              </Link>
             </div>
+              </Link>
           </Col>
         </Row>
       </Container>
@@ -213,7 +215,7 @@ function Dashboard() {
           <div className="logout">
             <p>Are you sure you want to log out?</p>
             <div className="modal-buttons">
-              <button className=" rounded-full" onClick={handleLogoutConfirm}>
+              <button className=" rounded-full" onClick={(e)=>{handleLogoutConfirm (e)}}>
                 OK
               </button>
               <button className=" rounded-full" onClick={handleLogoutCancel}>

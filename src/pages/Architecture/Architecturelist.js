@@ -24,6 +24,8 @@ import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
@@ -435,7 +437,8 @@ function Row(props) {
 export default function Architecturelist() {
   const [architecture, setArchitecture] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-
+  const [currentPage, setCurrentPage] =React.useState(1);
+  const itemsPerPage = 10;
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     console.log(saved);
@@ -455,6 +458,14 @@ export default function Architecturelist() {
         setIsLoading(false);
       });
   }, []);
+  const totalPages = Math.ceil(architecture.length / itemsPerPage);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = architecture.slice(startIndex, endIndex);
   const handleSearch = (architecName) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     const url = `${BaseUrl}/architec/searchdata?architecName=${architecName}`
@@ -534,18 +545,21 @@ export default function Architecturelist() {
                 <TableCell align="center">Edit</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {architecture
-                ? architecture.map((row) =>
-                    row && row.architecsName ? (
-                      <Row key={row._id} row={row} setArchitecture={setArchitecture} />
-                    ) : null
-                  )
-                : null}
-            </TableBody>
+             <TableBody>
+        {itemsToDisplay.map((row) =>
+          row && row.architecsName ? (
+            <Row key={row._id} row={row} setArchitecture={setArchitecture} followDetails={row.followDetails} />
+          ) : null
+        )}
+      </TableBody>
           </Table>
         </TableContainer>
       </div>
+      <div className="d-flex justify-center my-3">
+     <Stack spacing={2}>
+     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+    </Stack>
+     </div>
     </>
   );
 }

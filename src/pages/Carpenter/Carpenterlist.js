@@ -25,6 +25,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
@@ -435,7 +437,8 @@ function Row(props) {
 export default function Carpenterlist() {
   const [carpenter, setCarpenter] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-
+  const [currentPage, setCurrentPage] =React.useState(1);
+  const itemsPerPage = 10;
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -453,6 +456,15 @@ export default function Carpenterlist() {
         setIsLoading(false);
       });
   }, []);
+  const totalPages = Math.ceil(carpenter.length / itemsPerPage);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = carpenter.slice(startIndex, endIndex);
+
     const handleSearch = (carpentersName) => {
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
         axios
@@ -529,18 +541,21 @@ export default function Carpenterlist() {
                 <TableCell align="center">Edit</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {carpenter
-                ? carpenter.map((row) =>
-                    row && row.carpentersName ? (
-                      <Row key={row._id} row={row} setCarpenter={setCarpenter} />
-                    ) : null
-                  )
-                : null}
-            </TableBody>
+             <TableBody>
+        {itemsToDisplay.map((row) =>
+          row && row.carpentersName ? (
+            <Row key={row._id} row={row} setCarpenter={setCarpenter} followDetails={row.followDetails} />
+          ) : null
+        )}
+      </TableBody>
           </Table>
         </TableContainer>
       </div>
+      <div className="d-flex justify-center my-3">
+     <Stack spacing={2}>
+     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+    </Stack>
+     </div>
     </>
   );
 }

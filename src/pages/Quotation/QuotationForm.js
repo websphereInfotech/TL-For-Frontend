@@ -46,10 +46,10 @@ function QuotationForm() {
     return{
       description: "",
       area: "",
-      size: "0",
-      rate: "0",
-      quantity: "0",
-      total: "0",
+      size: "",
+      rate: "",
+      quantity: "",
+      total: "",
     }
   }
   const handleRowChange = (rowIndex, field, value) => {
@@ -223,6 +223,17 @@ function QuotationForm() {
       setMessage("Please Fill Required Fields");
       setShowModal(true);
       return;
+    }
+    const requiredFields = ["description", "area", "size", "rate", "quantity", "total"];
+
+    for (const row of rows) {
+      for (const field of requiredFields) {
+        if (!row[field]) {
+          setMessage(`Please fill in the ${field} field in a row.`);
+          setShowModal(true);
+          return;
+        }
+      }
     }
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     const architectureIds = selectedArchitecture.map((item) => item.value);
@@ -514,12 +525,12 @@ function QuotationForm() {
               <table className="">
                 <thead>
                   <tr>
-                    <th>Description</th>
-                    <th>Area</th>
-                    <th>Size</th>
-                    <th>Rate</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
+                  <th>Description<span className="text-red-600"> &#8727; </span></th>
+                    <th>Area<span className="text-red-600"> &#8727; </span></th>
+                    <th>Size<span className="text-red-600"> &#8727; </span></th>
+                    <th>Rate<span className="text-red-600"> &#8727; </span></th>
+                    <th>Quantity<span className="text-red-600"> &#8727; </span></th>
+                    <th>Total<span className="text-red-600"> &#8727; </span></th>
                     <th>
                       <button type="button" className="" onClick={addRowTable}>
                         <AiOutlinePlusCircle className="fs-3"/>

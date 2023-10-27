@@ -213,7 +213,7 @@
 }
 
 .download-icon-cell {
-font-size: 12px;
+font-size: 25px;
 }
 .edit-icon{
   font-size: 25px;
@@ -222,8 +222,12 @@ font-size: 12px;
   font-size: 28px;
 }
 @media (max-width: 425px) {
+  .table-auto td,
+  .table-auto th{
+    padding: 2px;
+  }
   .status-cell {
-    font-size: 10px ; 
+    font-size: 10px !important; 
   }
   .edit-icon{
     font-size: 18px;
@@ -232,20 +236,51 @@ font-size: 12px;
     font-size: 20px;
   }
   .download-icon-cell {
-   font-size: 10px;
+   font-size: 15px !important;
+  }
+  .view-table{
+    font-size: 12px;
   }
   .hidden-on-small-screens {
     display: none;
   }
 }
-
+@media (max-width: 375px) {
+  .table-auto td,
+  .table-auto th {
+    padding: 1px;
+  }
+  .status-cell {
+    font-size: 10px !important;
+  }
+  .edit-icon {
+    font-size: 12px;
+  }
+  .delete-icon {
+    font-size: 12px;
+  }
+  .download-icon-cell {
+    font-size: 8px;
+  }
+  .hidden-on-small-screens {
+    display: none;
+  }
+}
 @media (max-width: 320px) {
   .status-cell {
-   font-size: 10px;
+    font-size: 8px;
   }
-
+  .edit-icon {
+    font-size: 10px;
+  }
+  .delete-icon {
+    font-size: 10px;
+  }
   .download-icon-cell {
-  font-size: 10px;
+    font-size: 8px;
+  }
+  .download-icon-cell {
+    font-size: 10px;
   }
 }
 option:hover {
@@ -267,4 +302,27 @@ option:hover {
 .dropdown-item:active{
   background-color: #fff;
   color: black;
+}
+
+.table-container {
+  width: 400px;
+}
+@media screen and (max-width: 425px) {
+  .table-container {
+    width: 370px;
+  }
+}
+@media screen and (max-width: 375px) {
+  .table-container {
+    width: 320px;
+  }
+}
+@media screen and (max-width: 320px) {
+  .table-container {
+    width: 200px;
+    font-size: 13px;
+  }
+}
+.disabled-select {
+  pointer-events: none;
 }

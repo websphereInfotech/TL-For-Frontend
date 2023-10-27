@@ -25,6 +25,16 @@ import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
 import { AiOutlineDownload } from "react-icons/ai"
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
+// export default function PaginationOutlined() {
+//   return (
+//     <Stack spacing={2}>
+//       <Pagination count={10} variant="outlined" />
+//     </Stack>
+//   );
+// }
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function getTrueStatus(followDetails) {
@@ -218,7 +228,7 @@ function Row(props) {
     } catch (error) {
       console.log(error);
     }
-  };
+  }
   
   const handleDownloadPDF = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -238,13 +248,13 @@ function Row(props) {
             byteArray[i] = binaryData.charCodeAt(i);
           }
 
-          const blob = new Blob([byteArray], { type: 'application/pdf' })
+          const blob = new Blob([byteArray], { type: `${row.serialNumber}.pdf` })
 
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.style.display = 'none';
 
-          a.download = 'document.pdf';
+          a.download =`${row.serialNumber}.pdf`;
 
           a.href = url;
           document.body.appendChild(a);
@@ -261,12 +271,10 @@ function Row(props) {
         console.error('Error downloading PDF:', error);
       });
   };
- 
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
     setSelectedValue(selectedValue);
-
     if (selectedValue === 'Approve') {
       handleApprove(row._id);
       setDisableDropdown(true);
@@ -276,45 +284,7 @@ function Row(props) {
     }
     localStorage.setItem(`selectedValue_${row._id}`, selectedValue);
   };
-
-  const fetchDatabaseValue = (selectedValue, id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios.get(`${BaseUrl}/follow/${selectedValue.toLowerCase()}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${saved}`,
-      },
-    })
-    .then(function (response) {
-      if (response.data.status === "Success") {
-        if (selectedValue === 'Approve') {
-          setApprove(response.data.data.Approve);
-          setReject(response.data.data.Reject);
-        } else if (selectedValue === 'Reject') {
-          setReject(response.data.data.Reject);
-          setApprove(response.data.data.Approve);
-        }
-        setFollowUp(false);
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }
-  React.useEffect(() => {
-    const savedSelectedValue = localStorage.getItem(`status_${row._id}`);
-    if (savedSelectedValue) {
-      setSelectedValue(savedSelectedValue);
-      if (savedSelectedValue === 'Approve' || savedSelectedValue === 'Reject') {
-        setDisableDropdown(true);
-        if (savedSelectedValue === 'Approve') {
-          fetchDatabaseValue('Approve', row._id); 
-        } else if (savedSelectedValue === 'Reject') {
-          fetchDatabaseValue('Reject', row._id); 
-        }
-      }
-    }
-  }, [row._id]);
-
+ 
   return (
     <>
       <React.Fragment>
@@ -360,6 +330,7 @@ function Row(props) {
       style={{
         backgroundColor: "white",
         color: "black",
+        appearance:disableDropdown?"none":"auto"
       }}
       value={row.selectedValue} 
       onChange={handleSelectChange}
@@ -370,14 +341,14 @@ function Row(props) {
       <option value="Reject">Reject</option>
     </select>
   ) : (
-    <TableCell align="center" className="status-cell" style={{ wordBreak: "break-word", width: '15%' }}>
+    <p>
       {getTrueStatus(row.followDetails)}
-    </TableCell>
+    </p>
   )}
 </TableCell>
 
-          <TableCell  className="download-icon-cell">
-            <AiOutlineDownload className="fs-4" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
+          <TableCell >
+            <AiOutlineDownload  className="download-icon-cell" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
           </TableCell>
         </TableRow>
         <TableRow>
@@ -530,7 +501,7 @@ function Row(props) {
   <Modal.Body className="bg-white rounded">
     {selectedQuotationDetails ? (
       <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+        <table className="view-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
           <tbody>
             <tr>
               <th className="m-table p-0">Token No</th>
@@ -620,10 +591,11 @@ function Row(props) {
     </>
   );
 }
-
 export default function Quotationlist() {
   const [quotation, setQuotation] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [currentPage, setCurrentPage] =React.useState(1);
+  const itemsPerPage = 10;
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -641,7 +613,14 @@ export default function Quotationlist() {
         setIsLoading(false);
       });
   }, []);
- 
+  const totalPages = Math.ceil(quotation.length / itemsPerPage);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = quotation.slice(startIndex, endIndex);
   const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
@@ -665,7 +644,8 @@ export default function Quotationlist() {
       .then(function (response) {
         const updatedQuotation = response.data.data.map((row) => {
           const savedSelectedValue = localStorage.getItem(`status_${row._id}`);
-          const status = getTrueStatus(row.followDetails);
+          const status = getTrueStatus(row.Followdetails);
+          console.log(">>>>>>>",status);
           return {
             ...row,
             selectedValue: {savedSelectedValue},
@@ -742,15 +722,21 @@ export default function Quotationlist() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {quotation.map((row) =>
-                row && row.userName ? (
-                  <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
-                ) : null
-              )}
-            </TableBody>
+        {itemsToDisplay.map((row) =>
+          row && row.userName ? (
+            <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
+          ) : null
+        )}
+      </TableBody>
           </Table>
         </TableContainer>
+        
       </div>
+     <div className="d-flex justify-center my-3">
+     <Stack spacing={2}>
+     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+    </Stack>
+     </div>
     </>
   );
 }

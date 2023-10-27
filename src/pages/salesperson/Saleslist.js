@@ -26,6 +26,8 @@ import routeUrls from "../../constants/routeUrls";
 import{AiOutlinePlus}from"react-icons/ai"
 import Spinner from 'react-bootstrap/Spinner';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
@@ -488,6 +490,8 @@ export default function Saleslist() {
   const [startDate, setStartDate] = React.useState('');
   const [endDate, setEndDate] =React.useState('');
   const [selectedFilter, setSelectedFilter] =React.useState('');
+  const [currentPage, setCurrentPage] =React.useState(1);
+  const itemsPerPage = 10;
 
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -508,15 +512,29 @@ export default function Saleslist() {
       });
   }, []);
  
+  const totalPages = Math.ceil(salesperson.length / itemsPerPage);
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const itemsToDisplay = salesperson.slice(startIndex, endIndex);
 
 const handleStartDateChange = (e) => {
   const newStartDate = e.target.value; 
   setStartDate(newStartDate);
+  if (!newStartDate) {
+    setStartDate("");
+  }
 };
 
 const handleEndDateChange = (e) => {
   const newEndDate = e.target.value; 
   setEndDate(newEndDate);
+  if (!newEndDate) {
+    setEndDate("");
+  }
 };
 
 const handleFilterChange = (filter) => {
@@ -649,18 +667,20 @@ const handleFilterChange = (filter) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {salesperson
-                ? salesperson.map((row) =>
-                    row && row.Name ? (
-                      <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
-                      endDate={endDate} selectedFilter={selectedFilter}/>
-                    ) : null
-                  )
-                : null}
-            </TableBody>
+        {itemsToDisplay.map((row) =>
+          row && row.Name ? (
+            <Row key={row._id} row={row} setSalesperson={setSalesperson} followDetails={row.followDetails} />
+          ) : null
+        )}
+      </TableBody>
           </Table>
         </TableContainer>
       </div>
+      <div className="d-flex justify-center my-3">
+     <Stack spacing={2}>
+     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+    </Stack>
+     </div>
     </>
   );
 }
