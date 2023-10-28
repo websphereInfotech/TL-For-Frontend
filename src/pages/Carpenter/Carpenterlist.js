@@ -1,18 +1,6 @@
 
 import * as React from "react";
-import {
-  Box,
-  Collapse,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-} from "@mui/material";
+import {Box,Collapse,IconButton,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,Paper} from "@mui/material";
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -29,100 +17,96 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
-function Row(props) {
-  const { row, setCarpenter } = props;
-  const [open, setOpen] = React.useState(false);
-  const [selectedCarpenterId, setSelectedCarpenterId] = React.useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);
+function Row({ row, setCarpenter }) {
+  const [open, setOpen] = React.useState(false);//open dropdown connected quotation
+  const [selectedCarpenterId, setSelectedCarpenterId] = React.useState(null);//set id to delete data
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);//set confirmation of delete
   const [selectedCarpenterDetails, setSelectedCarpenterDetails] =
-    React.useState(null);
-    const [user, setUser] = React.useState([]);
-    const [selectedQuotationDetails, setselectedQuotationDetails] =
-    React.useState(null);
+    React.useState(null);//show data of carpenter
+  const [Quotation, setQuotation] = React.useState([]);//show Quotation data
+  const [selectedQuotationDetails, setselectedQuotationDetails] =
+    React.useState(null);//show Quotation data in model
 
-    const handleviewQutotation = (id) => {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-      let tableData;
-      axios
-        .get(`${BaseUrl}/quotation/viewdata/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        })
-        .then(function (response) {
-          const userData = response.data.data1;
-          console.log(userData);
-          axios
-            .get(`${BaseUrl}/total/view/${id}`, {
-              headers: {
-                Authorization: `Bearer ${saved}`,
-              },
-            })
-            .then(function (response2) {
-              tableData = response2.data.data;
-              let mainTotal = 0;
-              for (const item of tableData) {
-                mainTotal += item.total;
-              }
-              const salesName = userData.sales ? userData.sales.Name : "";
-              if (!Array.isArray(tableData)) {
-                tableData = [tableData];
-              }
-              console.log("tabledataa", tableData);
-              let architecNames = "";
-              let carpenterNames = "";
-              let shopNames = "";
-  
-              if (userData.architec) {
-                architecNames = userData.architec
-                  .map((architec) => architec.architecsName)
-                  .join(", ");
-              }
-              if (userData.carpenter) {
-                carpenterNames = userData.carpenter
-                  .map((carpenter) => carpenter.carpentersName)
-                  .join(", ");
-              }
-              if (userData.shop) {
-                shopNames = userData.shop.map((shop) => shop.shopName).join(", ");
-              }
-              const innerTableRows = tableData.map((item, index) => (
-                <tr key={index}>
-                  <td className="break-words border">{item.description}</td>
-                  <td className="break-words border">{item.area}</td>
-                  <td className="border ">{item.size}</td>
-                  <td className="border ">{item.rate}</td>
-                  <td className="border ">{item.quantity}</td>
-                  <td className="border ">{item.total}</td>
-                </tr>
-              ));
-              setselectedQuotationDetails({
-                tokenNo: userData.serialNumber,
-                Date: userData.Date,
-                name: userData.userName,
-                mobileNo: userData.mobileNo,
-                address: userData.address,
-                innerTable: innerTableRows,
-                mainTotal: mainTotal,
-                architec: architecNames,
-                carpenter: carpenterNames,
-                shop: shopNames,
-                sales: salesName,
-              });
-              // setLoading(false);
-            })
-            .catch(function (error) {
-              console.log(error);
-              // setLoading(false);
+  const handleviewQutotation = (id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    let tableData;
+    axios
+      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then(function (response) {
+        const QuotationData = response.data.data1;
+        console.log(QuotationData);
+        axios
+          .get(`${BaseUrl}/total/view/${id}`, {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          })
+          .then(function (response2) {
+            tableData = response2.data.data;
+            let mainTotal = 0;
+            for (const item of tableData) {
+              mainTotal += item.total;
+            }
+            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+            if (!Array.isArray(tableData)) {
+              tableData = [tableData];
+            }
+            console.log("tabledataa", tableData);
+            let architecNames = "";
+            let carpenterNames = "";
+            let shopNames = "";
+
+            if (QuotationData.architec) {
+              architecNames = QuotationData.architec
+                .map((architec) => architec.architecsName)
+                .join(", ");
+            }
+            if (QuotationData.carpenter) {
+              carpenterNames = QuotationData.carpenter
+                .map((carpenter) => carpenter.carpentersName)
+                .join(", ");
+            }
+            if (QuotationData.shop) {
+              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+            }
+            const innerTableRows = tableData.map((item, index) => (
+              <tr key={index}>
+                <td className="break-words border">{item.description}</td>
+                <td className="break-words border">{item.area}</td>
+                <td className="border ">{item.size}</td>
+                <td className="border ">{item.rate}</td>
+                <td className="border ">{item.quantity}</td>
+                <td className="border ">{item.total}</td>
+              </tr>
+            ));
+            setselectedQuotationDetails({
+              tokenNo: QuotationData.serialNumber,
+              Date: QuotationData.Date,
+              name: QuotationData.userName,
+              mobileNo: QuotationData.mobileNo,
+              address: QuotationData.address,
+              innerTable: innerTableRows,
+              mainTotal: mainTotal,
+              architec: architecNames,
+              carpenter: carpenterNames,
+              shop: shopNames,
+              sales: salesName,
             });
-        })
-        .catch(function (error) {
-          console.log(error);
-          // setLoading(false);
-        });
-    };
-  
-    const handleviewdata = (id) => {
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const handleviewdata = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
     axios
@@ -139,34 +123,37 @@ function Row(props) {
         console.log(error);
       });
   };
+
   const handleDelete = () => {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        axios
-          .delete(
-            `${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${saved}`,
-              },
-            }
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+      .delete(
+        `${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response.data.data);
+        setCarpenter((prevCarpenters) =>
+          prevCarpenters.filter(
+            (carpenter) => carpenter._id !== selectedCarpenterId
           )
-          .then(function (response) {
-            console.log(response.data.data);
-            setCarpenter((prevCarpenters) =>
-              prevCarpenters.filter(
-                (carpenter) => carpenter._id !== selectedCarpenterId
-              )
-            );
-            setShowDeleteConfirmation(false);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
+        );
+        setShowDeleteConfirmation(false);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const confirmDelete = (id) => {
     setSelectedCarpenterId(id);
     setShowDeleteConfirmation(true);
   };
+
   const handleSubmit = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -176,8 +163,8 @@ function Row(props) {
         },
       })
       .then(function (response) {
-        setUser({ user: response.data.data }); 
-        console.log({ user: response.data.data });
+        setQuotation({ Quotation: response.data.data });
+        console.log({ Quotation: response.data.data });
       })
       .catch(function (error) {
         console.log(error);
@@ -186,8 +173,8 @@ function Row(props) {
   return (
     <>
       <React.Fragment>
-        <TableRow style={{borderBottom:'3px solid rgba(224, 224, 224, 1)'}}>
-          <TableCell  onClick={() => handleSubmit(row._id)}>
+        <TableRow style={{ borderBottom: '3px solid rgba(224, 224, 224, 1)' }}>
+          <TableCell onClick={() => handleSubmit(row._id)}>
             <IconButton
               aria-label="expand row"
               size="small"
@@ -196,7 +183,7 @@ function Row(props) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" style={{textTransform:"uppercase" }}>
+          <TableCell component="th" scope="row" style={{ textTransform: "uppercase" }}>
             {row.carpentersName}
           </TableCell>
           <TableCell align="center">
@@ -222,7 +209,7 @@ function Row(props) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-               Quotation
+                  Quotation
                 </Typography>
                 <div>
                   <Table size="small" aria-label="purchases">
@@ -236,38 +223,38 @@ function Row(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {user.user?.map((userRow) => (
-                        <TableRow key={userRow._id}>
+                      {Quotation.Quotation?.map((QuotationRow) => (
+                        <TableRow key={QuotationRow._id}>
                           <TableCell
                             align="center"
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
-                            {userRow.serialNumber}
+                            {QuotationRow.serialNumber}
                           </TableCell>
                           <TableCell
                             component="th"
                             scope="row"
                             align="center"
-                            style={{ width: "15%" ,textTransform:"uppercase"}}
+                            style={{ width: "15%", textTransform: "uppercase" }}
                           >
-                            {userRow.userName}
+                            {QuotationRow.userName}
                           </TableCell>
                           <TableCell align="center" style={{ width: "15%" }}>
-                            {userRow.mobileNo}
+                            {QuotationRow.mobileNo}
                           </TableCell>
                           <TableCell
                             align="center"
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
-                            {userRow.address}
+                            {QuotationRow.address}
                           </TableCell>
-                          
-                          <TableCell align="center"  style={{ wordBreak: "break-word", width:'15%'  }}>
-                        <FaStreetView 
-                        align="center" 
-                        className="fs-5 mx-auto"
-                        onClick={() => handleviewQutotation(userRow._id)}/>
-                        </TableCell>
+
+                          <TableCell align="center" style={{ wordBreak: "break-word", width: '15%' }}>
+                            <FaStreetView
+                              align="center"
+                              className="fs-5 mx-auto"
+                              onClick={() => handleviewQutotation(QuotationRow._id)} />
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -278,6 +265,7 @@ function Row(props) {
           </TableCell>
         </TableRow>
       </React.Fragment>
+
       <Modal
         show={showDeleteConfirmation}
         onHide={() => setShowDeleteConfirmation(false)}
@@ -305,11 +293,11 @@ function Row(props) {
         onHide={() => setSelectedCarpenterDetails(null)}
       >
         <Modal.Body className="bg-white rounded">
-          {selectedCarpenterDetails ? (
+          {selectedCarpenterDetails !== null && (
             <div className="pl-10 md:pl-24">
-              <table className="w-full table-fixed ">
+              <table className="w-full table-fixed">
                 <tr>
-                  <th className="py-2 sm:px-0">carpenter Name</th>
+                  <th className="py-2 sm:px-0">Carpenter Name</th>
                   <td> {selectedCarpenterDetails.carpentersName}</td>
                 </tr>
                 <tr>
@@ -324,12 +312,10 @@ function Row(props) {
                 </tr>
               </table>
             </div>
-          ) : (
-            <p>....Loading</p>
           )}
           <div className="flex justify-center mt-2">
             <div
-              className="btn bg-black text-white rounded-full py-2 px-4 mt-2 "
+              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
               onClick={() => setSelectedCarpenterDetails(null)}
             >
               Close
@@ -337,110 +323,111 @@ function Row(props) {
           </div>
         </Modal.Body>
       </Modal>
+
       <Modal
-  show={selectedQuotationDetails !== null}
-  onHide={() => setselectedQuotationDetails(null)}
->
-  <Modal.Body className="bg-white rounded">
-    {selectedQuotationDetails ? (
-      <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
-          <tbody>
-            <tr>
-              <th classname="m-table">Token No</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.tokenNo}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Date</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.Date}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Name </th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table" className="break-words uppercase">
-                {selectedQuotationDetails.name}
-              </td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Mobile No</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.mobileNo}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Address</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table" className="break-words">
-                {selectedQuotationDetails.address}
-              </td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Architec</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.architec}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Carpenter</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.carpenter}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">shop</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.shop}</td>
-            </tr>
-            <tr>
-              <th sclassname="m-table">Sales Person</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td sclassname="m-table">{selectedQuotationDetails.sales}</td>
-            </tr>
-            <tr className=" text-center">
-                      <table className="table-container border border-separate my-3">
-                        <thead>
-                          <tr>
-                            <th className="border">Description</th>
-                            <th className="border ">Area</th>
-                            <th className="border ">Size</th>
-                            <th className="border ">Rate</th>
-                            <th className="border ">Quantity</th>
-                            <th className="border ">Total</th>
-                          </tr>
-                        </thead>
-                        <tbody>{selectedQuotationDetails.innerTable}</tbody>
-                        <tr className="text-right">
-                      <th colSpan="5">Main Total:</th>
-                      <td className="border">{selectedQuotationDetails.mainTotal}</td>
-                    </tr>
-                      </table>
-                    </tr>
-                    </tbody>
-        </table>
-      </div>
-    ) : (
-      <p>....Loading</p>
-    )}
-    <div className="flex justify-center mt-2">
-      <div
-        className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
-        onClick={() => setselectedQuotationDetails(null)}
+        show={selectedQuotationDetails !== null}
+        onHide={() => setselectedQuotationDetails(null)}
       >
-        Close
-      </div>
-    </div>
-  </Modal.Body>
-</Modal>
+        <Modal.Body className="bg-white rounded">
+          {selectedQuotationDetails!== null &&(
+            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+              <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+                <tbody>
+                  <tr>
+                    <th classname="m-table">Token No</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.tokenNo}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Date</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.Date}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Name </th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table" className="break-words uppercase">
+                      {selectedQuotationDetails.name}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Mobile No</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.mobileNo}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Address</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table" className="break-words">
+                      {selectedQuotationDetails.address}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Architec</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.architec}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Carpenter</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.carpenter}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">shop</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.shop}</td>
+                  </tr>
+                  <tr>
+                    <th sclassname="m-table">Sales Person</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td sclassname="m-table">{selectedQuotationDetails.sales}</td>
+                  </tr>
+                  <tr className=" text-center">
+                    <table className="table-container border border-separate my-3">
+                      <thead>
+                        <tr>
+                          <th className="border">Description</th>
+                          <th className="border ">Area</th>
+                          <th className="border ">Size</th>
+                          <th className="border ">Rate</th>
+                          <th className="border ">Quantity</th>
+                          <th className="border ">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>{selectedQuotationDetails.innerTable}</tbody>
+                      <tr className="text-right">
+                        <th colSpan="5">Main Total:</th>
+                        <td className="border">{selectedQuotationDetails.mainTotal}</td>
+                      </tr>
+                    </table>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          ) }
+          <div className="flex justify-center mt-2">
+            <div
+              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+              onClick={() => setselectedQuotationDetails(null)}
+            >
+              Close
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
 
 export default function Carpenterlist() {
-  const [carpenter, setCarpenter] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] =React.useState(1);
+  const [carpenter, setCarpenter] = React.useState([]);//to show carpenter list (data)
+  const [isLoading, setIsLoading] = React.useState(true);//set loader when api response get the data
+  const [currentPage, setCurrentPage] = React.useState(1);//set page for pagination
   const itemsPerPage = 10;
+
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
     axios
       .get(`${BaseUrl}/carpenter/list`, {
         headers: {
@@ -456,6 +443,7 @@ export default function Carpenterlist() {
         setIsLoading(false);
       });
   }, []);
+
   const totalPages = Math.ceil(carpenter.length / itemsPerPage);
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
@@ -465,30 +453,32 @@ export default function Carpenterlist() {
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = carpenter.slice(startIndex, endIndex);
 
-    const handleSearch = (carpentersName) => {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        axios
-          .get(
-            `${BaseUrl}/carpenter/searchdata?carpentersName=${carpentersName}`,
-            {
-              headers: {
-                Authorization: `Bearer ${saved}`,
-              },
-            }
-          )
-          .then(function (response) {
-            console.log(response.data.data);
-            setCarpenter(response.data.data);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      };
+  const handleSearch = (carpentersName) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+      .get(
+        `${BaseUrl}/carpenter/searchdata?carpentersName=${carpentersName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response.data.data);
+        setCarpenter(response.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-    <Spinner animation="border" variant="dark" />
-  </div>;
+      <Spinner animation="border" variant="dark" />
+    </div>;
   }
+
   return (
     <>
       <div className="bg-dark text-white rounded-br-full">
@@ -501,8 +491,6 @@ export default function Carpenterlist() {
               <div className="relative ">
                 <input
                   type="search"
-                  name=""
-                  id=""
                   className="search-input py-1  pr-2 ps-10 md:w-80 w-40 rounded-md	text-black"
                   onChange={(e) => handleSearch(e.target.value)}
                 />
@@ -541,21 +529,21 @@ export default function Carpenterlist() {
                 <TableCell align="center">Edit</TableCell>
               </TableRow>
             </TableHead>
-             <TableBody>
-        {itemsToDisplay.map((row) =>
-          row && row.carpentersName ? (
-            <Row key={row._id} row={row} setCarpenter={setCarpenter} followDetails={row.followDetails} />
-          ) : null
-        )}
-      </TableBody>
+            <TableBody>
+              {itemsToDisplay.map((row) =>
+                row && row.carpentersName ? (
+                  <Row key={row._id} row={row} setCarpenter={setCarpenter} followDetails={row.followDetails} />
+                ) : null
+              )}
+            </TableBody>
           </Table>
         </TableContainer>
       </div>
       <div className="d-flex justify-center my-3">
-     <Stack spacing={2}>
-     <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
-    </Stack>
-     </div>
+        <Stack spacing={2}>
+          <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
+        </Stack>
+      </div>
     </>
   );
 }

@@ -23,7 +23,7 @@ import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
-import{AiOutlinePlus}from"react-icons/ai"
+import { AiOutlinePlus } from "react-icons/ai"
 import Spinner from 'react-bootstrap/Spinner';
 import { DropdownButton, Dropdown } from 'react-bootstrap';
 import Pagination from '@mui/material/Pagination';
@@ -31,17 +31,16 @@ import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
-  const { row ,setSalesperson,startDate,endDate,selectedFilter} = props;
-  const [open, setOpen] = React.useState(false);
-  const [salespersonID, setSalespersonId] = React.useState(null);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] =
-  React.useState(false);
-  const [selectedSalesperson, setSelectedSalesperson] = React.useState(null);
-  const [datesSelected, setDatesSelected] =React.useState(false);
-  const [user, setUser] = React.useState([]);
+  const { row, setSalesperson, startDate, endDate, selectedFilter } = props;//pass props for export salelist
+  const [open, setOpen] = React.useState(false);//open dropdown of Quotation data
+  const [salespersonID, setSalespersonId] = React.useState(null);//set salesperson id to delete data
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);//set confirmation for delete data
+  const [selectedSalesperson, setSelectedSalesperson] = React.useState(null);//to show salesperson data in model
+  const [datesSelected, setDatesSelected] = React.useState(false);//set the date which is
+  const [Quotation, setQuotation] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
-  React.useState(null);
- 
+    React.useState(null);
+
   const handleviewQutotation = (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
@@ -52,8 +51,8 @@ function Row(props) {
         },
       })
       .then(function (response) {
-        const userData = response.data.data1;
-        console.log(userData);
+        const QuotationData = response.data.data1;
+        console.log(QuotationData);
         axios
           .get(`${BaseUrl}/total/view/${id}`, {
             headers: {
@@ -66,7 +65,7 @@ function Row(props) {
             for (const item of tableData) {
               mainTotal += item.total;
             }
-            const salesName = userData.sales ? userData.sales.Name : "";
+            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
             if (!Array.isArray(tableData)) {
               tableData = [tableData];
             }
@@ -75,18 +74,18 @@ function Row(props) {
             let carpenterNames = "";
             let shopNames = "";
 
-            if (userData.architec) {
-              architecNames = userData.architec
+            if (QuotationData.architec) {
+              architecNames = QuotationData.architec
                 .map((architec) => architec.architecsName)
                 .join(", ");
             }
-            if (userData.carpenter) {
-              carpenterNames = userData.carpenter
+            if (QuotationData.carpenter) {
+              carpenterNames = QuotationData.carpenter
                 .map((carpenter) => carpenter.carpentersName)
                 .join(", ");
             }
-            if (userData.shop) {
-              shopNames = userData.shop.map((shop) => shop.shopName).join(", ");
+            if (QuotationData.shop) {
+              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
             }
             const innerTableRows = tableData.map((item, index) => (
               <tr key={index}>
@@ -99,11 +98,11 @@ function Row(props) {
               </tr>
             ));
             setselectedQuotationDetails({
-              tokenNo: userData.serialNumber,
-              Date:userData.Date,
-              name: userData.userName,
-              mobileNo: userData.mobileNo,
-              address: userData.address,
+              tokenNo: QuotationData.serialNumber,
+              Date: QuotationData.Date,
+              name: QuotationData.userName,
+              mobileNo: QuotationData.mobileNo,
+              address: QuotationData.address,
               innerTable: innerTableRows,
               mainTotal: mainTotal,
               architec: architecNames,
@@ -138,6 +137,7 @@ function Row(props) {
         console.log(error);
       });
   };
+
   const handleDelete = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -161,78 +161,71 @@ function Row(props) {
     setSalespersonId(id);
     setShowDeleteConfirmation(true);
   };
- 
-  const handleSubmit = (id,startDate,endDate,selectedFilter) => {
-       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
+  const handleSubmit = (id, startDate, endDate, selectedFilter) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let apiUrl = `${BaseUrl}/salesPerson/salespersonid/${id}?`;
 
     if (startDate && endDate) {
       apiUrl += `startDate=${startDate}&endDate=${endDate}`;
     }
-    if(selectedFilter){
+    if (selectedFilter) {
       apiUrl += `&status=${selectedFilter}`
     }
-    console.log("API URL:", apiUrl); 
+    console.log("API URL:", apiUrl);
     axios
-    .get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${saved}`,
-      },
-    })
-    .then(function (response) {
-      if (response.data.data && response.data.data.length > 0) {
-        setUser({ user: response.data.data[0].connectedUsers });
-      } else {
-        setUser([]); 
-      }
-      // console.log("API Response:", response.data);
-      // setUser({user:response.data.data[0].connectedUsers});
-      // console.log("user", response.data.data[0].connectedUsers[0].followDetails);
-      // console.log(">>>>>>>>>", startDate, endDate, id,selectedFilter);
+      .get(apiUrl, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then(function (response) {
+        if (response.data.data && response.data.data.length > 0) {
+          setQuotation({ Quotation: response.data.data[0].connectedUsers });
+        } else {
+          setQuotation([]);
+        }
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-  console.log(">>>>",datesSelected);
+  console.log(">>>>", datesSelected);
 
-React.useEffect(() => {
+  React.useEffect(() => {
     if ((startDate && endDate) || selectedFilter) {
       handleSubmit(row._id, startDate, endDate, selectedFilter);
-      setDatesSelected(true); 
+      setDatesSelected(true);
     } else {
       setDatesSelected(false);
     }
-  }, [row._id,startDate, endDate, selectedFilter]);
+  }, [row._id, startDate, endDate, selectedFilter]);
 
   function getTrueStatus(followDetails) {
-    if (!followDetails || !Array.isArray(followDetails)) {
-      return 'Status not available';
-    }
-  
+
     if (followDetails.some((detail) => detail.Approve)) {
       return 'Approve';
     }
-    
+
     if (followDetails.some((detail) => detail.Reject)) {
       return 'Reject';
-    }    
-    if (followDetails.some((detail)=>detail.followup )) {
-      
+    }
+    if (followDetails.some((detail) => detail.followup)) {
+
       return 'Follow up';
     }
-    if (followDetails.some((detail)=>detail.none )) {
-      
+    if (followDetails.some((detail) => detail.none)) {
+
       return followDetails;
     }
   }
- 
+
   return (
     <>
       <React.Fragment>
-    
-        <TableRow style={{borderBottom:'3px solid rgba(224, 224, 224, 1)'}}>
-          <TableCell onClick={() => handleSubmit(row._id,startDate,endDate,selectedFilter)}>
+
+        <TableRow style={{ borderBottom: '3px solid rgba(224, 224, 224, 1)' }}>
+          <TableCell onClick={() => handleSubmit(row._id, startDate, endDate, selectedFilter)}>
             <IconButton
               aria-label="expand row"
               size="small"
@@ -241,8 +234,8 @@ React.useEffect(() => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" style={{textTransform:"uppercase" }}>
-          {row.Name}
+          <TableCell component="th" scope="row" style={{ textTransform: "uppercase" }}>
+            {row.Name}
           </TableCell>
           <TableCell align="center">
             <FaStreetView
@@ -252,7 +245,7 @@ React.useEffect(() => {
           </TableCell>
           <TableCell align="right">
             <MdDeleteForever
-               onClick={() => confirmDelete(row._id)}
+              onClick={() => confirmDelete(row._id)}
               className="mx-auto"
             />
           </TableCell>
@@ -282,46 +275,46 @@ React.useEffect(() => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {user.user?.map((Salerow) => (
-                        
+                      {Quotation.Quotation?.map((Salerow) => (
+
                         <TableRow key={Salerow._id}>
                           <TableCell
                             component="th"
                             scope="row"
                             align="center"
-                            style={{  width:'15%'}}
-                            >
+                            style={{ width: '15%' }}
+                          >
                             {Salerow.serialNumber}
                           </TableCell>
-                          <TableCell align="center" 
-                            style={{  width:'15%',textTransform:"uppercase" }}>
-                              {Salerow.userName}
+                          <TableCell align="center"
+                            style={{ width: '15%', textTransform: "uppercase" }}>
+                            {Salerow.userName}
                           </TableCell>
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width:'15%' }}
-                            >
+                            style={{ wordBreak: "break-word", width: '15%' }}
+                          >
                             {Salerow.mobileNo}
                           </TableCell>
-                         
+
                           <TableCell
                             align="center"
-                            style={{ wordBreak: "break-word", width:'15%'  }}
-                            >
+                            style={{ wordBreak: "break-word", width: '15%' }}
+                          >
                             {Salerow.address}
                           </TableCell>
-                        <TableCell
-                           align="center"
-                           style={{ wordBreak: "break-word", width:'15%'  }}
-                           >
-                          {getTrueStatus(Salerow.followDetails)}
+                          <TableCell
+                            align="center"
+                            style={{ wordBreak: "break-word", width: '15%' }}
+                          >
+                            {getTrueStatus(Salerow.followDetails)}
                           </TableCell>
-                          <TableCell align="center"  style={{ wordBreak: "break-word", width:'15%'  }}>
-                        <FaStreetView 
-                        align="center" 
-                        className="fs-5 mx-auto"  
-                        onClick={() => handleviewQutotation(Salerow._id)}/>
-                        </TableCell>
+                          <TableCell align="center" style={{ wordBreak: "break-word", width: '15%' }}>
+                            <FaStreetView
+                              align="center"
+                              className="fs-5 mx-auto"
+                              onClick={() => handleviewQutotation(Salerow._id)} />
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -359,7 +352,7 @@ React.useEffect(() => {
         onHide={() => setSelectedSalesperson(null)}
       >
         <Modal.Body className="bg-white rounded pl-10 pr-10">
-          {selectedSalesperson ? (
+          {selectedSalesperson !== null && (
             <div className=" pl-10 md:pl-24">
               <table className="w-full table-fixed">
                 <tr>
@@ -374,8 +367,6 @@ React.useEffect(() => {
                 </tr>
               </table>
             </div>
-          ) : (
-            <p>loading...</p>
           )}
           <div className="flex justify-center mt-2">
             <div
@@ -388,112 +379,112 @@ React.useEffect(() => {
         </Modal.Body>
       </Modal>
       <Modal
-  show={selectedQuotationDetails !== null}
-  onHide={() => setselectedQuotationDetails(null)}
->
-  <Modal.Body className="bg-white rounded">
-    {selectedQuotationDetails ? (
-      <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-        <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
-          <tbody>
-            <tr>
-              <th classname="m-table">Token No</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td className="m-table">{selectedQuotationDetails.tokenNo}</td>
-            </tr>
-            <tr>
-              <th classname="m-table">Date</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table">{selectedQuotationDetails.Date}</td>
-            </tr>
-            <tr>
-              <th classname="m-table">Name </th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table" className="break-words uppercase">
-                {selectedQuotationDetails.name}
-              </td>
-            </tr>
-            <tr>
-              <th classname="m-table">Mobile No</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table">{selectedQuotationDetails.mobileNo}</td>
-            </tr>
-            <tr>
-              <th classname="m-table">Address</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table" className="break-words">
-                {selectedQuotationDetails.address}
-              </td>
-            </tr>
-            <tr>
-              <th classname="m-table">Architec</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table">{selectedQuotationDetails.architec}</td>
-            </tr>
-            <tr>
-              <th classname="m-table">Carpenter</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td classname="m-table">{selectedQuotationDetails.carpenter}</td>
-            </tr>
-            <tr>
-              <th className="m-table">shop</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td className="m-table">{selectedQuotationDetails.shop}</td>
-            </tr>
-            <tr>
-              <th className="m-table">Sales Person</th>
-              <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-              <td className="m-table">{selectedQuotationDetails.sales}</td>
-            </tr>
-            <tr className="align-middle">
-                      <table className="table-container border border-separate my-3">
-                        <thead>
-                          <tr>
-                            <th className="border">Description</th>
-                            <th className="border ">Area</th>
-                            <th className="border ">Size</th>
-                            <th className="border ">Rate</th>
-                            <th className="border ">Quantity</th>
-                            <th className="border ">Total</th>
-                          </tr>
-                        </thead>
-                        <tbody>{selectedQuotationDetails.innerTable}</tbody>
-                        <tr className="text-right">
-                      <th colSpan="5">Main Total:</th>
-                      <td className="border">{selectedQuotationDetails.mainTotal}</td>
-                    </tr>
-                      </table>
-                    </tr>
-                    </tbody>
-        </table>
-      </div>
-    ) : (
-      <p>....Loading</p>
-    )}
-    <div className="flex justify-center mt-2">
-      <div
-        className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
-        onClick={() => setselectedQuotationDetails(null)}
+        show={selectedQuotationDetails !== null}
+        onHide={() => setselectedQuotationDetails(null)}
       >
-        Close
-      </div>
-    </div>
-  </Modal.Body>
-</Modal>
+        <Modal.Body className="bg-white rounded">
+          {selectedQuotationDetails !== null && (
+            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
+              <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
+                <tbody>
+                  <tr>
+                    <th classname="m-table">Token No</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td className="m-table">{selectedQuotationDetails.tokenNo}</td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Date</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table">{selectedQuotationDetails.Date}</td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Name </th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table" className="break-words uppercase">
+                      {selectedQuotationDetails.name}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Mobile No</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table">{selectedQuotationDetails.mobileNo}</td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Address</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table" className="break-words">
+                      {selectedQuotationDetails.address}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Architec</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table">{selectedQuotationDetails.architec}</td>
+                  </tr>
+                  <tr>
+                    <th classname="m-table">Carpenter</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td classname="m-table">{selectedQuotationDetails.carpenter}</td>
+                  </tr>
+                  <tr>
+                    <th className="m-table">shop</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td className="m-table">{selectedQuotationDetails.shop}</td>
+                  </tr>
+                  <tr>
+                    <th className="m-table">Sales Person</th>
+                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <td className="m-table">{selectedQuotationDetails.sales}</td>
+                  </tr>
+                  <tr className="align-middle">
+                    <table className="table-container border border-separate my-3">
+                      <thead>
+                        <tr>
+                          <th className="border">Description</th>
+                          <th className="border ">Area</th>
+                          <th className="border ">Size</th>
+                          <th className="border ">Rate</th>
+                          <th className="border ">Quantity</th>
+                          <th className="border ">Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>{selectedQuotationDetails.innerTable}</tbody>
+                      <tr className="text-right">
+                        <th colSpan="5">Main Total:</th>
+                        <td className="border">{selectedQuotationDetails.mainTotal}</td>
+                      </tr>
+                    </table>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="flex justify-center mt-2">
+            <div
+              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+              onClick={() => setselectedQuotationDetails(null)}
+            >
+              Close
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
 
 export default function Saleslist() {
-  const [salesperson, setSalesperson] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [startDate, setStartDate] = React.useState('');
-  const [endDate, setEndDate] =React.useState('');
-  const [selectedFilter, setSelectedFilter] =React.useState('');
-  const [page, setPage] = React.useState(1);
+  const [salesperson, setSalesperson] = React.useState([]);//show list of sales person
+  const [isLoading, setIsLoading] = React.useState(true);//set loader when api response get data
+  const [startDate, setStartDate] = React.useState('');//set the form date which selected
+  const [endDate, setEndDate] = React.useState('');//set to date which selected
+  const [selectedFilter, setSelectedFilter] = React.useState('');//set Filter which selected
+  const [page, setPage] = React.useState(1);//set a page in pagination
   const rowsPerPage = 10;
+
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
     axios
       .get(`${BaseUrl}/salesPerson/AllList`, {
         headers: {
@@ -501,7 +492,7 @@ export default function Saleslist() {
         },
       })
       .then(function (response) {
-        console.log("??????????????S",response.data.data);
+        console.log("??????????????S", response.data.data);
         setSalesperson(response.data.data);
         setIsLoading(false);
       })
@@ -510,37 +501,38 @@ export default function Saleslist() {
         setIsLoading(false);
       });
   }, []);
- 
+
   const indexOfLastItem = page * rowsPerPage;
   const indexOfFirstItem = indexOfLastItem - rowsPerPage;
   const displayedSalesperson = salesperson.slice(indexOfFirstItem, indexOfLastItem);
-  
+
   const handlePageChange = (event, value) => {
     setPage(value);
-};
-const handleStartDateChange = (e) => {
-  const newStartDate = e.target.value; 
-  setStartDate(newStartDate);
-  if (!newStartDate) {
-    setStartDate("");
-  }
-};
+  };
 
-const handleEndDateChange = (e) => {
-  const newEndDate = e.target.value; 
-  setEndDate(newEndDate);
-  if (!newEndDate) {
-    setEndDate("");
-  }
-};
+  const handleStartDateChange = (e) => {
+    const newStartDate = e.target.value;
+    setStartDate(newStartDate);
+    if (!newStartDate) {
+      setStartDate("");
+    }
+  };
 
-const handleFilterChange = (filter) => {
-  setSelectedFilter(filter);
-  console.log(">>>>>>",filter,selectedFilter);
-};
+  const handleEndDateChange = (e) => {
+    const newEndDate = e.target.value;
+    setEndDate(newEndDate);
+    if (!newEndDate) {
+      setEndDate("");
+    }
+  };
+
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    console.log(">>>>>>", filter, selectedFilter);
+  };
 
   const handleSearch = (SalesPersonName) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);  
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .get(`${BaseUrl}/salesPerson/search/?SalesPersonName=${SalesPersonName}`, {
         headers: {
@@ -555,10 +547,11 @@ const handleFilterChange = (filter) => {
         console.log(error);
       });
   };
+
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-            <Spinner animation="border" variant="dark" />
-          </div>;
+      <Spinner animation="border" variant="dark" />
+    </div>;
   }
 
   return (
@@ -587,68 +580,67 @@ const handleFilterChange = (filter) => {
         </Container>
       </div>
       <Container>
-  <div className="row md:mx-auto mx-auto align-items-center">
-    <Col xs={12} md={4} lg={6} >
-      <Breadcrumb className="font-bold pb-1">
-        <Breadcrumb.Item
-          linkAs={Link}
-          linkProps={{ to: routeUrls.DASHBOARD }}
-        >
-          Dashboard
-        </Breadcrumb.Item>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: routeUrls.SALELIST }}>
-          Sales Person List
-        </Breadcrumb.Item>
-      </Breadcrumb>
-    </Col>
-    <Col xs={12} md={4} lg={3} className="d-flex align-items-center px-0">
+        <div className="row md:mx-auto mx-auto align-items-center">
+          <Col xs={12} md={4} lg={6} >
+            <Breadcrumb className="font-bold pb-1">
+              <Breadcrumb.Item
+                linkAs={Link}
+                linkProps={{ to: routeUrls.DASHBOARD }}
+              >
+                Dashboard
+              </Breadcrumb.Item>
+              <Breadcrumb.Item linkAs={Link} linkProps={{ to: routeUrls.SALELIST }}>
+                Sales Person List
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col xs={12} md={4} lg={3} className="d-flex align-items-center px-0">
 
-    <p className="leading-normal">From</p>
-    <input
-      type="date"
-      name="date"
-      id="date"
-      className="border-solid border-2 border-black rounded px-1 mx-2"
-      value={startDate}
-      onChange={handleStartDateChange}
-    />
-    <p>To</p>
-    <input
-      type="date"
-      name="date"
-      id="date"
-      className="border-solid border-2 border-black rounded px-1 mx-2"
-      value={endDate}
-      onChange={handleEndDateChange}
-    />
+            <p className="leading-normal">From</p>
+            <input
+              type="date"
+              name="date"
+              id="date"
+              className="border-solid border-2 border-black rounded px-1 mx-2"
+              value={startDate}
+              onChange={handleStartDateChange}
+            />
+            <p>To</p>
+            <input
+              type="date"
+              name="date"
+              id="date"
+              className="border-solid border-2 border-black rounded px-1 mx-2"
+              value={endDate}
+              onChange={handleEndDateChange}
+            />
 
-    </Col>
-    <Col xs={12} md={4} lg={3} className="flex px-0 items-center md:my-0 my-2">
-   
-    <DropdownButton
-  id="filter-dropdown"
-  title="Filter By"
-  variant="white"
-  className=" px-2 mx-2 "
->
-  <Dropdown.Item onClick={() => handleFilterChange('approve')}>Approve</Dropdown.Item>
-  <Dropdown.Item onClick={() => handleFilterChange('reject')}>Reject</Dropdown.Item>
-  <Dropdown.Item onClick={() => handleFilterChange('followup')}>Follow Up</Dropdown.Item>
-  <Dropdown.Item onClick={() => handleFilterChange('none')}>None</Dropdown.Item>
-</DropdownButton>
+          </Col>
+          <Col xs={12} md={4} lg={3} className="flex px-0 items-center md:my-0 my-2">
+
+            <DropdownButton
+              id="filter-dropdown"
+              title="Filter By"
+              variant="white"
+              className=" px-2 mx-2 "
+            >
+              <Dropdown.Item onClick={() => handleFilterChange('approve')}>Approve</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleFilterChange('reject')}>Reject</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleFilterChange('followup')}>Follow Up</Dropdown.Item>
+              <Dropdown.Item onClick={() => handleFilterChange('none')}>None</Dropdown.Item>
+            </DropdownButton>
 
 
-      <Link to={`${routeUrls.SALEFORM}`}>
-            <div className="flex items-center border-solid border-2 border-black rounded px-1">
-            <p className="leading-normal pr-1">Add Sales Person</p>
-            <AiOutlinePlus className="fs-5" />
-            </div>
-          </Link>
-    </Col>
-  </div>
-</Container>
+            <Link to={`${routeUrls.SALEFORM}`}>
+              <div className="flex items-center border-solid border-2 border-black rounded px-1">
+                <p className="leading-normal pr-1">Add Sales Person</p>
+                <AiOutlinePlus className="fs-5" />
+              </div>
+            </Link>
+          </Col>
+        </div>
+      </Container>
 
- 
       <div className="container my-5 table-auto">
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
@@ -664,34 +656,26 @@ const handleFilterChange = (filter) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {salesperson
-                ? salesperson.map((row) =>
-                    row && row.Name ? (
-                      <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
-                      endDate={endDate} selectedFilter={selectedFilter}/>
-                    ) : null
-                  )
-                : null} */}
-                 {displayedSalesperson.map((row) =>
-      row && row.Name ? (
-          <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
-          endDate={endDate} selectedFilter={selectedFilter} />
-      ) : null
-  )}
+              {displayedSalesperson.map((row) =>
+                row && row.Name ? (
+                  <Row key={row._id} row={row} setSalesperson={setSalesperson} startDate={startDate}
+                    endDate={endDate} selectedFilter={selectedFilter} />
+                ) : null
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </div>
-   <div className="d-flex justify-center">
-   <Stack spacing={2}>
-   <Pagination
-        count={Math.ceil(salesperson.length / rowsPerPage)}
-        page={page}
-        onChange={handlePageChange}
-        variant="outlined"
-    />
-    </Stack>
-   </div>
+      <div className="d-flex justify-center">
+        <Stack spacing={2}>
+          <Pagination
+            count={Math.ceil(salesperson.length / rowsPerPage)}
+            page={page}
+            onChange={handlePageChange}
+            variant="outlined"
+          />
+        </Stack>
+      </div>
     </>
   );
 }
