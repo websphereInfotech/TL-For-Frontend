@@ -207,7 +207,8 @@ function Architectureform() {
                   ...prevData,
                   architecsName: e.target.value,
                 }))
-              } />
+              }
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">
@@ -223,7 +224,8 @@ function Architectureform() {
                   ...prevData,
                   mobileNo: e.target.value,
                 }))
-              } />
+              }
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">Address :</Form.Label>
@@ -236,7 +238,8 @@ function Architectureform() {
                   ...prevData,
                   address: e.target.value,
                 }))
-              } />
+              }
+            />
           </Form.Group>
           <button type="submit" className="btn bg-black text-white w-full">
             Submit
@@ -246,8 +249,11 @@ function Architectureform() {
       <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            formData.message.includes("successful") ? "modal-success" : "modal-error"
-          } >
+            formData.message.includes("successful")
+              ? "modal-success"
+              : "modal-error"
+          }
+        >
           {formData.message}
         </Modal.Body>
       </Modal>

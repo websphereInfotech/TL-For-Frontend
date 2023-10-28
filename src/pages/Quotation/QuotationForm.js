@@ -26,7 +26,7 @@ function QuotationForm() {
     showModal: false,
     message: "",
     isSuccess: false,
-  });
+  });  //show error message and create,update message
   
   const [architecture, setArchitecture] = useState([]); //architec in add drop dwon
   const [selectedArchitecture, setSelectedArchitecture] = useState([]); //api response in only name find

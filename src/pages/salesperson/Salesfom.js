@@ -5,14 +5,18 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+
 let BaseUrl = process.env.REACT_APP_BASEURL;
+
 function Salesform() {
-  const [Name, setName] = useState("");
-  const [mobileNo, setMoblieNo] = useState("");
-  const [message, setMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [Name, setName] = useState(""); // create salesperson
+  const [mobileNo, setMoblieNo] = useState(""); // create salesperson
+  const [message, setMessage] = useState(""); // show error message and create 
+  const [showModal, setShowModal] = useState(false); // show model
 
   useEffect(() => {
     if (id) {

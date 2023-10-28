@@ -1,23 +1,29 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Header from "../../components/Header";
 import { Breadcrumb, Container, Form } from "react-bootstrap";
+import Header from "../../components/Header";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
+
 let BaseUrl = process.env.REACT_APP_BASEURL;
+
 function Shopform() {
-  const [shopName, setShopName] = useState("");
-  const [mobileNo, setMoblieNo] = useState("");
-  const [address, setAddress] = useState("");
-  const [message, setMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [formData, setFormData] = useState({
+    shopName: "",
+    mobileNo: "",
+    address: "",
+    message: "",
+    showModal: false,
+  }); // Create New Shop
 
   useEffect(() => {
     if (id) {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
       axios
         .get(`${BaseUrl}/shop/viewdata/${id}`, {
           headers: {
@@ -26,35 +32,47 @@ function Shopform() {
         })
         .then(function (response) {
           const shopData = response.data.data;
-          setShopName(shopData.shopName);
-          setMoblieNo(shopData.mobileNo);
-          setAddress(shopData.address);
+          setFormData((prevData) => ({
+            ...prevData,
+            shopName : shopData.shopName,
+            mobileNo: shopData.mobileNo,
+            address: shopData.address,
+          }));
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     }
   }, [id]);
 
   const handleShop = (e) => {
     e.preventDefault();
+
+    const { shopName, mobileNo, address } = formData;
+
     if (!shopName && !mobileNo) {
-      setMessage("Please Fill Required Fields");
-      setShowModal(true);
+      setFormData((prevData) => ({
+        ...prevData,
+        message: "Please Fill Required Fields",
+        showModal: true,
+      }));
       return;
     }
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
     if (id) {
-      console.log(id);
       axios
         .put(
           `${BaseUrl}/shop/data/update/${id}`,
           {
-            shopName: shopName,
-            mobileNo: mobileNo,
-            address: address,
+            shopName,
+            mobileNo,
+            address,
           },
           {
             headers: {
@@ -64,26 +82,35 @@ function Shopform() {
         )
         .then(function (response) {
           if (response.data && response.data.status === "Success") {
-            setMessage("Shop  Update successful");
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: "Shop Update successful",
+              showModal: true,
+            }));
           } else {
-            setMessage(response.data.message);
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: response.data.message,
+              showModal: true,
+            }));
           }
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.response.data.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     } else {
       axios
         .post(
           `${BaseUrl}/shop/data/create`,
           {
-            shopName: shopName,
-            mobileNo: mobileNo,
-            address: address,
+            shopName,
+            mobileNo,
+            address,
           },
           {
             headers: {
@@ -93,29 +120,44 @@ function Shopform() {
         )
         .then(function (response) {
           if (response.data && response.data.status === "Success") {
-            setMessage("Shop Create successful");
-            setShowModal(true);
+            const saved = response.data.token;
+            localStorage.setItem(process.env.REACT_APP_KEY, saved);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: "Shop Create successful",
+              showModal: true,
+            }));
           } else {
-            setMessage(response.data.message);
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: response.data.message,
+              showModal: true,
+            }));
           }
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.response.data.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     }
   };
+
   const handleClose = useCallback(() => {
-    setShowModal(false);
-    if (message.includes("successful")) {
+    setFormData((prevData) => ({
+      ...prevData,
+      showModal: false,
+    }));
+    if (formData.message.includes("successful")) {
       navigate(routeUrls.DASHBOARD);
     }
-  }, [message, navigate]);
+  }, [formData.message, navigate]);
 
   useEffect(() => {
-    if (showModal) {
+    if (formData.showModal) {
       const timer = setTimeout(() => {
         handleClose();
       }, 2000);
@@ -124,7 +166,8 @@ function Shopform() {
         clearTimeout(timer);
       };
     }
-  }, [showModal, handleClose]);
+  }, [formData.showModal, handleClose]);
+
   return (
     <>
       <Header />
@@ -136,13 +179,16 @@ function Shopform() {
           >
             Dashboard
           </Breadcrumb.Item>
-          <Breadcrumb.Item linkAs={Link} linkProps={{ to: routeUrls.SHOPFORM }}>
+          <Breadcrumb.Item
+            linkAs={Link}
+            linkProps={{ to: routeUrls.SHOPFORM }}
+          >
             ShopForm
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
       <p className="md:text-4xl text-2xl font-bold text-center mb-3">
-        {id ? "Update ShopForm" : "Create ShopForm"}
+        {id ? "Update  ShopForm" : "Create ShopForm"}
       </p>
       <Container>
         <Form className="w-50 mx-auto" onSubmit={handleShop}>
@@ -153,9 +199,14 @@ function Shopform() {
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Shop Name :"
-              value={shopName}
-              onChange={(e) => setShopName(e.target.value)}
+              placeholder="Shop Name"
+              value={formData.shopName}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  shopName: e.target.value,
+                }))
+              }
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -165,18 +216,28 @@ function Shopform() {
             </Form.Label>
             <Form.Control
               type="text"
-              placeholder="Moblie No :"
-              value={mobileNo}
-              onChange={(e) => setMoblieNo(e.target.value)}
+              placeholder="Moblie No"
+              value={formData.mobileNo}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  mobileNo: e.target.value,
+                }))
+              }
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">Address :</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Address :"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Address"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  address: e.target.value,
+                }))
+              }
             />
           </Form.Group>
           <button type="submit" className="btn bg-black text-white w-full">
@@ -184,13 +245,15 @@ function Shopform() {
           </button>
         </Form>
       </Container>
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            message.includes("successful") ? "modal-success" : "modal-error"
+            formData.message.includes("successful")
+              ? "modal-success"
+              : "modal-error"
           }
         >
-          {message}
+          {formData.message}
         </Modal.Body>
       </Modal>
     </>
