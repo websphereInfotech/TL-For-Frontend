@@ -25,19 +25,16 @@ function getTrueStatus(followDetails) {
 
 function Row({ row, setQuotation }) {
 
-  const [open, setOpen] = React.useState(false); //su open karo cho
-  const [selectedQuotationID, setSelectedQuotationId] = React.useState(null);
+  const [open, setOpen] = React.useState(false); //open dropdown of quotation connected person.
+  const [selectedQuotationID, setSelectedQuotationId] = React.useState(null);//set the quotation id to delete .
   const [showDeleteConfirmation, setShowDeleteConfirmation] =
-    React.useState(false);
+    React.useState(false); //for delete data (confirmation)
   const [selectedQuotationDetails, setselectedQuotationDetails] =
-    React.useState(null);
-  const [disableDropdown, setDisableDropdown] = React.useState(false);
-
-  //sudharo states
-  const [approve, setApprove] = React.useState('');
-  const [reject, setReject] = React.useState('');
-  const [followUp, setFollowUp] = React.useState(true);
-  const [selectedValue, setSelectedValue] = React.useState("Follow Up")
+    React.useState(null);//show the value of Quotation in model
+  const [disableDropdown, setDisableDropdown] = React.useState(false);//select tags dropdown disable
+  const [approve, setApprove] = React.useState('');// set the approve true or false
+  const [reject, setReject] = React.useState('');//set the reject true or false
+  const [followUp, setFollowUp] = React.useState(true);//set the follow true or false
 
   const handleviewdata = (id) => {
 
@@ -208,12 +205,12 @@ function Row({ row, setQuotation }) {
           },
         }
       );
-      if (response.data.status === "Success") {
-        if (action === "Approve") {
+      if (response.data === followUp) {
+        if (approve) {
           setApprove(true);
           setReject(false);
           setFollowUp(false);
-        } else if (action === "Reject") {
+        } else if (reject) {
           setApprove(false);
           setReject(true);
           setFollowUp(false);
@@ -228,9 +225,7 @@ function Row({ row, setQuotation }) {
   };
 
   const handleSelectChange = (event) => {
-
     const selectedValue = event.target.value;
-    setSelectedValue(selectedValue);
     
     if (selectedValue === 'Approve') {
       handleApproveReject(row._id, 'Approve');
@@ -430,6 +425,8 @@ function Row({ row, setQuotation }) {
           </TableCell>
         </TableRow>
       </React.Fragment>
+
+
       <Modal
         show={showDeleteConfirmation}
         onHide={() => setShowDeleteConfirmation(false)}
@@ -451,12 +448,13 @@ function Row({ row, setQuotation }) {
           </div>
         </div>
       </Modal>
+      
       <Modal
         show={selectedQuotationDetails !== null}
         onHide={() => setselectedQuotationDetails(null)}
       >
         <Modal.Body className="bg-white rounded">
-          {selectedQuotationDetails ? (
+          {selectedQuotationDetails !== null &&(
             <div style={{ maxWidth: '400px', margin: '0 auto' }}>
               <table className="view-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
                 <tbody>
@@ -531,9 +529,7 @@ function Row({ row, setQuotation }) {
                 </tbody>
               </table>
             </div>
-          ) : (
-            <p>....Loading</p>
-          )}
+          ) }
           <div className="flex justify-center mt-2">
             <div
               className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
@@ -549,10 +545,11 @@ function Row({ row, setQuotation }) {
   );
 }
 export default function Quotationlist() {
-  const [quotation, setQuotation] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [currentPage, setCurrentPage] = React.useState(1);
+  const [quotation, setQuotation] = React.useState([]);//show the data of Quotation
+  const [isLoading, setIsLoading] = React.useState(true);// loader set when api response get a late
+  const [currentPage, setCurrentPage] = React.useState(1);//for pagination page
   const itemsPerPage = 10;
+
   React.useEffect(() => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -570,6 +567,7 @@ export default function Quotationlist() {
         setIsLoading(false);
       });
   }, []);
+
   const totalPages = Math.ceil(quotation.length / itemsPerPage);
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
@@ -578,6 +576,7 @@ export default function Quotationlist() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = quotation.slice(startIndex, endIndex);
+
   const handleSearch = (inputValue) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
