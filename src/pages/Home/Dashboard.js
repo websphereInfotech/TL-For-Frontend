@@ -1,5 +1,4 @@
 import axios from "axios";
-// import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link,useNavigate } from "react-router-dom";
@@ -7,7 +6,6 @@ import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
 import Spinner from 'react-bootstrap/Spinner';
 let BaseUrl = process.env.REACT_APP_BASEURL
-// const Dashboard = lazy(() => import('./Dashboard'));
 
 function Dashboard() {
   const navigate = useNavigate(); 
@@ -43,14 +41,12 @@ function Dashboard() {
           architecCount: architecResponse.data.count,
           salespersonCount: salespersonResponse.data.count,
         });
-        console.log(">>>>>>>>>",quotationResponse.data);
         setLoading(false);
       } catch (error) {
         console.error(error);
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -73,8 +69,7 @@ function Dashboard() {
        <div className="d-flex justify-content-center align-items-center vh-100">
        <Spinner animation="border" variant="dark" />
      </div>
-      ) : (
-       
+      ) : ( 
         <>
         <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
         <div className="md:pl-12 pr-6 md:py-4 py-3 pl-2">

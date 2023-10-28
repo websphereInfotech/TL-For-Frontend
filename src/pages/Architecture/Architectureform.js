@@ -6,16 +6,19 @@ import axios from "axios";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 
-let BaseUrl = process.env.REACT_APP_BASEURL
+let BaseUrl = process.env.REACT_APP_BASEURL;
 
 function Architectureform() {
-  const [architecsName, setArchitecs] = useState("");
-  const [mobileNo, setMoblieNo] = useState("");
-  const [address, setAddress] = useState("");
-  const [message, setMessage] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [formData, setFormData] = useState({
+    architecsName: "",
+    mobileNo: "",
+    address: "",
+    message: "",
+    showModal: false,
+  }); // Create New Architecs
 
   useEffect(() => {
     if (id) {
@@ -29,34 +32,48 @@ function Architectureform() {
         })
         .then(function (response) {
           const architecData = response.data.data;
-          setArchitecs(architecData.architecsName);
-          setMoblieNo(architecData.mobileNo);
-          setAddress(architecData.address);
+          setFormData((prevData) => ({
+            ...prevData,
+            architecsName: architecData.architecsName,
+            mobileNo: architecData.mobileNo,
+            address: architecData.address,
+          }));
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.response.data.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     }
   }, [id]);
+
   const handleArchitecture = (e) => {
     e.preventDefault();
+    const { architecsName, mobileNo, address } = formData;
+
     if (!architecsName && !mobileNo) {
-      setMessage("Please Fill Required Fields");
-      setShowModal(true);
+      setFormData((prevData) => ({
+        ...prevData,
+        message: "Please Fill Required Fields",
+        showModal: true,
+      }));
       return;
     }
+
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     console.log(saved);
+
     if (id) {
       axios
         .put(
           `${BaseUrl}/architec/data/update/${id}`,
           {
-            architecsName: architecsName,
-            mobileNo: mobileNo,
-            address: address,
+            architecsName,
+            mobileNo,
+            address,
           },
           {
             headers: {
@@ -66,26 +83,35 @@ function Architectureform() {
         )
         .then(function (response) {
           if (response.data && response.data.status === "Success") {
-            setMessage("Architecture Update successful");
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: "Architecture Update successful",
+              showModal: true,
+            }));
           } else {
-            setMessage(response.data.message);
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: response.data.message,
+              showModal: true,
+            }));
           }
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.response.data.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     } else {
       axios
         .post(
           `${BaseUrl}/architec/data/create`,
           {
-            architecsName: architecsName,
-            mobileNo: mobileNo,
-            address: address,
+            architecsName,
+            mobileNo,
+            address,
           },
           {
             headers: {
@@ -97,29 +123,42 @@ function Architectureform() {
           if (response.data && response.data.status === "Success") {
             const saved = response.data.token;
             localStorage.setItem(process.env.REACT_APP_KEY, saved);
-            setMessage("Architecture Create successful");
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: "Architecture Create successful",
+              showModal: true,
+            }));
           } else {
-            setMessage(response.data.message);
-            setShowModal(true);
+            setFormData((prevData) => ({
+              ...prevData,
+              message: response.data.message,
+              showModal: true,
+            }));
           }
         })
         .catch(function (error) {
           console.log(error);
-          setMessage(error.response.data.message);
-          setShowModal(true);
+          setFormData((prevData) => ({
+            ...prevData,
+            message: error.response.data.message,
+            showModal: true,
+          }));
         });
     }
   };
+
   const handleClose = useCallback(() => {
-    setShowModal(false);
-    if (message.includes("successful")) {
+    setFormData((prevData) => ({
+      ...prevData,
+      showModal: false,
+    }));
+    if (formData.message.includes("successful")) {
       navigate(routeUrls.DASHBOARD);
     }
-  }, [message, navigate]);
+  }, [formData.message, navigate]);
 
   useEffect(() => {
-    if (showModal) {
+    if (formData.showModal) {
       const timer = setTimeout(() => {
         handleClose();
       }, 2000);
@@ -128,7 +167,8 @@ function Architectureform() {
         clearTimeout(timer);
       };
     }
-  }, [showModal, handleClose]);
+  }, [formData.showModal, handleClose]);
+
   return (
     <>
       <Header />
@@ -161,9 +201,13 @@ function Architectureform() {
             <Form.Control
               type="text"
               placeholder="Architec Name"
-              value={architecsName}
-              onChange={(e) => setArchitecs(e.target.value)}
-            />
+              value={formData.architecsName}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  architecsName: e.target.value,
+                }))
+              } />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">
@@ -173,31 +217,38 @@ function Architectureform() {
             <Form.Control
               type="text"
               placeholder="Moblie No"
-              value={mobileNo}
-              onChange={(e) => setMoblieNo(e.target.value)}
-            />
+              value={formData.mobileNo}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  mobileNo: e.target.value,
+                }))
+              } />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
             <Form.Label className="font-bold">Address :</Form.Label>
             <Form.Control
               type="text"
               placeholder="Address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
+              value={formData.address}
+              onChange={(e) =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  address: e.target.value,
+                }))
+              } />
           </Form.Group>
           <button type="submit" className="btn bg-black text-white w-full">
             Submit
           </button>
         </Form>
       </Container>
-      <Modal show={showModal} onHide={handleClose}>
+      <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            message.includes("successful") ? "modal-success" : "modal-error"
-          }
-        >
-          {message}
+            formData.message.includes("successful") ? "modal-success" : "modal-error"
+          } >
+          {formData.message}
         </Modal.Body>
       </Modal>
     </>
