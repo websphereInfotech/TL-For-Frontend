@@ -10,9 +10,8 @@ import { FaStreetView } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
+import { Breadcrumb, Col, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
-import Spinner from 'react-bootstrap/Spinner';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 let BaseUrl = process.env.REACT_APP_BASEURL
@@ -183,24 +182,24 @@ function Row({ row, setCarpenter }) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" style={{ textTransform: "uppercase" }}>
+          <TableCell component="th" scope="row" class="color uppercase">
             {row.carpentersName}
           </TableCell>
           <TableCell align="center">
             <FaStreetView
-              className="mx-auto"
+              className="mx-auto color"
               onClick={() => handleviewdata(row._id)}
             />
           </TableCell>
           <TableCell align="center">
             <MdDeleteForever
-              className="mx-auto"
+              className="mx-auto color"
               onClick={() => confirmDelete(row._id)}
             />
           </TableCell>
           <TableCell align="right">
             <Link to={`${routeUrls.CARPENTERFORM}/${row._id}`}>
-              <BiEdit className="mx-auto" />
+              <BiEdit className="mx-auto color"/>
             </Link>
           </TableCell>
         </TableRow>
@@ -208,42 +207,44 @@ function Row({ row, setCarpenter }) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6" className="color" gutterBottom component="div">
                   Quotation
                 </Typography>
                 <div>
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center">Token Number</TableCell>
-                        <TableCell align="center">Name</TableCell>
-                        <TableCell align="center">Mobile No.</TableCell>
-                        <TableCell align="center">Address</TableCell>
-                        <TableCell align="center">Detalis</TableCell>
+                        <TableCell align="center" class='color-1'>Token Number</TableCell>
+                        <TableCell align="center" class='color-1'>Name</TableCell>
+                        <TableCell align="center" class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center" class='color-1'>Address</TableCell>
+                        <TableCell align="center" class='color-1'>Detalis</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {Quotation.Quotation?.map((QuotationRow) => (
                         <TableRow key={QuotationRow._id}>
                           <TableCell
+                          class='color-1'
                             align="center"
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {QuotationRow.serialNumber}
                           </TableCell>
                           <TableCell
-                            component="th"
+                           class='color-1'
                             scope="row"
                             align="center"
                             style={{ width: "15%", textTransform: "uppercase" }}
                           >
                             {QuotationRow.userName}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%" }}>
+                          <TableCell align="center" class='color-1' style={{ width: "15%" }}>
                             {QuotationRow.mobileNo}
                           </TableCell>
                           <TableCell
                             align="center"
+                            class='color-1'
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {QuotationRow.address}
@@ -252,7 +253,7 @@ function Row({ row, setCarpenter }) {
                           <TableCell align="center" style={{ wordBreak: "break-word", width: '15%' }}>
                             <FaStreetView
                               align="center"
-                              className="fs-5 mx-auto"
+                              className="fs-5 mx-auto color"
                               onClick={() => handleviewQutotation(QuotationRow._id)} />
                           </TableCell>
                         </TableRow>
@@ -275,12 +276,12 @@ function Row({ row, setCarpenter }) {
             <p>Are you sure you want to delete this item?</p>
             <div className="modal-buttons">
               <button
-                className=" rounded-full"
+                className=" rounded-full n-color"
                 onClick={() => setShowDeleteConfirmation(false)}
               >
                 No
               </button>
-              <button className=" rounded-full" onClick={handleDelete}>
+              <button className=" rounded-full n-color" onClick={handleDelete}>
                 Yes
               </button>
             </div>
@@ -297,15 +298,15 @@ function Row({ row, setCarpenter }) {
             <div className="pl-10 md:pl-24">
               <table className="w-full table-fixed">
                 <tr>
-                  <th className="py-2 sm:px-0">Carpenter Name</th>
+                  <th className="py-2 sm:px-0 color">Carpenter Name</th>
                   <td> {selectedCarpenterDetails.carpentersName}</td>
                 </tr>
                 <tr>
-                  <th className="py-2 sm:px-0">Mobile No</th>
+                  <th className="py-2 sm:px-0 color">Mobile No</th>
                   <td> {selectedCarpenterDetails.mobileNo}</td>
                 </tr>
                 <tr>
-                  <th className="py-2 sm:px-0">Address</th>
+                  <th className="py-2 sm:px-0 color">Address</th>
                   <td className="break-words">
                     {selectedCarpenterDetails.address}
                   </td>
@@ -315,7 +316,7 @@ function Row({ row, setCarpenter }) {
           )}
           <div className="flex justify-center mt-2">
             <div
-              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+              className="btn n-color text-white rounded-full py-2 px-4 mt-2"
               onClick={() => setSelectedCarpenterDetails(null)}
             >
               Close
@@ -334,68 +335,68 @@ function Row({ row, setCarpenter }) {
               <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
                 <tbody>
                   <tr>
-                    <th classname="m-table">Token No</th>
+                    <th className="m-table color">Token No</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.tokenNo}</td>
+                    <td className="m-table">{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Date</th>
+                    <th className="m-table color">Date</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.Date}</td>
+                    <td className="m-table">{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Name </th>
+                    <th className="m-table color">Name </th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table" className="break-words uppercase">
+                    <td className="m-table break-words uppercase">
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Mobile No</th>
+                    <th className="m-table color">Mobile No</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.mobileNo}</td>
+                    <td className="m-table">{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Address</th>
+                    <th className="m-table color">Address</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table" className="break-words">
+                    <td className="m-table break-words">
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Architec</th>
+                    <th className="m-table color">Architec</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.architec}</td>
+                    <td className="m-table">{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Carpenter</th>
+                    <th className="m-table color">Carpenter</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.carpenter}</td>
+                    <td className="m-table">{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">shop</th>
+                    <th className="m-table color">shop</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.shop}</td>
+                    <td className="m-table">{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Sales Person</th>
+                    <th className="m-table color">Sales Person</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.sales}</td>
+                    <td className="m-table">{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
                       <thead>
                         <tr>
-                          <th className="border">Description</th>
-                          <th className="border ">Area</th>
-                          <th className="border ">Size</th>
-                          <th className="border ">Rate</th>
-                          <th className="border ">Quantity</th>
-                          <th className="border ">Total</th>
+                          <th className="border color">Description</th>
+                          <th className="border color ">Area</th>
+                          <th className="border color ">Size</th>
+                          <th className="border color ">Rate</th>
+                          <th className="border color ">Quantity</th>
+                          <th className="border color ">Total</th>
                         </tr>
                       </thead>
                       <tbody>{selectedQuotationDetails.innerTable}</tbody>
-                      <tr className="text-right">
+                      <tr className="text-right color">
                         <th colSpan="5">Main Total:</th>
                         <td className="border">{selectedQuotationDetails.mainTotal}</td>
                       </tr>
@@ -407,7 +408,7 @@ function Row({ row, setCarpenter }) {
           ) }
           <div className="flex justify-center mt-2">
             <div
-              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+              className="btn n-color text-white rounded-full py-2 px-4 mt-2"
               onClick={() => setselectedQuotationDetails(null)}
             >
               Close
@@ -454,6 +455,7 @@ export default function Carpenterlist() {
   const itemsToDisplay = carpenter.slice(startIndex, endIndex);
 
   const handleSearch = (carpentersName) => {
+    setCurrentPage(1);
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
       .get(
@@ -475,17 +477,18 @@ export default function Carpenterlist() {
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-      <Spinner animation="border" variant="dark" />
+     <h1 className="color font-bold text-4xl">
+      TIMBERLAND
+     </h1>
     </div>;
   }
 
   return (
     <>
-      <div className="bg-dark text-white rounded-br-full">
-        <Container>
+      <div className="n-color text-white rounded-br-full">
           <div className="row mb-3 py-3 lg:mx-0 ms-12">
             <Col md={6} sm={12}>
-              <p className="md:text-2xl text-xl font-bold">TIMBERLAND</p>
+              <p className="md:text-2xl text-xl font-bold pl-9">TIMBERLAND</p>
             </Col>
             <Col md={6} sm={12} className="lg:pl-40">
               <div className="relative ">
@@ -500,10 +503,9 @@ export default function Carpenterlist() {
               </div>
             </Col>
           </div>
-        </Container>
       </div>
       <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
+        <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.DASHBOARD }}
@@ -521,12 +523,12 @@ export default function Carpenterlist() {
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell>carpenter Name</TableCell>
-                <TableCell align="center" className="font-bold">
+                <TableCell class="color">carpenter Name</TableCell>
+                <TableCell class='color-1' align="center" className="font-bold">
                   Detalis
                 </TableCell>
-                <TableCell align="center">Delete</TableCell>
-                <TableCell align="center">Edit</TableCell>
+                <TableCell class='color-1'align="center">Delete</TableCell>
+                <TableCell class='color-1' align="center">Edit</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

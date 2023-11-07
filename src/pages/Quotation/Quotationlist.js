@@ -6,9 +6,8 @@ import { FaStreetView } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiSearch, BiEdit } from "react-icons/bi";
 import { MdDeleteForever } from "react-icons/md";
-import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
+import { Breadcrumb, Col, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
-import Spinner from 'react-bootstrap/Spinner';
 import { AiOutlineDownload } from "react-icons/ai"
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
@@ -215,7 +214,7 @@ function Row({ row, setQuotation }) {
           setReject(true);
           setFollowUp(false);
         }
-        localStorage.setItem(`status_${id}`, action);
+        localStorage.setItem(`selectedValue_${id}`, action);
       } else {
         console.log("Error:", response.data);
       }
@@ -223,10 +222,37 @@ function Row({ row, setQuotation }) {
       console.log(error);
     }
   };
+  // const handleSelectChange = (event) => {
+  //   const selectedValue = event.target.value;
+  //   const rowId = row._id; // Get the row ID for the current row
+
+  //   // Update the local state
+  //   setQuotation((prevQuotation) =>
+  //     prevQuotation.map((quotationRow) => {
+  //       if (quotationRow._id === rowId) {
+  //         return {
+  //           ...quotationRow,
+  //           selectedValue
+  //           // disableDropdown: disableDropdown,
+  //         };
+  //       }
+  //       return quotationRow;
+  //     })
+  //   );
+
+  //   localStorage.setItem(`status_${rowId}`, selectedValue);
+  //   if (selectedValue === 'Approve') {
+  //    handleApproveReject(rowId, 'Approve');
+  //     setDisableDropdown(true);
+  //   } else if (selectedValue === 'Reject') {
+  //     handleApproveReject(rowId, 'Reject');
+  //     setDisableDropdown(true);
+  //   } 
+  // };
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
-    
+
     if (selectedValue === 'Approve') {
       handleApproveReject(row._id, 'Approve');
       setDisableDropdown(true);
@@ -234,7 +260,7 @@ function Row({ row, setQuotation }) {
       handleApproveReject(row._id, 'Reject');
       setDisableDropdown(true);
     }
-    localStorage.setItem(`selectedValue_${row._id}`, selectedValue);
+    localStorage.setItem(`status_${row._id}`, selectedValue);
   };
 
   return (
@@ -250,29 +276,29 @@ function Row({ row, setQuotation }) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell component="th" scope="row" class="color">
             {row.serialNumber}
           </TableCell>
-          <TableCell component="th" scope="row" className="uppercase">
+          <TableCell component="th" scope="row" class="uppercase color">
             {row.userName}
           </TableCell>
           <TableCell align="center">
             <FaStreetView
-              className="mx-auto edit-icon"
+              className="mx-auto edit-icon color"
               style={{ cursor: "pointer" }}
               onClick={() => handleviewdata(row._id)}
             />
           </TableCell>
           <TableCell align="right">
             <MdDeleteForever
-              className="mx-auto delete-icon"
+              className="mx-auto delete-icon color"
               style={{ cursor: "pointer" }}
               onClick={() => confirmDelete(row._id)}
             />
           </TableCell>
           <TableCell align="right">
             <Link to={`${routeUrls.QUOTATION}/${row._id}`}>
-              <BiEdit className="mx-auto edit-icon" style={{ cursor: "pointer" }} />
+              <BiEdit className="mx-auto edit-icon color" style={{ cursor: "pointer" }} />
             </Link>
           </TableCell>
           <TableCell align="center" className="status-cell">
@@ -282,7 +308,7 @@ function Row({ row, setQuotation }) {
                 style={{
                   backgroundColor: "white",
                   color: "black",
-                  appearance: disableDropdown ? "none" : "auto"
+                  appearance: disableDropdown ? "none" :"auto"
                 }}
                 value={row.selectedValue}
                 onChange={handleSelectChange}
@@ -293,44 +319,46 @@ function Row({ row, setQuotation }) {
                 <option value="Reject">Reject</option>
               </select>
             ) : (
-              <p>
+              <p className="color">
                 {getTrueStatus(row.followDetails)}
               </p>
             )}
           </TableCell>
 
           <TableCell >
-            <AiOutlineDownload className="download-icon-cell" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
+            <AiOutlineDownload className="download-icon-cell color" onClick={() => handleDownloadPDF(row._id)} style={{ cursor: "pointer" }} />
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6" className="color" gutterBottom component="div">
                   Architec
                 </Typography>
                 <div className="md:nested-table-container">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center" >Architec Name</TableCell>
-                        <TableCell align="center" >Mobile No.</TableCell>
-                        <TableCell align="center" >Address</TableCell>
+                        <TableCell align="center" class='color-1'>Architec Name</TableCell>
+                        <TableCell align="center" class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center" class='color-1'>Address</TableCell>
                       </TableRow>
                     </TableHead>
                     {row.architecture && row.architecture.length > 0 && (
                       <TableBody>
                         {row.architecture?.map((architectureRow, index) => (
                           <TableRow key={index}>
-                            <TableCell component="th" scope="row" align="center" style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
+                            <TableCell class='color-1' scope="row" align="center" 
+                            style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
                               {architectureRow.architecsName}
                             </TableCell>
-                            <TableCell align="center" style={{ width: "15%" }}>
+                            <TableCell  class='color-1' align="center" style={{ width: "15%" }}>
                               {architectureRow.mobileNo}
                             </TableCell>
                             <TableCell
                               align="center"
+                              class='color-1'
                               style={{ wordBreak: "break-word", width: "15%" }}
                             >
                               {architectureRow.address}
@@ -349,7 +377,7 @@ function Row({ row, setQuotation }) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6"className="color" gutterBottom component="div">
                   Carpenter
                 </Typography>
                 <div className="md:nested-table-container">
@@ -358,21 +386,21 @@ function Row({ row, setQuotation }) {
                     aria-label="purchases" >
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center" >Carpenter Name</TableCell>
-                        <TableCell align="center" >Mobile No.</TableCell>
-                        <TableCell align="center" >Address</TableCell>
+                        <TableCell align="center"  class='color-1'>Carpenter Name</TableCell>
+                        <TableCell align="center"  class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center"  class='color-1'>Address</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.carpenter?.map((carpenterRow) => (
                         <TableRow>
-                          <TableCell component="th" scope="row" align="center" style={{ width: "15%", wordBreak: "break-word", textTransform: "uppercase" }}>
+                          <TableCell  class='color-1' scope="row" align="center" style={{ width: "15%", wordBreak: "break-word", textTransform: "uppercase" }}>
                             {carpenterRow.carpentersName}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {carpenterRow.mobileNo}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {carpenterRow.address}
                           </TableCell>
                         </TableRow>
@@ -388,7 +416,7 @@ function Row({ row, setQuotation }) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
+                <Typography variant="h6" className="color" gutterBottom component="div">
                   Shop
                 </Typography>
                 <div className="md:nested-table-container">
@@ -397,21 +425,21 @@ function Row({ row, setQuotation }) {
                     aria-label="purchases" >
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center" >Shop Name</TableCell>
-                        <TableCell align="center" >Mobile No.</TableCell>
-                        <TableCell align="center" >Address</TableCell>
+                        <TableCell align="center" class='color-1' >Shop Name</TableCell>
+                        <TableCell align="center"  class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center"  class='color-1'>Address</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.shop?.map((shopRow) => (
                         <TableRow>
-                          <TableCell component="th" scope="row" align="center" style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
+                          <TableCell scope="row" align="center" class='color-1' style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
                             {shopRow.shopName}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center" class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {shopRow.mobileNo}
                           </TableCell>
-                          <TableCell align="center" style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {shopRow.address}
                           </TableCell>
 
@@ -431,96 +459,96 @@ function Row({ row, setQuotation }) {
         show={showDeleteConfirmation}
         onHide={() => setShowDeleteConfirmation(false)}
       >
-        <div className="logout-model">
+        <div className="logout-model ">
           <div className="logout">
             <p>Are you sure you want to delete this item?</p>
             <div className="modal-buttons">
               <button
-                className=" rounded-full"
+                className=" rounded-full n-color"
                 onClick={() => setShowDeleteConfirmation(false)}
               >
                 No
               </button>
-              <button className=" rounded-full" onClick={handleDelete}>
+              <button className=" rounded-full n-color" onClick={handleDelete}>
                 Yes
               </button>
             </div>
           </div>
         </div>
       </Modal>
-      
+
       <Modal
         show={selectedQuotationDetails !== null}
         onHide={() => setselectedQuotationDetails(null)}
       >
         <Modal.Body className="bg-white rounded">
-          {selectedQuotationDetails !== null &&(
+          {selectedQuotationDetails !== null && (
             <div style={{ maxWidth: '400px', margin: '0 auto' }}>
               <table className="view-table" style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
                 <tbody>
                   <tr>
-                    <th className="m-table p-0">Token No</th>
+                    <th className="m-table  color">Token No</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.tokenNo}</td>
+                    <td className="m-table ">{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Date</th>
+                    <th className="m-table  color">Date</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.Date}</td>
+                    <td className="m-table">{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Name </th>
+                    <th className="m-table color">Name </th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table" className="break-words uppercase">
+                    <td className="break-words m-table uppercase">
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Mobile No</th>
+                    <th className="m-table color">Mobile No</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.mobileNo}</td>
+                    <td className="m-table">{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Address</th>
+                    <th className="m-table color">Address</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table" className="break-words">
+                    <td className="m-table break-words">
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Architec</th>
+                    <th className="m-table color">Architec</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.architec}</td>
+                    <td className="m-table">{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Carpenter</th>
+                    <th className="m-table color">Carpenter</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.carpenter}</td>
+                    <td className="m-table">{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">shop</th>
+                    <th className="m-table color">shop</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.shop}</td>
+                    <td className="m-table">{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
-                    <th sclassname="m-table">Sales Person</th>
+                    <th className="m-table color">Sales Person</th>
                     <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td sclassname="m-table">{selectedQuotationDetails.sales}</td>
+                    <td className="m-table">{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
                       <thead>
                         <tr>
-                          <th className="border">Description</th>
-                          <th className="border ">Area</th>
-                          <th className="border ">Size</th>
-                          <th className="border ">Rate</th>
-                          <th className="border ">Quantity</th>
-                          <th className="border ">Total</th>
+                          <th className="border color">Description</th>
+                          <th className="border color">Area</th>
+                          <th className="border color">Size</th>
+                          <th className="border color">Rate</th>
+                          <th className="border color">Quantity</th>
+                          <th className="border color">Total</th>
                         </tr>
                       </thead>
                       <tbody>{selectedQuotationDetails.innerTable}</tbody>
-                      <tr className="text-right">
+                      <tr className="text-right color">
                         <th colSpan="5">Main Total:</th>
                         <td className="border">{selectedQuotationDetails.mainTotal}</td>
                       </tr>
@@ -529,10 +557,10 @@ function Row({ row, setQuotation }) {
                 </tbody>
               </table>
             </div>
-          ) }
+          )}
           <div className="flex justify-center mt-2">
             <div
-              className="btn bg-black text-white rounded-full py-2 px-4 mt-2"
+              className="btn text-white n-color rounded-full py-2 px-4 mt-2"
               onClick={() => setselectedQuotationDetails(null)}
             >
               Close
@@ -568,7 +596,6 @@ export default function Quotationlist() {
       });
   }, []);
 
-  const totalPages = Math.ceil(quotation.length / itemsPerPage);
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
@@ -578,6 +605,7 @@ export default function Quotationlist() {
   const itemsToDisplay = quotation.slice(startIndex, endIndex);
 
   const handleSearch = (inputValue) => {
+    setCurrentPage(1);
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
 
@@ -589,7 +617,6 @@ export default function Quotationlist() {
         url = `${url}userName=${inputValue}`;
       }
     }
-
     axios
       .get(url, {
         headers: {
@@ -597,17 +624,8 @@ export default function Quotationlist() {
         },
       })
       .then(function (response) {
-        const updatedQuotation = response.data.data.map((row) => {
-          const savedSelectedValue = localStorage.getItem(`status_${row._id}`);
-          const status = getTrueStatus(row.Followdetails);
-          return {
-            ...row,
-            selectedValue: { savedSelectedValue },
-            status: status,
-            followDetails: row.followDetails,
-          };
-        });
-        setQuotation(updatedQuotation);
+
+        setQuotation(response.data.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -616,17 +634,19 @@ export default function Quotationlist() {
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-      <Spinner animation="border" variant="dark" />
+      <h1 className="color font-bold text-4xl">
+        TIMBERLAND
+      </h1>
     </div>;
   }
 
   return (
-    <>
-      <div className="bg-dark text-white rounded-br-full">
-        <Container>
+   <div>
+     <>
+      <div className="n-color text-white rounded-br-full">
           <div className="row mb-3 py-3 lg:mx-0 ms-12">
             <Col md={6} sm={12}>
-              <p className="md:text-2xl text-xl font-bold">TIMBERLAND</p>
+              <p className="md:text-2xl text-1xl font-bold pl-9" >TIMBERLAND</p>
             </Col>
             <Col md={6} sm={12} className="lg:pl-40">
               <div className="relative ">
@@ -637,16 +657,15 @@ export default function Quotationlist() {
                   className="search-input py-1 ps-10 pr-2 md:w-80 w-40 rounded-md	text-black"
                   onChange={(e) => handleSearch(e.target.value)}
                 />
-                <div className="absolute fs-5 bottom-1 left-2 text-black">
+                <div className="absolute fs-5 bottom-1 left-2 color">
                   <BiSearch />
                 </div>
               </div>
             </Col>
           </div>
-        </Container>
       </div>
-      <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
+      <div className="md:ps-24 ps-10 ">
+        <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.DASHBOARD }}
@@ -663,33 +682,46 @@ export default function Quotationlist() {
       </div>
       <div className="container my-5 table-auto">
         <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
+          <Table aria-label="collapsible table ">
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell>Token No.</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell align="center">Detalis</TableCell>
-                <TableCell align="center">Delete</TableCell>
-                <TableCell align="center">Edit</TableCell>
-                <TableCell align="center">Status</TableCell>
+                <TableCell class="color">Token No.</TableCell>
+                <TableCell class="color">Name</TableCell>
+                <TableCell align="center" class="color-1" >Detalis</TableCell>
+                <TableCell align="center" class="color-1" >Delete</TableCell>
+                <TableCell align="center" class="color-1" >Edit</TableCell>
+                <TableCell align="center" class="color-1" >Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {itemsToDisplay.map((row) =>
+  {itemsToDisplay.map((row) =>
+    row && row.userName ? (
+      <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
+    ) : null
+  )}
+</TableBody>
+            {/* <TableBody>
+              {quotation.map((row) =>
                 row && row.userName ? (
                   <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
                 ) : null
               )}
-            </TableBody>
+            </TableBody> */}
           </Table>
         </TableContainer>
       </div>
-      <div className="d-flex justify-center my-3">
+      {/* <div className="d-flex justify-center my-3">
         <Stack spacing={2}>
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
         </Stack>
-      </div>
+      </div> */}
+      <div className="d-flex justify-center my-3">
+  <Stack spacing={2}>
+    <Pagination count={Math.ceil(quotation.length / itemsPerPage)} page={currentPage} onChange={handlePageChange} variant="outlined" />
+  </Stack>
+</div>
     </>
+   </div>
   );
 }

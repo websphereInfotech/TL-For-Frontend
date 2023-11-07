@@ -172,7 +172,7 @@ function Shopform() {
     <>
       <Header />
       <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
+        <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.DASHBOARD }}
@@ -187,13 +187,13 @@ function Shopform() {
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
-      <p className="md:text-4xl text-2xl font-bold text-center mb-3">
+      <p className="md:text-4xl text-2xl color font-bold text-center mb-3">
         {id ? "Update  ShopForm" : "Create ShopForm"}
       </p>
       <Container>
         <Form className="w-50 mx-auto" onSubmit={handleShop}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label className="font-bold">
+            <Form.Label className="font-bold color">
               Shop Name
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
@@ -210,7 +210,7 @@ function Shopform() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label className="font-bold">
+            <Form.Label className="font-bold color">
               Moblie No.
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
@@ -227,7 +227,7 @@ function Shopform() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label className="font-bold">Address :</Form.Label>
+            <Form.Label className="font-bold color">Address :</Form.Label>
             <Form.Control
               type="text"
               placeholder="Address"
@@ -240,7 +240,7 @@ function Shopform() {
               }
             />
           </Form.Group>
-          <button type="submit" className="btn bg-black text-white w-full">
+          <button type="submit" className="btn n-color md:py-1 text-white w-full">
             Submit
           </button>
         </Form>
