@@ -446,7 +446,7 @@ function QuotationForm() {
     <>
       <Header />
       <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
+        <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.DASHBOARD }}>
@@ -461,7 +461,7 @@ function QuotationForm() {
         </Breadcrumb>
       </div>
 
-      <p className="md:text-4xl text-2xl font-bold text-center mb-3">
+      <p className="md:text-4xl text-2xl color font-bold text-center mb-3">
         {id ? "Update Quotation Form" : "Create Quotation Form"}
       </p>
       <Container>
@@ -472,7 +472,7 @@ function QuotationForm() {
                 className=" mb-3 md:w-72 w-72"
                 controlId="formBasicEmail"
               >
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Token No. <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
                 <Form.Control
@@ -486,7 +486,7 @@ function QuotationForm() {
                 className="mb-3 md:w-72 w-72"
                 controlId="formBasicEmail"
               >
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Date <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
                 <Form.Control
@@ -504,7 +504,7 @@ function QuotationForm() {
                 className="mb-3 md:w-72 w-72"
                 controlId="formBasicEmail"
               >
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Name <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
                 <Form.Control
@@ -521,7 +521,7 @@ function QuotationForm() {
                 className="mb-3 md:w-72 w-72"
                 controlId="formBasicPassword"
               >
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Mobile No. <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
                 <Form.Control
@@ -538,7 +538,7 @@ function QuotationForm() {
               className="mb-3 md:w-full w-72"
               controlId="formBasicPassword"
             >
-              <Form.Label className="font-bold">
+              <Form.Label className="font-bold color">
                 Address <span className="text-red-600"> &#8727; </span>:
               </Form.Label>
               <Form.Control
@@ -554,25 +554,25 @@ function QuotationForm() {
               <table className="">
                 <thead>
                   <tr>
-                    <th>
+                    <th className="color">
                       Description<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       Area<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       Size<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       Rate<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       Quantity<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       Total<span className="text-red-600"> &#8727; </span>
                     </th>
-                    <th>
+                    <th className="color">
                       <button type="button" className="" onClick={addRowTable}>
                         <AiOutlinePlusCircle className="fs-3" />
                       </button>
@@ -657,7 +657,7 @@ function QuotationForm() {
                 </>
               </table>
             </div>
-            <p className="font-bold">Architec Name</p>
+            <p className="font-bold color">Architec Name</p>
             <Select
               isMulti
               className="md:w-full w-72"
@@ -681,7 +681,7 @@ function QuotationForm() {
                 }
               }}
             />
-            <p className="font-bold">Carpenter Name</p>
+            <p className="font-bold color">Carpenter Name</p>
             <Select
               isMulti
               className="md:w-full w-72"
@@ -705,7 +705,7 @@ function QuotationForm() {
                 }
               }}
             />
-            <p className="font-bold">Shop Name</p>
+            <p className="font-bold color">Shop Name</p>
             <Select
               isMulti
               className="md:w-full w-72"
@@ -728,7 +728,7 @@ function QuotationForm() {
                   selectsetShop(selectedOption);
                 }
               }}/>
-            <p className="font-bold">Sales Person</p>
+            <p className="font-bold color">Sales Person</p>
             <Select
               className="md:w-full w-72"
               options={sale.map((name) => ({
@@ -743,9 +743,8 @@ function QuotationForm() {
             <div className="mx-auto">
               <button
                 type="submit"
-                className="btn mt-3 bg-black text-white w-full"
+                className="btn mt-3 n-color md:py-1 text-white w-full"
               >
-                {" "}
                 Submit
               </button>
             </div>
@@ -766,7 +765,7 @@ function QuotationForm() {
           <Modal.Body className="bg-white rounded-lg">
             <Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Architec Name <span className="text-red-600"> &#8727; </span> :
                 </Form.Label>
                 <Form.Control
@@ -781,7 +780,7 @@ function QuotationForm() {
                   } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Mobile No. <span className="text-red-600"> &#8727; </span> :
                 </Form.Label>
                 <Form.Control
@@ -796,7 +795,7 @@ function QuotationForm() {
                   } />    
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">Address:</Form.Label>
+                <Form.Label className="font-bold color">Address:</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Address"
@@ -812,7 +811,7 @@ function QuotationForm() {
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewArchitecture}
-                className="border-1 bg-black text-white px-3 py-2 rounded-md " >
+                className="border-1 n-color text-white px-3 py-2 rounded-md " >
                 Create
               </button>
             </div>
@@ -825,7 +824,7 @@ function QuotationForm() {
           <Modal.Body className="bg-white rounded-lg">
             <Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Carpenter Name <span className="text-red-600"> &#8727; </span>
                   :
                 </Form.Label>
@@ -842,7 +841,7 @@ function QuotationForm() {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Mobile No.
                   <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
@@ -859,7 +858,7 @@ function QuotationForm() {
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">Address:</Form.Label>
+                <Form.Label className="font-bold color">Address:</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Address"
@@ -875,7 +874,7 @@ function QuotationForm() {
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewCarpenter}
-                className="border-1 bg-black text-white px-3 py-2 rounded-md " >
+                className="border-1 n-color text-white px-3 py-2 rounded-md " >
                 Create
               </button>
             </div>
@@ -888,7 +887,7 @@ function QuotationForm() {
           <Modal.Body className="bg-white rounded-lg">
             <Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Shop Name <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
                 <Form.Control
@@ -903,7 +902,7 @@ function QuotationForm() {
                   } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">
+                <Form.Label className="font-bold color">
                   Mobile No.
                   <span className="text-red-600"> &#8727; </span>:
                 </Form.Label>
@@ -919,7 +918,7 @@ function QuotationForm() {
                   } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Label className="font-bold">Address:</Form.Label>
+                <Form.Label className="font-bold color">Address:</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Address"
@@ -935,7 +934,7 @@ function QuotationForm() {
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewShop}
-                className="border-1 bg-black text-white px-3 py-2 rounded-md" >
+                className="border-1 n-color text-white px-3 py-2 rounded-md" >
                 Create
               </button>
             </div>

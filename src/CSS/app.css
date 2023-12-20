@@ -39,7 +39,7 @@
 .logout {
   text-align: center;
   padding: 20px 50px;
-  background-color: #fff;
+  background-color: white;
   color: black;
   border-radius: 100px;
 }
@@ -64,7 +64,7 @@
   cursor: pointer;
 }
 .modal-buttons button {
-  background: #333;
+  /* background: #333; */
   color: #fff;
 }
 /**************************Dashboard*****************************/
@@ -172,7 +172,6 @@
 }
 *{
   --tw-ring-color: none;
-
 }
 .dropdown-toggle btn{
   padding: 0px;
@@ -192,9 +191,7 @@
   position: relative;
   display: inline-block;
 }
-
 .dropdown-toggle {
-
   cursor: pointer;
 }
 
@@ -294,10 +291,10 @@ option:hover {
  white-space:nowrap;
 }
 .btn{
-  border: 2px solid black;
+  border: 2px solid #49413C;
 }
 .btn:hover{
-  border: 2px solid black;
+  border: 2px solid #49413C;
 }
 .dropdown-item:active{
   background-color: #fff;
@@ -325,4 +322,60 @@ option:hover {
 }
 .disabled-select {
   pointer-events: none;
+}
+.form-control{
+  width: 100%;
+}
+@media screen and (max-width:1024) {
+  .form-control{
+    width: 110%;
+  }
+}
+.imgg{
+  position: relative;
+  height:500px;
+  overflow:hidden 
+}
+.f-img {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* .btn:hover {
+  background-image: radial-gradient(circle, #8b7c5d, #7f6f54, #72634c, #665743, #594b3b, #534637, #4e4134, #483c30, #483c30, #483c30, #483c30, #483c30);
+} */
+/* @media screen and (max-width: 1024px) {
+  .f-img {
+    top: -2% !important;
+  }
+} */
+.n-color{
+  /* background-image: linear-gradient(to right, #8b7c5d, #7f6f54, #72634c, #665743, #594b3b, #534637, #4e4134, #483c30, #483c30, #483c30, #483c30, #483c30); */
+  /* background-image: radial-gradient(circle, #8b7c5d, #7f6f54, #72634c, #665743, #594b3b, #534637, #4e4134, #483c30, #483c30, #483c30, #483c30, #483c30); */
+  /* background-image: radial-gradient(circle, #71675e, #675d55, #5d544d, #534a44, #49413c); */
+  /* background-image: linear-gradient(to left, #71675e, #675d55, #5d544d, #534a44, #49413c); */
+  background-image: linear-gradient(to left, #71675e, #696057, #625851, #5a514a, #534a44, #524943, #504842, #4f4741, #544b45, #585048, #5d544c, #625950);
+  /* background-image: radial-gradient(circle, #8b7c5d, #8e7e60, #918163, #938367, #96866a, #908066, #8a7b62, #84755e, #756652, #665846, #574a3b, #483c30); */
+}
+@media screen and (max-width: 525px) {
+  .f-img {
+    top: 30% !important;
+  }
+}
+@media screen and (max-width:2500) {
+  .f-img{
+    left: 0%;
+    padding-right: 90px;
+  }
+}
+.wimg{
+  height: 450px;
+}
+.color{
+  color: #49413C;
+}
+.color-1{
+  color: #49413C;
+  text-align: center;
 }

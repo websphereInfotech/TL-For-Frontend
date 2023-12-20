@@ -130,7 +130,7 @@ function Salesform() {
     <>
       <Header />
       <div className="md:ps-24 ps-10">
-        <Breadcrumb className="font-bold">
+        <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.DASHBOARD }}
@@ -143,13 +143,13 @@ function Salesform() {
         </Breadcrumb>
       </div>
       
-      <p className="md:text-4xl text-2xl font-bold text-center mb-3">
+      <p className="md:text-4xl text-2xl font-bold color text-center mb-3">
         {id ? "Update SalepersonForm" : "Create SalepersonForm"}
       </p>
       <Container>
         <Form className="w-50 mx-auto" onSubmit={handleSalesperson}>
           <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label className="font-bold">
+            <Form.Label className="font-bold color">
              Name
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
@@ -161,7 +161,7 @@ function Salesform() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label className="font-bold">
+            <Form.Label className="font-bold color">
               Moblie No.
               <span className="text-red-600"> &#8727; </span>:
             </Form.Label>
@@ -173,7 +173,7 @@ function Salesform() {
             />
           </Form.Group>
         
-          <button type="submit" className="btn bg-black text-white w-full">
+          <button type="submit" className="btn n-color text-white w-full">
             Submit
           </button>
         </Form>

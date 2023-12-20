@@ -4,7 +4,6 @@ import { Col, Container, Row } from "react-bootstrap";
 import { Link,useNavigate } from "react-router-dom";
 import { FaPlus, FaPowerOff } from "react-icons/fa";
 import routeUrls from "../../constants/routeUrls";
-import Spinner from 'react-bootstrap/Spinner';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Dashboard() {
@@ -67,11 +66,13 @@ function Dashboard() {
     <>
       {loading ? (
        <div className="d-flex justify-content-center align-items-center vh-100">
-       <Spinner animation="border" variant="dark" />
+       <h1 className="color font-bold text-4xl">
+      TIMBERLAND
+     </h1>
      </div>
       ) : ( 
         <>
-        <div className="bg-dark text-white flex justify-between items-center mb-3 rounded-br-full">
+        <div className="n-color text-white flex justify-between items-center mb-3 rounded-br-full">
         <div className="md:pl-12 pr-6 md:py-4 py-3 pl-2">
           <p className="md:text-2xl text-1xl font-bold">TIMBERLAND</p>
         </div>
@@ -85,7 +86,7 @@ function Dashboard() {
         </div>
       </div>
       <div className="container nameinfo">
-        <div className="bg-dark text-white rounded-md">
+        <div className="n-color text-white rounded-md">
           <ul className="flex	align-middle	justify-around">
             <Link to={routeUrls.QUOTATIONLIST}>
               <li>
@@ -124,18 +125,21 @@ function Dashboard() {
         <Row>
           <Col md={6} sm={12}>
             <Link to={isLogoutModalOpen ? '#' :routeUrls.QUOTATION}>
-              <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
+              <div className="bg-[#71675E] md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div>
-                  {" "}
                   <img
-                    src={require("../../Images/form-1.jpg")}
+                    src={require("../../Images/q-3.jpg")}
+
+                    // src={require("../../Images/q-3.jpg")}
                     alt=""
-                    className="w-40"
+                    // className="w-40"
+                    style={{width:'300px',height:'180px'}}
+
                   />
-                  <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
+                  <p className="form  px-4 py-3 font-bold text-white bg-[#49413C] rounded-md">
                     Quotation
                   </p>
-                  <div className="plus border-1 bg-white">
+                  <div className="plus bg-[#49413C] text-white">
                     <FaPlus className="ms-3 my-3  text-2xl " />
                   </div>
                 </div>
@@ -144,18 +148,20 @@ function Dashboard() {
           </Col>
           <Col md={6} sm={12}>
             <Link to={isLogoutModalOpen ? '#' :routeUrls.SHOPFORM}>
-              <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
+              <div className="bg-[#71675E] md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
                 <div>
                   <img
-                    src={require("../../Images/shop-1.png")}
+                    src={require("../../Images/shop3.webp")}
+                    // src={require("../../Images/shop-2.jpg")}
                     alt=""
-                    className="w-40"
+                    // className="w-40"
+                    style={{width:'300px',height:'180px'}}
                   />
                 </div>
-                <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
+                <p className="form text-white px-4 py-3 font-bold bg-[#49413C] rounded-md">
                   Shop
                 </p>
-                <div className="plus border-1 bg-white">
+                <div className="plus  bg-[#49413C] text-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
               </div>
@@ -165,19 +171,22 @@ function Dashboard() {
         <Row>
           <Col md={6} sm={12}>
                 <Link to={isLogoutModalOpen ? '#' :routeUrls.CARPENTERFORM}>
-            <div className="bg-zinc-600 md:m-10 my-3 sm:m-0  rounded-lg py-8 xl:px-44 lg:px-32 md:px-10 md:py-6 px-24 create">
+            <div className="bg-[#71675E] md:m-10 my-3 sm:m-0  rounded-lg py-8 xl:px-44 lg:px-32 md:px-10 md:py-6 px-24 create">
               <div>
                 {" "}
                 <img
-                  src={require("../../Images/images.png")}
+                  src={require("../../Images/carpenter4.jpg")}
+                  // src={require("../../Images/carpenter5.webp")}
                   alt=""
-                  className="w-40"
+                  // className="w-62"
+                  style={{width:'300px',height:'180px'}}
+
                 />
               </div>
-              <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
+              <p className="form text-white px-4 py-3 font-bold bg-[#49413C] rounded-md">
                 Carpenter
               </p>
-                <div className="plus border-1 bg-white">
+                <div className="plus  bg-[#49413C] text-white">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
             </div>
@@ -185,19 +194,21 @@ function Dashboard() {
           </Col>
           <Col md={6} sm={12}>
               <Link to={isLogoutModalOpen ? '#' :routeUrls.ARCHITECTURE}>
-            <div className="bg-zinc-600 md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
+            <div className="bg-[#71675E] md:m-10 sm:m-0 my-3 rounded-lg py-8 xl:px-44 lg:px-32 md:px-8 md:py-6 px-24 create">
               <div>
                 {" "}
                 <img
-                  src={require("../../Images/architecture.jpg")}
+                  src={require("../../Images/archite..2.png")}
+                  // src={require("../../Images/architec2.jpg")}
                   alt=""
-                  className="w-44"
+                  style={{width:'300px',height:'180px'}}
+                  // className="w-72"
                 />
               </div>
-              <p className="form border-1 px-4 py-2 font-bold bg-white rounded-md">
+              <p className="form text-white px-4 py-3 font-bold bg-[#49413C] rounded-md">
                 Architecture
               </p>
-                <div className="plus border-1 bg-white">
+                <div className="plus text-white  bg-[#49413C]">
                   <FaPlus className="ms-3 my-3 text-2xl" />
                 </div>
             </div>
@@ -207,13 +218,13 @@ function Dashboard() {
       </Container>
       {isLogoutModalOpen && (
         <div className="logout-modal ">
-          <div className="logout">
+          <div className="logout color">
             <p>Are you sure you want to log out?</p>
             <div className="modal-buttons">
-              <button className=" rounded-full" onClick={(e)=>{handleLogoutConfirm (e)}}>
+              <button className=" rounded-full n-color" onClick={(e)=>{handleLogoutConfirm (e)}}>
                 OK
               </button>
-              <button className=" rounded-full" onClick={handleLogoutCancel}>
+              <button className=" rounded-full n-color" onClick={handleLogoutCancel}>
                 Cancel
               </button>
             </div>
