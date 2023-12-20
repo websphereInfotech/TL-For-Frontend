@@ -587,6 +587,10 @@ export default function Quotationlist() {
         },
       })
       .then(function (response) {
+        const sortedQuotations = response.data.data.sort((a, b) => {
+          return a.serialNumber - b.serialNumber;
+        });
+        console.log(sortedQuotations);
         setQuotation(response.data.data);
         setIsLoading(false);
       })

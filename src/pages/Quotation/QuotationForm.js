@@ -322,6 +322,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
+            isSuccess:true,
           });
           const newArchOption = {
             label: newArchitecture.name,
@@ -332,6 +333,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
+            isSuccess:false,
           });
         }
       })
@@ -370,6 +372,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: "Carpenter Create successful",
+            isSuccess:true,
           });
           const newCarpOption = {
             label: newCarpenter.name,
@@ -380,6 +383,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
+            isSuccess:false
           });
         }
       })
@@ -418,6 +422,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: "Shop Create successful",
+            isSuccess:true,
           });
           const newShopOption = {
             label: newShop.name,
@@ -428,6 +433,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
+            isSuccess:false
           });
         }
       })
