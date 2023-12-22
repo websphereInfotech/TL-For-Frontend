@@ -20,8 +20,6 @@ function AdminLogin() {
       .post(`${url}/login`, {
         login_id: login_id,
         password: password,
-      },{
-        withCredentials: true,
       })
       .then(function (response) {
         console.log("***",response);
