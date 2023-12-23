@@ -27,7 +27,7 @@ function AdminLogin() {
               setMessage("Login successful");
               setShowModal(true);
             } else {
-              setMessage(message.response.data.message);
+              setMessage(response.data.message);
               setShowModal(true);
             }
     } catch (error) {
@@ -35,6 +35,7 @@ function AdminLogin() {
       setMessage(error.response.data.message);
       setShowModal(true);
     }
+        // console.log(error.config);
   };
   const handleClose = useCallback(() => {
     setShowModal(false);
