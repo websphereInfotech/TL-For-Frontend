@@ -34,6 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "homepage": "https://timberland.onrender.com/login",
+
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -20,7 +20,7 @@ function App() {
  
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Routes>
           <Route exct path={routeUrls.LOGIN} element={<AdminLogin />} />
           <Route path="/" element={<Navigate to={routeUrls.LOGIN} />} />
