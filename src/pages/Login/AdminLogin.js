@@ -27,7 +27,7 @@ function AdminLogin() {
               setMessage("Login successful");
               setShowModal(true);
             } else {
-              setMessage(response.data.error);
+              setMessage(response.data.message);
               setShowModal(true);
             }
     } catch (error) {
