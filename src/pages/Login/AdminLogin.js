@@ -32,7 +32,7 @@ function AdminLogin() {
             }
     } catch (error) {
       console.log(error);
-      setMessage(error.message);
+      setMessage(error.response.data.message);
       setShowModal(true);
     }
   };
