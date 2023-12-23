@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CSS/app.css';
 import AdminLogin from './pages/Login/AdminLogin';
@@ -20,7 +20,7 @@ function App() {
  
   return (
     <>
-            <Router>
+      <BrowserRouter>
         <Routes>
           <Route exct path={routeUrls.LOGIN} element={<AdminLogin />} />
           <Route path="/" element={<Navigate to={routeUrls.LOGIN} />} />
@@ -50,7 +50,7 @@ function App() {
 
 
         </Routes>
-      </Router>
+      </BrowserRouter>
     </>
   );
 }
