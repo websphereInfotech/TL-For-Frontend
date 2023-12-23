@@ -21,40 +21,44 @@ function Shopform() {
   }); // Create New Shop
 
   useEffect(() => {
-    if (id) {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-      axios
-        .get(`${BaseUrl}/shop/viewdata/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        })
-        .then(function (response) {
+    const fetchData = async () => {
+      if (id) {
+        try {
+          const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  
+          const response = await axios.get(`${BaseUrl}/shop/viewdata/${id}`, {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          });
+  
           const shopData = response.data.data;
           setFormData((prevData) => ({
             ...prevData,
-            shopName : shopData.shopName,
+            shopName: shopData.shopName,
             mobileNo: shopData.mobileNo,
             address: shopData.address,
           }));
-        })
-        .catch(function (error) {
+        } catch (error) {
           console.log(error);
           setFormData((prevData) => ({
             ...prevData,
             message: error.response.data.message,
             showModal: true,
           }));
-        });
-    }
+        }
+      }
+    };
+  
+    fetchData();
+  
   }, [id]);
-
-  const handleShop = (e) => {
+  
+  const handleShop = async (e) => {
     e.preventDefault();
-
+  
     const { shopName, mobileNo, address } = formData;
-
+  
     if (!shopName && !mobileNo) {
       setFormData((prevData) => ({
         ...prevData,
@@ -63,11 +67,12 @@ function Shopform() {
       }));
       return;
     }
+  
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    if (id) {
-      axios
-        .put(
+  
+    try {
+      if (id) {
+        const response = await axios.put(
           `${BaseUrl}/shop/data/update/${id}`,
           {
             shopName,
@@ -79,33 +84,23 @@ function Shopform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Shop Update successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Shop Update successful",
             showModal: true,
           }));
-        });
-    } else {
-      axios
-        .post(
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      } else {
+        const response = await axios.post(
           `${BaseUrl}/shop/data/create`,
           {
             shopName,
@@ -117,35 +112,34 @@ function Shopform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            const saved = response.data.token;
-            localStorage.setItem(process.env.REACT_APP_KEY, saved);
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Shop Create successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
+          const newSaved = response.data.token;
+          localStorage.setItem(process.env.REACT_APP_KEY, newSaved);
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Shop Create successful",
             showModal: true,
           }));
-        });
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setFormData((prevData) => ({
+        ...prevData,
+        message: error.response.data.message,
+        showModal: true,
+      }));
     }
   };
-
+  
   const handleClose = useCallback(() => {
     setFormData((prevData) => ({
       ...prevData,

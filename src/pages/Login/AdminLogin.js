@@ -13,32 +13,28 @@ function AdminLogin() {
   const [message, setMessage] = useState(""); //set message when login is success or not
   const navigate = useNavigate(); // for navigate page
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = process.env.REACT_APP_BASEURL;
-    axios
-      .post(`${url}/login`, {
+    try {
+      const url = process.env.REACT_APP_BASEURL;
+      const response = await axios.post(`${url}/login`, {
         login_id: login_id,
         password: password,
-      })
-      .then(function (response) {
-        console.log("***",response);
-        if (response.data && response.data.status === "Success") {
-          const saved = response.data.token;
-          localStorage.setItem(process.env.REACT_APP_KEY, saved);
-          setMessage("Login successful");
-          setShowModal(true);
-        } else {
-          setMessage(response.data.message);
-          setShowModal(true);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-        setMessage(error.message);
-        setShowModal(true);
       });
-    // console.log(error.config);
+      if (response.data && response.data.status === "Success") {
+              const saved = response.data.token;
+              localStorage.setItem(process.env.REACT_APP_KEY, saved);
+              setMessage("Login successful");
+              setShowModal(true);
+            } else {
+              setMessage(response.data.message);
+              setShowModal(true);
+            }
+    } catch (error) {
+      console.log(error);
+      setMessage(error.message);
+      setShowModal(true);
+    }
   };
   const handleClose = useCallback(() => {
     setShowModal(false);

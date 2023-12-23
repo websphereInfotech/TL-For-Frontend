@@ -35,163 +35,157 @@ function Row({ row, setQuotation }) {
   const [reject, setReject] = React.useState('');//set the reject true or false
   const [followUp, setFollowUp] = React.useState(true);//set the follow true or false
 
-  const handleviewdata = (id) => {
-
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let tableData;
-
-    axios
-      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
+  const handleviewdata = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        const userData = response.data.data1;
-        console.log(userData);
-        axios
-          .get(`${BaseUrl}/total/view/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response2) {
-
-            tableData = response2.data.data;
-            let mainTotal = 0;
-            for (const item of tableData) {
-              mainTotal += item.total;
-            }
-            const salesName = userData.sales ? userData.sales.Name : "";
-            if (!Array.isArray(tableData)) {
-              tableData = [tableData];
-            }
-            console.log("tabledataa", tableData);
-            let architecNames = "";
-            let carpenterNames = "";
-            let shopNames = "";
-
-            if (userData.architec) {
-              architecNames = userData.architec
-                .map((architec) => architec.architecsName)
-                .join(", ");
-            }
-            if (userData.carpenter) {
-              carpenterNames = userData.carpenter
-                .map((carpenter) => carpenter.carpentersName)
-                .join(", ");
-            }
-            if (userData.shop) {
-              shopNames = userData.shop.map((shop) => shop.shopName).join(", ");
-            }
-            const innerTableRows = tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="break-words border">{item.description}</td>
-                <td className="break-words border">{item.area}</td>
-                <td className="border ">{item.size}</td>
-                <td className="border ">{item.rate}</td>
-                <td className="border ">{item.quantity}</td>
-                <td className="border ">{item.total}</td>
-              </tr>
-            ));
-
-            setselectedQuotationDetails({
-              tokenNo: userData.serialNumber,
-              Date: userData.Date,
-              name: userData.userName,
-              mobileNo: userData.mobileNo,
-              address: userData.address,
-              innerTable: innerTableRows,
-              mainTotal: mainTotal,
-              architec: architecNames,
-              carpenter: carpenterNames,
-              shop: shopNames,
-              sales: salesName,
-            });
-
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      const userData = response1.data.data1;
+      console.log(userData);
+  
+      const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+  
+      let tableData = response2.data.data;
+      let mainTotal = 0;
+      for (const item of tableData) {
+        mainTotal += item.total;
+      }
+  
+      const salesName = userData.sales ? userData.sales.Name : "";
+      if (!Array.isArray(tableData)) {
+        tableData = [tableData];
+      }
+  
+      console.log("tabledataa", tableData);
+      let architecNames = "";
+      let carpenterNames = "";
+      let shopNames = "";
+  
+      if (userData.architec) {
+        architecNames = userData.architec
+          .map((architec) => architec.architecsName)
+          .join(", ");
+      }
+      if (userData.carpenter) {
+        carpenterNames = userData.carpenter
+          .map((carpenter) => carpenter.carpentersName)
+          .join(", ");
+      }
+      if (userData.shop) {
+        shopNames = userData.shop.map((shop) => shop.shopName).join(", ");
+      }
+  
+      const innerTableRows = tableData.map((item, index) => (
+        <tr key={index}>
+          <td className="break-words border">{item.description}</td>
+          <td className="break-words border">{item.area}</td>
+          <td className="border ">{item.size}</td>
+          <td className="border ">{item.rate}</td>
+          <td className="border ">{item.quantity}</td>
+          <td className="border ">{item.total}</td>
+        </tr>
+      ));
+  
+      setselectedQuotationDetails({
+        tokenNo: userData.serialNumber,
+        Date: userData.Date,
+        name: userData.userName,
+        mobileNo: userData.mobileNo,
+        address: userData.address,
+        innerTable: innerTableRows,
+        mainTotal: mainTotal,
+        architec: architecNames,
+        carpenter: carpenterNames,
+        shop: shopNames,
+        sales: salesName,
+      });
+    } catch (error) {
+      console.log("Error in handleviewdata:", error);
+    }
   };
-
-  const handleDelete = () => {
-
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .delete(
+  
+  const handleDelete = async () => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.delete(
         `${BaseUrl}/quotation/delete/data/${selectedQuotationID}`,
         {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
         }
-      )
-
-      .then(function (response) {
-        console.log(response.data.data);
-        setQuotation((prevQuotation) =>
-          prevQuotation.filter(
-            (quotation) => quotation._id !== selectedQuotationID
-          )
-        );
-        setShowDeleteConfirmation(false);
-      })
-
-      .catch(function (error) {
-        console.log(error);
-      });
+      );
+  
+      console.log(response.data.data);
+  
+      setQuotation((prevQuotation) =>
+        prevQuotation.filter(
+          (quotation) => quotation._id !== selectedQuotationID
+        )
+      );
+  
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.log("Error in handleDelete:", error);
+    }
   };
-
+    
   const confirmDelete = (id) => {
     setSelectedQuotationId(id);
     setShowDeleteConfirmation(true);
   };
-
-  const handleDownloadPDF = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/quatation/pdf/${id}`, {
+  const handleDownloadPDF = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/quatation/pdf/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          const binaryData = atob(response.data.data);
-
-          const byteArray = new Uint8Array(binaryData.length);
-          for (let i = 0; i < binaryData.length; i++) {
-            byteArray[i] = binaryData.charCodeAt(i);
-          }
-
-          const blob = new Blob([byteArray], { type: `${row.serialNumber}.pdf` })
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.download = `${row.serialNumber}.pdf`;
-          a.href = url;
-          document.body.appendChild(a);
-          a.click();
-
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-          console.log('PDF downloaded successfully');
-        } else {
-          console.error('PDF download failed:', response.status, response.statusText);
-        }
-      })
-
-      .catch((error) => {
-        console.error('Error downloading PDF:', error);
       });
+  
+      if (response.status === 200) {
+        const binaryData = atob(response.data.data);
+        const byteArray = new Uint8Array(binaryData.length);
+  
+        for (let i = 0; i < binaryData.length; i++) {
+          byteArray[i] = binaryData.charCodeAt(i);
+        }
+  
+        const blob = new Blob([byteArray], { type: `${row.serialNumber}.pdf` });
+  
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.download = `${row.serialNumber}.pdf`;
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+  
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+  
+        console.log("PDF downloaded successfully");
+      } else {
+        console.error(
+          "PDF download failed:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      // Handle or log the error as needed
+    }
   };
+
   const handleApproveReject = async (id, action) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
@@ -222,47 +216,24 @@ function Row({ row, setQuotation }) {
       console.log(error);
     }
   };
-  // const handleSelectChange = (event) => {
-  //   const selectedValue = event.target.value;
-  //   const rowId = row._id; // Get the row ID for the current row
 
-  //   // Update the local state
-  //   setQuotation((prevQuotation) =>
-  //     prevQuotation.map((quotationRow) => {
-  //       if (quotationRow._id === rowId) {
-  //         return {
-  //           ...quotationRow,
-  //           selectedValue
-  //           // disableDropdown: disableDropdown,
-  //         };
-  //       }
-  //       return quotationRow;
-  //     })
-  //   );
-
-  //   localStorage.setItem(`status_${rowId}`, selectedValue);
-  //   if (selectedValue === 'Approve') {
-  //    handleApproveReject(rowId, 'Approve');
-  //     setDisableDropdown(true);
-  //   } else if (selectedValue === 'Reject') {
-  //     handleApproveReject(rowId, 'Reject');
-  //     setDisableDropdown(true);
-  //   } 
-  // };
-
-  const handleSelectChange = (event) => {
+  const handleSelectChange = async (event) => {
     const selectedValue = event.target.value;
-
-    if (selectedValue === 'Approve') {
-      handleApproveReject(row._id, 'Approve');
-      setDisableDropdown(true);
-    } else if (selectedValue === 'Reject') {
-      handleApproveReject(row._id, 'Reject');
-      setDisableDropdown(true);
+  
+    try {
+      if (selectedValue === 'Approve') {
+        await handleApproveReject(row._id, 'Approve');
+        setDisableDropdown(true);
+      } else if (selectedValue === 'Reject') {
+        await handleApproveReject(row._id, 'Reject');
+        setDisableDropdown(true);
+      }
+      localStorage.setItem(`status_${row._id}`, selectedValue);
+    } catch (error) {
+      console.error("Error in handleSelectChange:", error);
     }
-    localStorage.setItem(`status_${row._id}`, selectedValue);
   };
-
+  
   return (
     <>
       <React.Fragment>
@@ -579,27 +550,58 @@ export default function Quotationlist() {
   const itemsPerPage = 10;
 
   React.useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/quotation/listdata`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+    const fetchData = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/quotation/listdata`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+  
         const sortedQuotations = response.data.data.sort((a, b) => {
           return a.serialNumber - b.serialNumber;
         });
+  
         console.log(sortedQuotations);
         setQuotation(response.data.data);
         setIsLoading(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
-      });
+      }
+    };
+  
+    fetchData();
   }, []);
-
+  
+  const handleSearch = async (inputValue) => {
+    try {
+      setCurrentPage(1);
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      let url = `${BaseUrl}/quotation/searchdata?`;
+  
+      if (inputValue) {
+        const isNumber = !isNaN(inputValue);
+        if (isNumber) {
+          url = `${url}serialNumber=${inputValue}`;
+        } else {
+          url = `${url}userName=${inputValue}`;
+        }
+      }
+  
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+  
+      setQuotation(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
   };
@@ -607,34 +609,6 @@ export default function Quotationlist() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = quotation.slice(startIndex, endIndex);
-
-  const handleSearch = (inputValue) => {
-    setCurrentPage(1);
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let url = `${BaseUrl}/quotation/searchdata?`;
-
-    if (inputValue) {
-      const isNumber = !isNaN(inputValue);
-      if (isNumber) {
-        url = `${url}serialNumber=${inputValue}`;
-      } else {
-        url = `${url}userName=${inputValue}`;
-      }
-    }
-    axios
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-
-        setQuotation(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">

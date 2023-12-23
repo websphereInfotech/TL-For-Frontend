@@ -26,126 +26,116 @@ function Row({ row, setCarpenter }) {
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);//show Quotation data in model
 
-  const handleviewQutotation = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let tableData;
-    axios
-      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        const QuotationData = response.data.data1;
-        console.log(QuotationData);
-        axios
-          .get(`${BaseUrl}/total/view/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response2) {
-            tableData = response2.data.data;
-            let mainTotal = 0;
-            for (const item of tableData) {
-              mainTotal += item.total;
-            }
-            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-            if (!Array.isArray(tableData)) {
-              tableData = [tableData];
-            }
-            console.log("tabledataa", tableData);
-            let architecNames = "";
-            let carpenterNames = "";
-            let shopNames = "";
-
-            if (QuotationData.architec) {
-              architecNames = QuotationData.architec
-                .map((architec) => architec.architecsName)
-                .join(", ");
-            }
-            if (QuotationData.carpenter) {
-              carpenterNames = QuotationData.carpenter
-                .map((carpenter) => carpenter.carpentersName)
-                .join(", ");
-            }
-            if (QuotationData.shop) {
-              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-            }
-            const innerTableRows = tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="break-words border">{item.description}</td>
-                <td className="break-words border">{item.area}</td>
-                <td className="border ">{item.size}</td>
-                <td className="border ">{item.rate}</td>
-                <td className="border ">{item.quantity}</td>
-                <td className="border ">{item.total}</td>
-              </tr>
-            ));
-            setselectedQuotationDetails({
-              tokenNo: QuotationData.serialNumber,
-              Date: QuotationData.Date,
-              name: QuotationData.userName,
-              mobileNo: QuotationData.mobileNo,
-              address: QuotationData.address,
-              innerTable: innerTableRows,
-              mainTotal: mainTotal,
-              architec: architecNames,
-              carpenter: carpenterNames,
-              shop: shopNames,
-              sales: salesName,
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .get(`${BaseUrl}/carpenter/viewdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data.data);
-        setSelectedCarpenterDetails(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const handleDelete = () => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .delete(
-        `${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`,
-        {
+    const handleviewQutotation = async (id) => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        let tableData;
+    
+        const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
+        });
+        const QuotationData = response1.data.data1;
+    
+        const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+        tableData = response2.data.data;
+    
+        let mainTotal = 0;
+        for (const item of tableData) {
+          mainTotal += item.total;
         }
-      )
-      .then(function (response) {
-        console.log(response.data.data);
-        setCarpenter((prevCarpenters) =>
-          prevCarpenters.filter(
-            (carpenter) => carpenter._id !== selectedCarpenterId
-          )
-        );
-        setShowDeleteConfirmation(false);
-      })
-      .catch(function (error) {
-        console.log(error);
+    
+        const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+    
+        if (!Array.isArray(tableData)) {
+          tableData = [tableData];
+        }
+    
+        let architecNames = "";
+        let carpenterNames = "";
+        let shopNames = "";
+    
+        if (QuotationData.architec) {
+          architecNames = QuotationData.architec
+            .map((architec) => architec.architecsName)
+            .join(", ");
+        }
+        if (QuotationData.carpenter) {
+          carpenterNames = QuotationData.carpenter
+            .map((carpenter) => carpenter.carpentersName)
+            .join(", ");
+        }
+        if (QuotationData.shop) {
+          shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+        }
+    
+        const innerTableRows = tableData.map((item, index) => (
+          <tr key={index}>
+            <td className="break-words border">{item.description}</td>
+            <td className="break-words border">{item.area}</td>
+            <td className="border ">{item.size}</td>
+            <td className="border ">{item.rate}</td>
+            <td className="border ">{item.quantity}</td>
+            <td className="border ">{item.total}</td>
+          </tr>
+        ));
+    
+        setselectedQuotationDetails({
+          tokenNo: QuotationData.serialNumber,
+          Date: QuotationData.Date,
+          name: QuotationData.userName,
+          mobileNo: QuotationData.mobileNo,
+          address: QuotationData.address,
+          innerTable: innerTableRows,
+          mainTotal: mainTotal,
+          architec: architecNames,
+          carpenter: carpenterNames,
+          shop: shopNames,
+          sales: salesName,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  const handleviewdata = async(id) => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    try {
+      const response = await axios.get(`${BaseUrl}/carpenter/viewdata/${id}`,{
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
       });
+      setSelectedCarpenterDetails(response.data.data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async() => {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    try {
+      const response = await axios.delete(`${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`,{
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      console.log(response.data.data);
+      setCarpenter((prevCarpenters) =>
+      prevCarpenters.filter(
+        (carpenter) => carpenter._id !== selectedCarpenterId
+      )
+    );
+    setShowDeleteConfirmation(false);
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const confirmDelete = (id) => {
@@ -153,21 +143,19 @@ function Row({ row, setCarpenter }) {
     setShowDeleteConfirmation(true);
   };
 
-  const handleSubmit = (id) => {
+  const handleSubmit = async(id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/carpenter/listdata/${id}`, {
+    try {
+      const response = await axios.get(`${BaseUrl}/carpenter/listdata/${id}`,{
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        setQuotation({ Quotation: response.data.data });
-        console.log({ Quotation: response.data.data });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+      setQuotation({ Quotation: response.data.data });
+        console.log({ Quotation: response.data.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>

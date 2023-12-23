@@ -31,156 +31,157 @@ function Row(props) {
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
 
-  const handleviewQutotation = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let tableData;
-    axios
-      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+    const handleviewQutotation = async (id) => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
         const QuotationData = response.data.data1;
         console.log(QuotationData);
-        axios
-          .get(`${BaseUrl}/total/view/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response2) {
-            tableData = response2.data.data;
-            let mainTotal = 0;
-            for (const item of tableData) {
-              mainTotal += item.total;
-            }
-            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-            if (!Array.isArray(tableData)) {
-              tableData = [tableData];
-            }
-            console.log("tabledataa", tableData);
-            let architecNames = "";
-            let carpenterNames = "";
-            let shopNames = "";
-
-            if (QuotationData.architec) {
-              architecNames = QuotationData.architec
-                .map((architec) => architec.architecsName)
-                .join(", ");
-            }
-            if (QuotationData.carpenter) {
-              carpenterNames = QuotationData.carpenter
-                .map((carpenter) => carpenter.carpentersName)
-                .join(", ");
-            }
-            if (QuotationData.shop) {
-              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-            }
-            const innerTableRows = tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="break-words border">{item.description}</td>
-                <td className="break-words border">{item.area}</td>
-                <td className="border ">{item.size}</td>
-                <td className="border ">{item.rate}</td>
-                <td className="border ">{item.quantity}</td>
-                <td className="border ">{item.total}</td>
-              </tr>
-            ));
-            setselectedQuotationDetails({
-              tokenNo: QuotationData.serialNumber,
-              Date: QuotationData.Date,
-              name: QuotationData.userName,
-              mobileNo: QuotationData.mobileNo,
-              address: QuotationData.address,
-              innerTable: innerTableRows,
-              mainTotal: mainTotal,
-              architec: architecNames,
-              carpenter: carpenterNames,
-              shop: shopNames,
-              sales: salesName,
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
+    
+        const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
+        let tableData = response2.data.data;
+        let mainTotal = 0;
+        for (const item of tableData) {
+          mainTotal += item.total;
+        }
+    
+        const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+    
+        if (!Array.isArray(tableData)) {
+          tableData = [tableData];
+        }
+    
+        let architecNames = "";
+        let carpenterNames = "";
+        let shopNames = "";
+    
+        if (QuotationData.architec) {
+          architecNames = QuotationData.architec
+            .map((architec) => architec.architecsName)
+            .join(", ");
+        }
+    
+        if (QuotationData.carpenter) {
+          carpenterNames = QuotationData.carpenter
+            .map((carpenter) => carpenter.carpentersName)
+            .join(", ");
+        }
+    
+        if (QuotationData.shop) {
+          shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+        }
+    
+        const innerTableRows = tableData.map((item, index) => (
+          <tr key={index}>
+            <td className="break-words border">{item.description}</td>
+            <td className="break-words border">{item.area}</td>
+            <td className="border ">{item.size}</td>
+            <td className="border ">{item.rate}</td>
+            <td className="border ">{item.quantity}</td>
+            <td className="border ">{item.total}</td>
+          </tr>
+        ));
+    
+        setselectedQuotationDetails({
+          tokenNo: QuotationData.serialNumber,
+          Date: QuotationData.Date,
+          name: QuotationData.userName,
+          mobileNo: QuotationData.mobileNo,
+          address: QuotationData.address,
+          innerTable: innerTableRows,
+          mainTotal: mainTotal,
+          architec: architecNames,
+          carpenter: carpenterNames,
+          shop: shopNames,
+          sales: salesName,
+        });
+      } catch (error) {
         console.log(error);
-
-      });
-  };
-
-  const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/salesPerson/view/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+      }
+    };
+    
+    const handleviewdata = async (id) => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/salesPerson/view/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
         console.log(response.data.data);
         setSelectedSalesperson(response.data.data);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
-      });
-  };
-
-  const handleDelete = () => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .delete(`${BaseUrl}/salesPerson/delete/${salespersonID}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+      }
+    };
+    
+    const handleDelete = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.delete(`${BaseUrl}/salesPerson/delete/${salespersonID}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
         console.log(response.data.data);
+    
         setSalesperson((prevSalesperson) =>
           prevSalesperson.filter((salesperson) => salesperson._id !== salespersonID)
         );
+    
         setShowDeleteConfirmation(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
-      });
-  };
-
+      }
+    };
+    
   const confirmDelete = (id) => {
     setSalespersonId(id);
     setShowDeleteConfirmation(true);
   };
 
-  const handleSubmit = (id, startDate, endDate, selectedFilter) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let apiUrl = `${BaseUrl}/salesPerson/salespersonid/${id}?`;
-
-    if (startDate && endDate) {
-      apiUrl += `startDate=${startDate}&endDate=${endDate}`;
-    }
-    if (selectedFilter) {
-      apiUrl += `&status=${selectedFilter}`
-    }
-    console.log("API URL:", apiUrl);
-    axios
-      .get(apiUrl, {
+  const handleSubmit = async (id, startDate, endDate, selectedFilter) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      let apiUrl = `${BaseUrl}/salesPerson/salespersonid/${id}?`;
+  
+      if (startDate && endDate) {
+        apiUrl += `startDate=${startDate}&endDate=${endDate}`;
+      }
+      if (selectedFilter) {
+        apiUrl += `&status=${selectedFilter}`;
+      }
+  
+      console.log("API URL:", apiUrl);
+  
+      const response = await axios.get(apiUrl, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        if (response.data.data && response.data.data.length > 0) {
-          setQuotation({ Quotation: response.data.data[0].connectedUsers });
-        } else {
-          setQuotation([]);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      if (response.data.data && response.data.data.length > 0) {
+        setQuotation({ Quotation: response.data.data[0].connectedUsers });
+      } else {
+        setQuotation([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+  
   console.log(">>>>", datesSelected);
 
   React.useEffect(() => {
@@ -211,29 +212,28 @@ function Row(props) {
     }
   }
   
-  const exportToExcel = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .get(`${BaseUrl}/excel/${id}`, {
+  const exportToExcel = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/excel/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-        params:{
+        params: {
           startDate,
-          endDate
+          endDate,
         },
         responseType: 'blob',
-      })
-
-      .then((response) => {
-        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-         
-        saveAs(blob, 'Quotation.xlsx');
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      const blob = new Blob([response.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+  
+      saveAs(blob, 'Quotation.xlsx');
+    } catch (error) {
+      console.log(error);
+    }
   };
   
   return (
@@ -506,24 +506,29 @@ export default function Saleslist() {
   const rowsPerPage = 10;
 
   React.useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .get(`${BaseUrl}/salesPerson/AllList`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+    const fetchData = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  
+        const response = await axios.get(`${BaseUrl}/salesPerson/AllList`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+  
         console.log("??????????????S", response.data.data);
         setSalesperson(response.data.data);
         setIsLoading(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
-      });
+      }
+    };
+  
+    fetchData(); 
+  
   }, []);
+  
 
   const indexOfLastItem = page * rowsPerPage;
   const indexOfFirstItem = indexOfLastItem - rowsPerPage;
@@ -554,22 +559,22 @@ export default function Saleslist() {
     // console.log(">>>>>>", filter, selectedFilter);
   };
 
-  const handleSearch = (SalesPersonName) => {
+  const handleSearch = async (SalesPersonName) => {
     setPage(1);
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/salesPerson/search/?SalesPersonName=${SalesPersonName}`, {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  
+      const response = await axios.get(`${BaseUrl}/salesPerson/search/?SalesPersonName=${SalesPersonName}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        console.log(response.data.data);
-        setSalesperson(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      console.log(response.data.data);
+      setSalesperson(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (isLoading) {

@@ -17,70 +17,68 @@ function Salesform() {
   const [mobileNo, setMoblieNo] = useState(""); // create salesperson
   const [message, setMessage] = useState(""); // show error message and create 
   const [showModal, setShowModal] = useState(false); // show model
-
   useEffect(() => {
-    if (id) {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-      axios
-        .get(`${BaseUrl}/salesPerson/view/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        })
-        .then(function (response) {
+    const fetchData = async () => {
+      if (id) {
+        try {
+          const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+          const response = await axios.get(`${BaseUrl}/salesPerson/view/${id}`, {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          });
+  
           const SalespersonData = response.data.data;
           setName(SalespersonData.Name);
           setMoblieNo(SalespersonData.mobileNo);
-         
-        })
-        .catch(function (error) {
+        } catch (error) {
           console.log(error);
           setMessage(error.message);
           setShowModal(true);
-        });
-    }
+        }
+      }
+    };
+  
+    fetchData(); 
+  
   }, [id]);
-
-  const handleSalesperson = (e) => {
+  
+  
+  const handleSalesperson = async (e) => {
     e.preventDefault();
     if (!Name && !mobileNo) {
       setMessage("Please Fill Required Fields");
       setShowModal(true);
       return;
     }
+  
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    if (id) {
-      console.log(id);
-      axios
-        .put(
+  
+    try {
+      if (id) {
+        console.log(id);
+        const response = await axios.put(
           `${BaseUrl}/salesPerson/update/${id}`,
           {
             Name: Name,
-            mobileNo: mobileNo
+            mobileNo: mobileNo,
           },
           {
             headers: {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            setMessage("Sales person  Update successful");
-            setShowModal(true);
-          } else {
-            setMessage(response.data.message);
-            setShowModal(true);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          setMessage(error.response.data.message);
+        );
+  
+        if (response.data && response.data.status === "Success") {
+          setMessage("Sales person Update successful");
           setShowModal(true);
-        });
-    } else {
-      axios
-        .post(
+        } else {
+          setMessage(response.data.message);
+          setShowModal(true);
+        }
+      } else {
+        const response = await axios.post(
           `${BaseUrl}/salesPerson/create`,
           {
             Name: Name,
@@ -91,23 +89,23 @@ function Salesform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            setMessage("Sales Person Create successful");
-            setShowModal(true);
-          } else {
-            setMessage(response.data.message);
-            setShowModal(true);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          setMessage(error.response.data.message);
+        );
+  
+        if (response.data && response.data.status === "Success") {
+          setMessage("Sales Person Create successful");
           setShowModal(true);
-        });
+        } else {
+          setMessage(response.data.message);
+          setShowModal(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setMessage(error.response.data.message);
+      setShowModal(true);
     }
   };
+  
   const handleClose = useCallback(() => {
     setShowModal(false);
     if (message.includes("successful")) {

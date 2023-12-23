@@ -21,16 +21,18 @@ function Architectureform() {
   }); // Create New Architecs
 
   useEffect(() => {
-    if (id) {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-      console.log(saved);
-      axios
-        .get(`${BaseUrl}/architec/viewdata/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        })
-        .then(function (response) {
+    const fetchData = async () => {
+      try {
+        if (id) {
+          const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+          console.log(saved);
+  
+          const response = await axios.get(`${BaseUrl}/architec/viewdata/${id}`, {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          });
+  
           const architecData = response.data.data;
           setFormData((prevData) => ({
             ...prevData,
@@ -38,22 +40,24 @@ function Architectureform() {
             mobileNo: architecData.mobileNo,
             address: architecData.address,
           }));
-        })
-        .catch(function (error) {
-          console.log(error);
-          setFormData((prevData) => ({
-            ...prevData,
-            message: error.response.data.message,
-            showModal: true,
-          }));
-        });
-    }
+        }
+      } catch (error) {
+        console.log(error);
+        setFormData((prevData) => ({
+          ...prevData,
+          message: error.response.data.message,
+          showModal: true,
+        }));
+      }
+    };
+  
+    fetchData();
   }, [id]);
-
-  const handleArchitecture = (e) => {
+  
+  const handleArchitecture = async (e) => {
     e.preventDefault();
     const { architecsName, mobileNo, address } = formData;
-
+  
     if (!architecsName && !mobileNo) {
       setFormData((prevData) => ({
         ...prevData,
@@ -62,13 +66,13 @@ function Architectureform() {
       }));
       return;
     }
-
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    console.log(saved);
-
-    if (id) {
-      axios
-        .put(
+  
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      console.log(saved);
+  
+      if (id) {
+        const response = await axios.put(
           `${BaseUrl}/architec/data/update/${id}`,
           {
             architecsName,
@@ -80,33 +84,23 @@ function Architectureform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Architecture Update successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Architecture Update successful",
             showModal: true,
           }));
-        });
-    } else {
-      axios
-        .post(
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      } else {
+        const response = await axios.post(
           `${BaseUrl}/architec/data/create`,
           {
             architecsName,
@@ -118,34 +112,34 @@ function Architectureform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            const saved = response.data.token;
-            localStorage.setItem(process.env.REACT_APP_KEY, saved);
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Architecture Create successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
+          const saved = response.data.token;
+          localStorage.setItem(process.env.REACT_APP_KEY, saved);
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Architecture Create successful",
             showModal: true,
           }));
-        });
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setFormData((prevData) => ({
+        ...prevData,
+        message: error.response.data.message,
+        showModal: true,
+      }));
     }
   };
+  
 
   const handleClose = useCallback(() => {
     setFormData((prevData) => ({

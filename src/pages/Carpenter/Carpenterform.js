@@ -19,42 +19,41 @@ function Carpenterform() {
     message: "",
     showModal: false,
   }); // Create New Carpenter
-
   useEffect(() => {
+    async function fetchData() {
     if (id) {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-      axios
-        .get(`${BaseUrl}/carpenter/viewdata/${id}`, {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/carpenter/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
-        })
-        .then(function (response) {
-          const carpenterData = response.data.data;
-          setFormData((prevData) => ({
-            ...prevData,
-            carpentersName: carpenterData.carpentersName,
-            mobileNo: carpenterData.mobileNo,
-            address: carpenterData.address,
-          }));
-        })
-        .catch(function (error) {
-          console.log(error);
-          setFormData((prevData) => ({
-            ...prevData,
-            message: error.response.data.message,
-            showModal: true,
-          }));
         });
-    }
+  
+        const carpenterData = response.data.data;
+        setFormData((prevData) => ({
+          ...prevData,
+          carpentersName: carpenterData.carpentersName,
+          mobileNo: carpenterData.mobileNo,
+          address: carpenterData.address,
+        }));
+      } catch (error) {
+        console.log(error);
+        setFormData((prevData) => ({
+          ...prevData,
+          message: error.response.data.message,
+          showModal: true,
+        }));
+      }
+    }}
+    fetchData();
   }, [id]);
-
-  const handleCarpenter = (e) => {
+  
+  const handleCarpenter = async (e) => {
     e.preventDefault();
-
+  
     const { carpentersName, mobileNo, address } = formData;
-
+  
     if (!carpentersName && !mobileNo) {
       setFormData((prevData) => ({
         ...prevData,
@@ -64,10 +63,10 @@ function Carpenterform() {
       return;
     }
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    if (id) {
-      axios
-        .put(
+  
+    try {
+      if (id) {
+        const response = await axios.put(
           `${BaseUrl}/carpenter/data/update/${id}`,
           {
             carpentersName,
@@ -79,33 +78,23 @@ function Carpenterform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Carpenter Update successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Carpenter Update successful",
             showModal: true,
           }));
-        });
-    } else {
-      axios
-        .post(
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      } else {
+        const response = await axios.post(
           `${BaseUrl}/carpenter/data/create`,
           {
             carpentersName,
@@ -117,35 +106,34 @@ function Carpenterform() {
               Authorization: `Bearer ${saved}`,
             },
           }
-        )
-        .then(function (response) {
-          if (response.data && response.data.status === "Success") {
-            const saved = response.data.token;
-            localStorage.setItem(process.env.REACT_APP_KEY, saved);
-            setFormData((prevData) => ({
-              ...prevData,
-              message: "Carpenter Create successful",
-              showModal: true,
-            }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              message: response.data.message,
-              showModal: true,
-            }));
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+        );
+  
+        if (response.data && response.data.status === "Success") {
+          const savedToken = response.data.token;
+          localStorage.setItem(process.env.REACT_APP_KEY, savedToken);
           setFormData((prevData) => ({
             ...prevData,
-            message: error.response.data.message,
+            message: "Carpenter Create successful",
             showModal: true,
           }));
-        });
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            message: response.data.message,
+            showModal: true,
+          }));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setFormData((prevData) => ({
+        ...prevData,
+        message: error.response.data.message,
+        showModal: true,
+      }));
     }
   };
-
+  
   const handleClose = useCallback(() => {
     setFormData((prevData) => ({
       ...prevData,

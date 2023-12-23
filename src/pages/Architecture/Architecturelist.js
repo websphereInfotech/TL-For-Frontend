@@ -28,117 +28,114 @@ function Row({ row, setArchitecture }) {
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);//show the Quotation data in model
 
-  const handleviewQutotation = (id) => {
-
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let tableData;
-    axios
-      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        const QuotationData = response.data.data1;
-        console.log(QuotationData);
-        axios
-          .get(`${BaseUrl}/total/view/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response2) {
-            tableData = response2.data.data;
-            let mainTotal = 0;
-            for (const item of tableData) {
-              mainTotal += item.total;
-            }
-            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-            if (!Array.isArray(tableData)) {
-              tableData = [tableData];
-            }
-            console.log("tabledataa", tableData);
-            let architecNames = "";
-            let carpenterNames = "";
-            let shopNames = "";
-
-            if (QuotationData.architec) {
-              architecNames = QuotationData.architec
-                .map((architec) => architec.architecsName)
-                .join(", ");
-            }
-            if (QuotationData.carpenter) {
-              carpenterNames = QuotationData.carpenter
-                .map((carpenter) => carpenter.carpentersName)
-                .join(", ");
-            }
-            if (QuotationData.shop) {
-              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-            }
-            const innerTableRows = tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="break-words border">{item.description}</td>
-                <td className="break-words border">{item.area}</td>
-                <td className="border ">{item.size}</td>
-                <td className="border ">{item.rate}</td>
-                <td className="border ">{item.quantity}</td>
-                <td className="border ">{item.total}</td>
-              </tr>
-            ));
-            setselectedQuotationDetails({
-              tokenNo: QuotationData.serialNumber,
-              Date: QuotationData.Date,
-              name: QuotationData.userName,
-              mobileNo: QuotationData.mobileNo,
-              address: QuotationData.address,
-              innerTable: innerTableRows,
-              mainTotal: mainTotal,
-              architec: architecNames,
-              carpenter: carpenterNames,
-              shop: shopNames,
-              sales: salesName,
-            });
-
-          })
-          .catch(function (error) {
-            console.log(error);
-
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const handleviewdata = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/architec/viewdata/${id}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data.data);
-        setselectedArchitecDetails(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const handleDelete = () => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .delete(
-        `${BaseUrl}/architec/data/delete/${selectedArchitectureId}`,
-        {
+    const handleviewQutotation = async (id) => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    
+        const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
+        });
+    
+        const QuotationData = response1.data.data1;
+        console.log(QuotationData);
+    
+        const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
+        let tableData = response2.data.data;
+        let mainTotal = 0;
+    
+        for (const item of tableData) {
+          mainTotal += item.total;
         }
-      )
-      .then(function (response) {
+    
+        const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+    
+        if (!Array.isArray(tableData)) {
+          tableData = [tableData];
+        }
+    
+        console.log("tabledataa", tableData);
+        let architecNames = "";
+        let carpenterNames = "";
+        let shopNames = "";
+    
+        if (QuotationData.architec) {
+          architecNames = QuotationData.architec
+            .map((architec) => architec.architecsName)
+            .join(", ");
+        }
+        if (QuotationData.carpenter) {
+          carpenterNames = QuotationData.carpenter
+            .map((carpenter) => carpenter.carpentersName)
+            .join(", ");
+        }
+        if (QuotationData.shop) {
+          shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+        }
+    
+        const innerTableRows = tableData.map((item, index) => (
+          <tr key={index}>
+            <td className="break-words border">{item.description}</td>
+            <td className="break-words border">{item.area}</td>
+            <td className="border ">{item.size}</td>
+            <td className="border ">{item.rate}</td>
+            <td className="border ">{item.quantity}</td>
+            <td className="border ">{item.total}</td>
+          </tr>
+        ));
+    
+        setselectedQuotationDetails({
+          tokenNo: QuotationData.serialNumber,
+          Date: QuotationData.Date,
+          name: QuotationData.userName,
+          mobileNo: QuotationData.mobileNo,
+          address: QuotationData.address,
+          innerTable: innerTableRows,
+          mainTotal: mainTotal,
+          architec: architecNames,
+          carpenter: carpenterNames,
+          shop: shopNames,
+          sales: salesName,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    const handleviewdata = async (id) => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/architec/viewdata/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+    
+        console.log(response.data.data);
+        setselectedArchitecDetails(response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    const handleDelete = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.delete(
+          `${BaseUrl}/architec/data/delete/${selectedArchitectureId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${saved}`,
+            },
+          }
+        );
+    
         console.log(response.data.data);
         setArchitecture((prevArchitecture) =>
           prevArchitecture.filter(
@@ -146,33 +143,32 @@ function Row({ row, setArchitecture }) {
           )
         );
         setShowDeleteConfirmation(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
-      });
-  };
+      }
+    };
+    
 
   const confirmDelete = (id) => {
     setSelectedArchitectureId(id);
     setShowDeleteConfirmation(true);
   };
-
-  const handleSubmit = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/architec/listdata/${id}`, {
+  const handleSubmit = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/architec/listdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        setQuotation({ Quotation: response.data.data });
-        console.log({ Quotation: response.data.data });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      setQuotation({ Quotation: response.data.data });
+      console.log({ Quotation: response.data.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
+  
   return (
     <>
       <React.Fragment>
@@ -428,23 +424,26 @@ export default function Architecturelist() {
   const itemsPerPage = 10;
 
   React.useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    console.log(saved);
-    axios
-      .get(`${BaseUrl}/architec/list`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+    const fetchData = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        console.log(saved);
+        const response = await axios.get(`${BaseUrl}/architec/list`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+  
         console.log(response.data.data);
         setArchitecture(response.data.data);
         setIsLoading(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
-      });
+      }
+    };
+  
+    fetchData();
   }, []);
 
   const totalPages = Math.ceil(architecture.length / itemsPerPage);
@@ -456,25 +455,25 @@ export default function Architecturelist() {
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = architecture.slice(startIndex, endIndex);
 
-  const handleSearch = (architecName) => {
-    setCurrentPage(1);
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    const url = `${BaseUrl}/architec/searchdata?architecName=${architecName}`
-    
-    axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${saved}`,
-      },
-    })
-    .then(function (response) {
+  const handleSearch = async (architecName) => {
+    try {
+      setCurrentPage(1);
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const url = `${BaseUrl}/architec/searchdata?architecName=${architecName}`;
+      
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+  
       console.log(response.data.data);
       setArchitecture(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    } catch (error) {
+      console.log(error);
+    }
   };
+  
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">

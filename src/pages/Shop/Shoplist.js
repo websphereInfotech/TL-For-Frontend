@@ -24,147 +24,143 @@ function Row({ row, setShop }) {
   const [Quotation, setQuotation] = React.useState([]);//show data of Quotation in drop down
   const [selectedQuotationDetails, setselectedQuotationDetails] = React.useState(null);//show Quotation data in model
 
-  const handleviewQutotation = (id) => {
+  const handleviewQutotation = async (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let tableData;
-
-    axios
-      .get(`${BaseUrl}/quotation/viewdata/${id}`, {
+  
+    try {
+      const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        const QuotationData = response.data.data1;
-        console.log(QuotationData);
-        axios
-          .get(`${BaseUrl}/total/view/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          })
-          .then(function (response2) {
-            tableData = response2.data.data;
-            let mainTotal = 0;
-            for (const item of tableData) {
-              mainTotal += item.total;
-            }
-            const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-            if (!Array.isArray(tableData)) {
-              tableData = [tableData];
-            }
-            console.log("tabledataa", tableData);
-            let architecNames = "";
-            let carpenterNames = "";
-            let shopNames = "";
-
-            if (QuotationData.architec) {
-              architecNames = QuotationData.architec
-                .map((architec) => architec.architecsName)
-                .join(", ");
-            }
-            if (QuotationData.carpenter) {
-              carpenterNames = QuotationData.carpenter
-                .map((carpenter) => carpenter.carpentersName)
-                .join(", ");
-            }
-            if (QuotationData.shop) {
-              shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-            }
-            const innerTableRows = tableData.map((item, index) => (
-              <tr key={index}>
-                <td className="break-words border">{item.description}</td>
-                <td className="break-words border">{item.area}</td>
-                <td className="border ">{item.size}</td>
-                <td className="border ">{item.rate}</td>
-                <td className="border ">{item.quantity}</td>
-                <td className="border ">{item.total}</td>
-              </tr>
-            ));
-            setselectedQuotationDetails({
-              tokenNo: QuotationData.serialNumber,
-              Date: QuotationData.Date,
-              name: QuotationData.userName,
-              mobileNo: QuotationData.mobileNo,
-              address: QuotationData.address,
-              innerTable: innerTableRows,
-              mainTotal: mainTotal,
-              architec: architecNames,
-              carpenter: carpenterNames,
-              shop: shopNames,
-              sales: salesName,
-            });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      const QuotationData = response1.data.data1;
+  
+      const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+  
+      tableData = response2.data.data;
+      let mainTotal = 0;
+      for (const item of tableData) {
+        mainTotal += item.total;
+      }
+  
+      const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+  
+      if (!Array.isArray(tableData)) {
+        tableData = [tableData];
+      }
+  
+      let architecNames = "";
+      let carpenterNames = "";
+      let shopNames = "";
+  
+      if (QuotationData.architec) {
+        architecNames = QuotationData.architec
+          .map((architec) => architec.architecsName)
+          .join(", ");
+      }
+      if (QuotationData.carpenter) {
+        carpenterNames = QuotationData.carpenter
+          .map((carpenter) => carpenter.carpentersName)
+          .join(", ");
+      }
+      if (QuotationData.shop) {
+        shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+      }
+  
+      const innerTableRows = tableData.map((item, index) => (
+        <tr key={index}>
+          <td className="break-words border">{item.description}</td>
+          <td className="break-words border">{item.area}</td>
+          <td className="border ">{item.size}</td>
+          <td className="border ">{item.rate}</td>
+          <td className="border ">{item.quantity}</td>
+          <td className="border ">{item.total}</td>
+        </tr>
+      ));
+  
+      setselectedQuotationDetails({
+        tokenNo: QuotationData.serialNumber,
+        Date: QuotationData.Date,
+        name: QuotationData.userName,
+        mobileNo: QuotationData.mobileNo,
+        address: QuotationData.address,
+        innerTable: innerTableRows,
+        mainTotal: mainTotal,
+        architec: architecNames,
+        carpenter: carpenterNames,
+        shop: shopNames,
+        sales: salesName,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const handleviewdata = (id) => {
+  
+  const handleviewdata = async (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .get(`${BaseUrl}/shop/viewdata/${id}`, {
+  
+    try {
+      const response = await axios.get(`${BaseUrl}/shop/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        console.log(response.data.data);
-        setSelectedShopDetails(response.data.data);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      console.log(response.data.data);
+      setSelectedShopDetails(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  const handleDelete = () => {
+  
+  const handleDelete = async () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
-    axios
-      .delete(`${BaseUrl}/shop/data/delete/${selectedShopID}`, {
+  
+    try {
+      const response = await axios.delete(`${BaseUrl}/shop/data/delete/${selectedShopID}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        console.log(response.data.data);
-        setShop((prevShop) =>
-          prevShop.filter((shop) => shop._id !== selectedShopID)
-        );
-        setShowDeleteConfirmation(false);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      console.log(response.data.data);
+      setShop((prevShop) =>
+        prevShop.filter((shop) => shop._id !== selectedShopID)
+      );
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  
 
   const confirmDelete = (id) => {
     setSelectedShopId(id);
     setShowDeleteConfirmation(true);
   };
 
-  const handleSubmit = (id) => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/shop/listdata/${id}`, {
+  const handleSubmit = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/shop/listdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        setQuotation({ Quotation: response.data.data });
-        console.log({ Quotation: response.data.data });
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      setQuotation({ Quotation: response.data.data });
+      console.log({ Quotation: response.data.data });
+    } catch (error) {
+      console.log(error);
+    }
   };
-
+  
   return (
     <>
       <React.Fragment>
@@ -425,23 +421,28 @@ export default function Shoplist() {
   const itemsPerPage = 10;
 
   React.useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${BaseUrl}/shop/list`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
+    const fetchData = async () => {
+      try {
+        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+        const response = await axios.get(`${BaseUrl}/shop/list`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        });
+  
         console.log(response.data.data);
         setShop(response.data.data);
         setIsLoading(false);
-      })
-      .catch(function (error) {
+      } catch (error) {
         console.log(error);
         setIsLoading(false);
-      });
+      }
+    };
+  
+    fetchData();  
+  
   }, []);
+  
 
   const totalPages = Math.ceil(shop.length / itemsPerPage);
   const handlePageChange = (event, page) => {
@@ -452,24 +453,23 @@ export default function Shoplist() {
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = shop.slice(startIndex, endIndex);
 
-  const handleSearch = (shopName) => {
+  const handleSearch = async (shopName) => {
     setCurrentPage(1);
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    let url = `${BaseUrl}/shop/searchdata?shopName=${shopName}`
-
-    axios
-      .get(url, {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      let url = `${BaseUrl}/shop/searchdata?shopName=${shopName}`;
+  
+      const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
-      })
-      .then(function (response) {
-        setShop(response.data.data);
-        console.log(">>>>>", shop);
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+  
+      setShop(response.data.data);
+      console.log(">>>>>", shop);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (isLoading) {
