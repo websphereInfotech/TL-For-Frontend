@@ -150,7 +150,6 @@ function Row({ row, setQuotation }) {
           Authorization: `Bearer ${saved}`,
         },
       });
-  
       if (response.status === 200) {
         const binaryData = atob(response.data.data);
         const byteArray = new Uint8Array(binaryData.length);
