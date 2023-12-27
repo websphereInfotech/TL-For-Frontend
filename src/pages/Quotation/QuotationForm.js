@@ -36,7 +36,7 @@ function QuotationForm() {
   const [selectShop, selectsetShop] = useState([]); //api response in only name find
   const [sale, setSale] = useState([]); // sale in add drop dwon
   const [selectSale, selectsetSale] = useState(null); //api response in only name find
-  const [serialNub, setSerialNub] = useState(1); // auto genarate  serialnumber
+  const [serialNub, setSerialNub] = useState(0); // auto genarate  serialnumber
 
   const [isCreatingArchitecture, setIsCreatingArchitecture] = useState(false); //create Architect show model
   const [newArchitecture, setNewArchitecture] = useState({
