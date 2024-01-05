@@ -132,7 +132,7 @@ function QuotationForm() {
   
           const { data1: quotationData, data: tableData } = response.data;
           const formattedDate = formatDate(quotationData.Date);
-  
+         
           setFormValues({
             userName: quotationData.userName,
             mobileNo: quotationData.mobileNo,
@@ -246,41 +246,46 @@ function QuotationForm() {
     }
 
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
+    
     const architectureIds = selectedArchitecture.map((item) => item.value);
     const carpenterIds = selectCarpenter.map((item) => item.value);
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
-
+    console.log("architectureIds",architectureIds);
+    console.log("architectureIds",carpenterIds);
+    console.log("architectureIds",shopIds);
     const data = {
       ...formValues,
       serialNumber: serialNub.toString(),
-      architec: architectureIds,
+      architecture: architectureIds,
       carpenter: carpenterIds,
       shop: shopIds,
       sales: saleIds,
       addtotal: rows,
     };
 
+    console.log("data",data);
     try {
+      console.log("ID",id)
       const response = id
         ? await axios.put(`${url}/quotation/update/${id}`, data, {
             headers: { Authorization: `Bearer ${saved}` },
           })
-        : await axios.post(`${url}/quotation/cerate`, data, {
+          : await axios.post(`${url}/quotation/cerate`, data, {
             headers: { Authorization: `Bearer ${saved}` },
           });
-
-      const isSuccess = response.data.status === "Success";
-      setModalState({
-        showModal: true,
-        message: isSuccess
-          ? id
+          
+          console.log("update",response.data.data);
+          const isSuccess = response.data.status === "Success";
+          setModalState({
+            showModal: true,
+            message: isSuccess
+            ? id
             ? "Quotation Update successful"
             : "Quotation Create successful"
-          : response.data.message,
-        isSuccess,
-      });
+            : response.data.message,
+            isSuccess,
+          });
     } catch (error) {
       setModalState({
         showModal: true,
@@ -460,8 +465,8 @@ function QuotationForm() {
           >
             Dashboard
           </Breadcrumb.Item>
-
           <Breadcrumb.Item
+
             linkAs={Link}
             linkProps={{ to: routeUrls.QUOTATION }}
           >

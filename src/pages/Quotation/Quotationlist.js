@@ -480,24 +480,24 @@ function Row({ row, setQuotation }) {
                   </tr>
                   <tr>
                     <th className="m-table color">Address</th>
-                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>: </th>
                     <td className="m-table break-words">
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color">Architec</th>
-                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
                     <th className="m-table color">Carpenter</th>
-                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
                     <th className="m-table color">shop</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
