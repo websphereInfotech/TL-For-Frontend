@@ -468,7 +468,7 @@ function Row({ row, setQuotation }) {
                   </tr>
                   <tr>
                     <th className="m-table color">Name </th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
                     <td className="break-words m-table uppercase">
                       {selectedQuotationDetails.name}
                     </td>
@@ -480,19 +480,19 @@ function Row({ row, setQuotation }) {
                   </tr>
                   <tr>
                     <th className="m-table color">Address</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
                     <td className="m-table break-words">
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color">Architec</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
                     <th className="m-table color">Carpenter</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
@@ -502,7 +502,7 @@ function Row({ row, setQuotation }) {
                   </tr>
                   <tr>
                     <th className="m-table color">Sales Person</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
+                    <th style={{ padding: '8px', textAlign: 'right', wordBreak: 'break-word' }}>: </th>
                     <td className="m-table">{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
