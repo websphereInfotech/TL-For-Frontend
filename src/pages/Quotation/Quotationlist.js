@@ -94,7 +94,6 @@ function Row({ row, setQuotation }) {
                 <td className="border ">{item.total}</td>
               </tr>
             ));
-
             setselectedQuotationDetails({
               tokenNo: userData.serialNumber,
               Date: userData.Date,

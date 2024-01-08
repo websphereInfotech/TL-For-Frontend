@@ -244,9 +244,9 @@ function QuotationForm() {
     const data = {
       ...formValues,
       serialNumber: serialNub.toString(),
-      architec: architectureIds,
-      carpenter: carpenterIds,
-      shop: shopIds,
+      architecture_id: architectureIds,
+      carpenter_id: carpenterIds,
+      shop_id: shopIds,
       sales: saleIds,
       addtotal: rows,
     };
@@ -259,8 +259,7 @@ function QuotationForm() {
       : await axios.post(`${url}/quotation/cerate`, data, {
         headers: { Authorization: `Bearer ${saved}` },
       });
-      console.log("response",response.data.data);
-      console.log("data",data);
+      console.log("Response:", response.data);
       const isSuccess = response.data.status === "Success";
       setModalState({
         showModal: true,
