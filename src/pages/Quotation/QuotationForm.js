@@ -21,13 +21,13 @@ function QuotationForm() {
     Date: "",
   });
 
-  const [rows, setRows] = useState([createNewRow()]); // table row added
+  const [rows, setRows] = useState([createNewRow()]);  // table row added
   const [modalState, setModalState] = useState({
     showModal: false,
     message: "",
     isSuccess: false,
-  }); //show error message and create,update message
-
+  });  //show error message and create,update message
+  
   const [architecture, setArchitecture] = useState([]); //architec in add drop dwon
   const [selectedArchitecture, setSelectedArchitecture] = useState([]); //api response in only name find
   const [carpenter, setCarpenter] = useState([]); //carpenter in add drop dwon
@@ -37,7 +37,7 @@ function QuotationForm() {
   const [sale, setSale] = useState([]); // sale in add drop dwon
   const [selectSale, selectsetSale] = useState(null); //api response in only name find
   const [serialNub, setSerialNub] = useState(1); // auto genarate  serialnumber
-
+  
   const [isCreatingArchitecture, setIsCreatingArchitecture] = useState(false); //create Architect show model
   const [newArchitecture, setNewArchitecture] = useState({
     name: "",
@@ -59,7 +59,7 @@ function QuotationForm() {
     address: "",
   }); // create new shop
 
-  function createNewRow() {
+ function createNewRow() {
     return {
       description: "",
       area: "",
@@ -68,56 +68,55 @@ function QuotationForm() {
       quantity: "",
       total: "",
     };
-  } // create new row
+  }// create new row
 
   const addRowTable = () => {
     setRows((prevRows) => [...prevRows, createNewRow()]);
-  }; //table new row add
+  };//table new row add
 
   const handleRowChange = (rowIndex, field, value) => {
+
     setRows((prevRows) => {
       const newRows = [...prevRows];
       newRows[rowIndex][field] = value;
       const size = parseFloat(newRows[rowIndex].size) || 0; // convert integer value in float value
       const rate = parseFloat(newRows[rowIndex].rate) || 0; // convert integer value in float value
       const quantity = parseFloat(newRows[rowIndex].quantity) || 0; // convert integer value in float value
-      newRows[rowIndex].total = (size * rate * quantity).toFixed(2); // total
+      newRows[rowIndex].total = (size * rate * quantity).toFixed(2); // total 
       return newRows;
     });
   };
-  // architec ,carpenter, shop, salesperson name show in dropdwon
+// architec ,carpenter, shop, salesperson name show in dropdwon
   useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
-    async function fetchData(endpoint) {
-      const timestamp = Date.now();
-      try {
-        const response = await axios.get(
-          `${url}/${endpoint}?timestamp=${timestamp}`,
-          {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          }
-        );
-        return response.data.data;
-      } catch (error) {
-        console.error(error);
-        return [];
-      }
+  async function fetchData(endpoint) {
+    const timestamp = Date.now();
+    try {
+      const response = await axios.get(`${url}/${endpoint}?timestamp=${timestamp}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+      return response.data.data;
+    } catch (error) {
+      console.error(error);
+      return [];
     }
-    Promise.all([
-      fetchData("architec/list"),
-      fetchData("carpenter/list"),
-      fetchData("shop/list"),
-      fetchData("salesPerson/AllList"),
-    ]).then(([architectureData, carpenterData, shopData, saleData]) => {
+  }
+  Promise.all([
+    fetchData('architec/list'),
+    fetchData('carpenter/list'),
+    fetchData('shop/list'),
+    fetchData('salesPerson/AllList'),
+  ])
+    .then(([architectureData, carpenterData, shopData, saleData]) => {
       setArchitecture(architectureData);
       setCarpenter(carpenterData);
       setShop(shopData);
       setSale(saleData);
-    });
-  }, []);
+        });
+}, []);
 
   useEffect(() => {
     if (id) {
@@ -174,7 +173,7 @@ function QuotationForm() {
     }
   }, [id]);
 
-  const formatDate = (dateStr) => {
+    const formatDate = (dateStr) => {
     const [day, month, year] = dateStr.split("-");
     return `${year}-${month}-${day}`;
   };
@@ -205,7 +204,7 @@ function QuotationForm() {
 
   const handleQuotation = async (e) => {
     e.preventDefault();
-
+  
     const allFieldsEmpty = Object.values(formValues).every(
       (value) => value === ""
     );
@@ -217,16 +216,9 @@ function QuotationForm() {
       });
       return;
     }
-
-    const requiredFields = [
-      "description",
-      "area",
-      "size",
-      "rate",
-      "quantity",
-      "total",
-    ];
-
+  
+    const requiredFields = ["description", "area", "size", "rate", "quantity", "total"];
+  
     for (const row of rows) {
       for (const field of requiredFields) {
         if (!row[field]) {
@@ -239,42 +231,40 @@ function QuotationForm() {
         }
       }
     }
-
+  
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-
+  
     const architectureIds = selectedArchitecture.map((item) => item.value);
     const carpenterIds = selectCarpenter.map((item) => item.value);
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
-
+    console.log("Selected Architecture: ", selectedArchitecture);
+    console.log("Selected Carpenter: ", selectCarpenter);
+    console.log("Selected Shop: ", selectShop);
     const data = {
       ...formValues,
       serialNumber: serialNub.toString(),
-      architecture_id: architectureIds, // Match backend naming (architecture_id instead of architec)
-      carpenter_id: carpenterIds, // Match backend naming
-      shop_id: shopIds, // Match backend naming
+      architec: architectureIds,
+      carpenter: carpenterIds,
+      shop: shopIds,
       sales: saleIds,
       addtotal: rows,
     };
-
-
+    console.log("Request Payload: ", data);
     try {
       const response = id
-        ? await axios.put(`${url}/quotation/update/${id}`, data, {
-            headers: { Authorization: `Bearer ${saved}` },
-          })
-        : await axios.post(`${url}/quotation/cerate`, data, {
-            headers: { Authorization: `Bearer ${saved}` },
-          });
-
+      ? await axios.put(`${url}/quotation/update/${id}`, data, {
+        headers: { Authorization: `Bearer ${saved}` },
+      })
+      : await axios.post(`${url}/quotation/cerate`, data, {
+        headers: { Authorization: `Bearer ${saved}` },
+      });
+      console.log("response",response.data.data);
+      console.log("data",data);
       const isSuccess = response.data.status === "Success";
       setModalState({
         showModal: true,
-        message: isSuccess
-          ? id
-            ? "Quotation Update successful"
-            : "Quotation Create successful"
-          : response.data.message,
+        message: isSuccess ? (id ? "Quotation Update successful" : "Quotation Create successful") : response.data.message,
         isSuccess,
       });
     } catch (error) {
@@ -285,6 +275,7 @@ function QuotationForm() {
       });
     }
   };
+  
 
   const handleClose = useCallback(() => {
     setModalState((prev) => ({
@@ -305,13 +296,13 @@ function QuotationForm() {
       const timer = setTimeout(() => {
         handleClose();
       }, 2000);
-
+  
       return () => {
         clearTimeout(timer);
       };
     }
   }, [modalState.showModal, handleClose]);
-  // Create New Architec
+// Create New Architec
   const handleSaveNewArchitecture = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -334,7 +325,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
-            isSuccess: true,
+            isSuccess:true,
           });
           const newArchOption = {
             label: newArchitecture.name,
@@ -345,7 +336,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
-            isSuccess: false,
+            isSuccess:false,
           });
         }
       })
@@ -361,7 +352,7 @@ function QuotationForm() {
   const handleCloseCreateArchitecture = () => {
     setIsCreatingArchitecture(false);
   };
-  // create New  Carpenter
+// create New  Carpenter
   const handleSaveNewCarpenter = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     axios
@@ -384,7 +375,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: "Carpenter Create successful",
-            isSuccess: true,
+            isSuccess:true,
           });
           const newCarpOption = {
             label: newCarpenter.name,
@@ -395,7 +386,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
-            isSuccess: false,
+            isSuccess:false
           });
         }
       })
@@ -434,7 +425,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: "Shop Create successful",
-            isSuccess: true,
+            isSuccess:true,
           });
           const newShopOption = {
             label: newShop.name,
@@ -445,7 +436,7 @@ function QuotationForm() {
           setModalState({
             showModal: true,
             message: response.data.message,
-            isSuccess: false,
+            isSuccess:false
           });
         }
       })
@@ -467,15 +458,13 @@ function QuotationForm() {
         <Breadcrumb className="font-bold color">
           <Breadcrumb.Item
             linkAs={Link}
-            linkProps={{ to: routeUrls.DASHBOARD }}
-          >
+            linkProps={{ to: routeUrls.DASHBOARD }}>
             Dashboard
           </Breadcrumb.Item>
 
           <Breadcrumb.Item
             linkAs={Link}
-            linkProps={{ to: routeUrls.QUOTATION }}
-          >
+            linkProps={{ to: routeUrls.QUOTATION }}>
             Quotation
           </Breadcrumb.Item>
         </Breadcrumb>
@@ -608,14 +597,9 @@ function QuotationForm() {
                             type="text"
                             value={row.description || ""}
                             onChange={(e) =>
-                              handleRowChange(
-                                rowIndex,
-                                "description",
-                                e.target.value
-                              )
+                              handleRowChange( rowIndex, "description", e.target.value )
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                         <td>
                           <input
@@ -624,8 +608,7 @@ function QuotationForm() {
                             onChange={(e) =>
                               handleRowChange(rowIndex, "area", e.target.value)
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                         <td>
                           <input
@@ -634,8 +617,7 @@ function QuotationForm() {
                             onChange={(e) =>
                               handleRowChange(rowIndex, "size", e.target.value)
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                         <td>
                           <input
@@ -644,22 +626,16 @@ function QuotationForm() {
                             onChange={(e) =>
                               handleRowChange(rowIndex, "rate", e.target.value)
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                         <td>
                           <input
                             type="text"
                             value={row.quantity || ""}
                             onChange={(e) =>
-                              handleRowChange(
-                                rowIndex,
-                                "quantity",
-                                e.target.value
-                              )
+                              handleRowChange( rowIndex, "quantity", e.target.value)
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                         <td>
                           <input
@@ -668,8 +644,7 @@ function QuotationForm() {
                             onChange={(e) =>
                               handleRowChange(rowIndex, "total", e.target.value)
                             }
-                            className="form-control"
-                          />
+                            className="form-control" />
                         </td>
                       </tr>
                     </tbody>
@@ -683,9 +658,7 @@ function QuotationForm() {
                         {rows
                           .reduce(
                             (total, row) =>
-                              total + (parseFloat(row.total) || 0),
-                            0
-                          )
+                              total + (parseFloat(row.total) || 0), 0 )
                           .toFixed(2)}
                       </td>
                     </tr>
@@ -763,8 +736,7 @@ function QuotationForm() {
                   setIsCreatingShop(false);
                   selectsetShop(selectedOption);
                 }
-              }}
-            />
+              }}/>
             <p className="font-bold color">Sales Person</p>
             <Select
               className="md:w-full w-72"
@@ -789,12 +761,10 @@ function QuotationForm() {
         </div>
       </Container>
       <Modal show={modalState.showModal} onHide={handleClose}>
-        <Modal.Body
-          className={modalState.isSuccess ? "modal-success" : "modal-error"}
-        >
-          {modalState.message}
-        </Modal.Body>
-      </Modal>
+  <Modal.Body className={modalState.isSuccess ? "modal-success" : "modal-error"}>
+    {modalState.message}
+  </Modal.Body>
+</Modal>
 
       {isCreatingArchitecture ? (
         <Modal
@@ -805,8 +775,7 @@ function QuotationForm() {
             <Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">
-                  Architec Name <span className="text-red-600"> &#8727; </span>{" "}
-                  :
+                  Architec Name <span className="text-red-600"> &#8727; </span> :
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -817,8 +786,7 @@ function QuotationForm() {
                       ...newArchitecture,
                       name: e.target.value,
                     })
-                  }
-                />
+                  } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">
@@ -833,8 +801,7 @@ function QuotationForm() {
                       ...newArchitecture,
                       mobileNo: e.target.value,
                     })
-                  }
-                />
+                  } />    
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">Address:</Form.Label>
@@ -847,15 +814,13 @@ function QuotationForm() {
                       ...newArchitecture,
                       address: e.target.value,
                     })
-                  }
-                />
+                  }/>
               </Form.Group>
             </Form>
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewArchitecture}
-                className="border-1 n-color text-white px-3 py-2 rounded-md "
-              >
+                className="border-1 n-color text-white px-3 py-2 rounded-md " >
                 Create
               </button>
             </div>
@@ -912,15 +877,13 @@ function QuotationForm() {
                       ...newCarpenter,
                       address: e.target.value,
                     })
-                  }
-                />
+                  } />
               </Form.Group>
             </Form>
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewCarpenter}
-                className="border-1 n-color text-white px-3 py-2 rounded-md "
-              >
+                className="border-1 n-color text-white px-3 py-2 rounded-md " >
                 Create
               </button>
             </div>
@@ -945,8 +908,7 @@ function QuotationForm() {
                       ...newShop,
                       name: e.target.value,
                     })
-                  }
-                />
+                  } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">
@@ -962,8 +924,7 @@ function QuotationForm() {
                       ...newShop,
                       mobileNo: e.target.value,
                     })
-                  }
-                />
+                  } />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">Address:</Form.Label>
@@ -976,15 +937,13 @@ function QuotationForm() {
                       ...newShop,
                       address: e.target.value,
                     })
-                  }
-                />
+                  } />
               </Form.Group>
             </Form>
             <div className="flex justify-center">
               <button
                 onClick={handleSaveNewShop}
-                className="border-1 n-color text-white px-3 py-2 rounded-md"
-              >
+                className="border-1 n-color text-white px-3 py-2 rounded-md" >
                 Create
               </button>
             </div>
