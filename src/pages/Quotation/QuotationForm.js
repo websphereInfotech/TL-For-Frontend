@@ -36,7 +36,7 @@ function QuotationForm() {
   const [selectShop, selectsetShop] = useState([]); //api response in only name find
   const [sale, setSale] = useState([]); // sale in add drop dwon
   const [selectSale, selectsetSale] = useState(null); //api response in only name find
-  const [serialNub, setSerialNub] = useState(0); // auto genarate  serialnumber
+  const [serialNub, setSerialNub] = useState(1); // auto genarate  serialnumber
 
   const [isCreatingArchitecture, setIsCreatingArchitecture] = useState(false); //create Architect show model
   const [newArchitecture, setNewArchitecture] = useState({
@@ -120,28 +120,27 @@ function QuotationForm() {
   }, []);
 
   useEffect(() => {
-    const fetchQuestionsData = async () => {
-      if (id) {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        try {
-          const response = await axios.get(`${url}/quotation/viewdata/${id}`, {
-            headers: {
-              Authorization: `Bearer ${saved}`,
-            },
-          });
-  
+    if (id) {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      axios
+        .get(`${url}/quotation/viewdata/${id}`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        })
+        .then(function (response) {
           const { data1: quotationData, data: tableData } = response.data;
           const formattedDate = formatDate(quotationData.Date);
-         
+
           setFormValues({
             userName: quotationData.userName,
             mobileNo: quotationData.mobileNo,
             address: quotationData.address,
             Date: formattedDate,
           });
-  
+
           setRows(tableData);
-  
+
           const architectureOptions = quotationData.architec.map((item) => ({
             label: item.architecsName,
             name: item._id,
@@ -162,20 +161,18 @@ function QuotationForm() {
                 }))
               : [{ label: quotationData.sales.Name }]
             : [];
-  
+
           setSelectedArchitecture(architectureOptions);
           selectsetCarpenter(carpenterOptions);
           selectsetShop(shopOptions);
           selectsetSale(saleOptions);
           setSerialNub(quotationData.serialNumber);
-        } catch (error) {
+        })
+        .catch(function (error) {
           console.log(error);
-        }
-      }
-    };
-    fetchQuestionsData();
+        });
+    }
   }, [id]);
-  
 
   const formatDate = (dateStr) => {
     const [day, month, year] = dateStr.split("-");
@@ -183,15 +180,14 @@ function QuotationForm() {
   };
 
   useEffect(() => {
-    const fetchQuotationListData = async () => {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-      try {
-        const response = await axios.get(`${url}/quotation/listdata`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-  
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+      .get(`${url}/quotation/listdata`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      })
+      .then(function (response) {
         const res = response.data.data;
         if (res) {
           const usedTokenNumbers = res.map((item) => item.serialNumber);
@@ -201,11 +197,10 @@ function QuotationForm() {
           }
           setSerialNub(newTokenNumber);
         }
-      } catch (error) {
-        console.error(error);
-      }
-    }; 
-    fetchQuotationListData();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, []);
 
   const handleQuotation = async (e) => {
@@ -246,46 +241,42 @@ function QuotationForm() {
     }
 
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    
+
     const architectureIds = selectedArchitecture.map((item) => item.value);
     const carpenterIds = selectCarpenter.map((item) => item.value);
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
-    console.log("architectureIds",architectureIds);
-    console.log("architectureIds",carpenterIds);
-    console.log("architectureIds",shopIds);
+
     const data = {
       ...formValues,
       serialNumber: serialNub.toString(),
-      architecture: architectureIds,
-      carpenter: carpenterIds,
-      shop: shopIds,
+      architecture_id: architectureIds, // Match backend naming (architecture_id instead of architec)
+      carpenter_id: carpenterIds, // Match backend naming
+      shop_id: shopIds, // Match backend naming
       sales: saleIds,
       addtotal: rows,
     };
 
-    console.log("data",data);
+
     try {
-      console.log("ID",id)
       const response = id
         ? await axios.put(`${url}/quotation/update/${id}`, data, {
             headers: { Authorization: `Bearer ${saved}` },
           })
-          : await axios.post(`${url}/quotation/cerate`, data, {
+        : await axios.post(`${url}/quotation/cerate`, data, {
             headers: { Authorization: `Bearer ${saved}` },
           });
-          
-          console.log("update",response.data.data);
-          const isSuccess = response.data.status === "Success";
-          setModalState({
-            showModal: true,
-            message: isSuccess
-            ? id
+
+      const isSuccess = response.data.status === "Success";
+      setModalState({
+        showModal: true,
+        message: isSuccess
+          ? id
             ? "Quotation Update successful"
             : "Quotation Create successful"
-            : response.data.message,
-            isSuccess,
-          });
+          : response.data.message,
+        isSuccess,
+      });
     } catch (error) {
       setModalState({
         showModal: true,
@@ -321,135 +312,150 @@ function QuotationForm() {
     }
   }, [modalState.showModal, handleClose]);
   // Create New Architec
-  const handleSaveNewArchitecture = async() => {
+  const handleSaveNewArchitecture = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    try {
-      const response = await axios.post(`${url}/architec/data/create`,{
-        architecsName: newArchitecture.name,
-        mobileNo: newArchitecture.mobileNo,
-        address: newArchitecture.address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${saved}`,
+    axios
+      .post(
+        `${url}/architec/data/create`,
+        {
+          architecsName: newArchitecture.name,
+          mobileNo: newArchitecture.mobileNo,
+          address: newArchitecture.address,
         },
-      });
-      if (response.data && response.data.status === "Success") {
-        setIsCreatingArchitecture(false);
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      )
+      .then(function (response) {
+        if (response.data && response.data.status === "Success") {
+          setIsCreatingArchitecture(false);
+          setModalState({
+            showModal: true,
+            message: response.data.message,
+            isSuccess: true,
+          });
+          const newArchOption = {
+            label: newArchitecture.name,
+            value: response.data.architectureId,
+          };
+          setSelectedArchitecture([newArchOption]);
+        } else {
+          setModalState({
+            showModal: true,
+            message: response.data.message,
+            isSuccess: false,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
         setModalState({
           showModal: true,
-          message: response.data.message,
-          isSuccess: true,
-        });
-        const newArchOption = {
-          label: newArchitecture.name,
-          value: response.data.architectureId,
-        };
-        setSelectedArchitecture([newArchOption]);
-      } else {
-        setModalState({
-          showModal: true,
-          message: response.data.message,
+          message: error.response.data.message,
           isSuccess: false,
         });
-      }
-    } catch (error) {
-      console.log(error);
-      setModalState({
-        showModal: true,
-        message: error.response.data.message,
-        isSuccess: false,
       });
-    }
   };
   const handleCloseCreateArchitecture = () => {
     setIsCreatingArchitecture(false);
   };
   // create New  Carpenter
-  const handleSaveNewCarpenter = async() => {
+  const handleSaveNewCarpenter = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    try {
-      const response = await axios.post(`${url}/carpenter/data/create`,{
-        carpentersName: newCarpenter.name,
-        mobileNo: newCarpenter.mobileNo,
-        address: newCarpenter.address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${saved}`,
+    axios
+      .post(
+        `${url}/carpenter/data/create`,
+        {
+          carpentersName: newCarpenter.name,
+          mobileNo: newCarpenter.mobileNo,
+          address: newCarpenter.address,
         },
-      });
-      if (response.data && response.data.status === "Success") {
-        setIsCreatingCarpenter(false);
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      )
+      .then(function (response) {
+        if (response.data && response.data.status === "Success") {
+          setIsCreatingCarpenter(false);
+          setModalState({
+            showModal: true,
+            message: "Carpenter Create successful",
+            isSuccess: true,
+          });
+          const newCarpOption = {
+            label: newCarpenter.name,
+            value: response.data.carpenterId,
+          };
+          selectsetCarpenter([newCarpOption]);
+        } else {
+          setModalState({
+            showModal: true,
+            message: response.data.message,
+            isSuccess: false,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
         setModalState({
           showModal: true,
-          message: "Carpenter Create successful",
-          isSuccess: true,
-        });
-        const newCarpOption = {
-          label: newCarpenter.name,
-          value: response.data.carpenterId,
-        };
-        selectsetCarpenter([newCarpOption]);
-      } else {
-        setModalState({
-          showModal: true,
-          message: response.data.message,
+          message: error.response.data.message,
           isSuccess: false,
         });
-      }
-    } catch (error) {
-      console.log(error);
-      setModalState({
-        showModal: true,
-        message: error.response.data.message,
-        isSuccess: false,
       });
-    }
   };
   const handleCloseCreateCarpenter = () => {
     setIsCreatingCarpenter(false);
   };
   // Create New Shop
-  const handleSaveNewShop = async() => {
+  const handleSaveNewShop = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    try {
-      const response = await axios.post(`${url}/shop/data/create`,{
-        shopName: newShop.name,
-        mobileNo: newShop.mobileNo,
-        address: newShop.address,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${saved}`,
+    axios
+      .post(
+        `${url}/shop/data/create`,
+        {
+          shopName: newShop.name,
+          mobileNo: newShop.mobileNo,
+          address: newShop.address,
         },
-      });
-      if (response.data && response.data.status === "Success") {
-        setIsCreatingShop(false);
+        {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        }
+      )
+      .then(function (response) {
+        if (response.data && response.data.status === "Success") {
+          setIsCreatingShop(false);
+          setModalState({
+            showModal: true,
+            message: "Shop Create successful",
+            isSuccess: true,
+          });
+          const newShopOption = {
+            label: newShop.name,
+            value: response.data.shopId,
+          };
+          selectsetShop([newShopOption]);
+        } else {
+          setModalState({
+            showModal: true,
+            message: response.data.message,
+            isSuccess: false,
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
         setModalState({
           showModal: true,
-          message: "Shop Create successful",
-          isSuccess: true,
+          message: error.response.data.message,
         });
-        const newShopOption = {
-          label: newShop.name,
-          value: response.data.shopId,
-        };
-        selectsetShop([newShopOption]);
-      } else {
-        setModalState({
-          showModal: true,
-          message: response.data.message,
-          isSuccess: false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-      setModalState({
-        showModal: true,
-        message: error.response.data.message,
       });
-    }
   };
   const handleCloseCreateShop = () => {
     setIsCreatingShop(false);
@@ -465,8 +471,8 @@ function QuotationForm() {
           >
             Dashboard
           </Breadcrumb.Item>
-          <Breadcrumb.Item
 
+          <Breadcrumb.Item
             linkAs={Link}
             linkProps={{ to: routeUrls.QUOTATION }}
           >
