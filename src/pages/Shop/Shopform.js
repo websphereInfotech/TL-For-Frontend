@@ -89,7 +89,7 @@ function Shopform() {
         if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: "Shop Update successful",
+            message: "Shop Update successfully",
             showModal: true,
           }));
         } else {
@@ -119,7 +119,7 @@ function Shopform() {
           localStorage.setItem(process.env.REACT_APP_KEY, newSaved);
           setFormData((prevData) => ({
             ...prevData,
-            message: "Shop Create successful",
+            message: "Shop Create successfully",
             showModal: true,
           }));
         } else {
@@ -145,7 +145,7 @@ function Shopform() {
       ...prevData,
       showModal: false,
     }));
-    if (formData.message.includes("successful")) {
+    if (formData.message.includes("successfully")) {
       navigate(routeUrls.DASHBOARD);
     }
   }, [formData.message, navigate]);
@@ -242,7 +242,7 @@ function Shopform() {
       <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            formData.message.includes("successful")
+            formData.message.includes("successfully")
               ? "modal-success"
               : "modal-error"
           }

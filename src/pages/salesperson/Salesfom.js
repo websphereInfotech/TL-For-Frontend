@@ -71,7 +71,7 @@ function Salesform() {
         );
   
         if (response.data && response.data.status === "Success") {
-          setMessage("Sales person Update successful");
+          setMessage("Sales person Update successfully");
           setShowModal(true);
         } else {
           setMessage(response.data.message);
@@ -92,7 +92,7 @@ function Salesform() {
         );
   
         if (response.data && response.data.status === "Success") {
-          setMessage("Sales Person Create successful");
+          setMessage("Sales Person Create successfully");
           setShowModal(true);
         } else {
           setMessage(response.data.message);
@@ -108,7 +108,7 @@ function Salesform() {
   
   const handleClose = useCallback(() => {
     setShowModal(false);
-    if (message.includes("successful")) {
+    if (message.includes("successfully")) {
       navigate(routeUrls.DASHBOARD);
     }
   }, [message, navigate]);
@@ -179,7 +179,7 @@ function Salesform() {
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            message.includes("successful") ? "modal-success" : "modal-error"
+            message.includes("successfully") ? "modal-success" : "modal-error"
           }
         >
           {message}

@@ -24,7 +24,7 @@ function AdminLogin() {
       if (response.data && response.data.status === "Success") {
               const saved = response.data.token;
               localStorage.setItem(process.env.REACT_APP_KEY, saved);
-              setMessage("Login successful");
+              setMessage("Login successfully");
               setShowModal(true);
             } else {
               setMessage(response.data.message);
@@ -39,7 +39,7 @@ function AdminLogin() {
   };
   const handleClose = useCallback(() => {
     setShowModal(false);
-    if (message.includes("successful")) {
+    if (message.includes("successfully")) {
       navigate(routeUrls.DASHBOARD);
     }
   }, [message, navigate]);
@@ -128,7 +128,7 @@ function AdminLogin() {
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            message.includes("successful") ? "modal-success" : "modal-error"
+            message.includes("successfully") ? "modal-success" : "modal-error"
           }
         >
           {message}

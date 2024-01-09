@@ -247,7 +247,7 @@ function QuotationForm() {
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
 
-    const data = {
+     const data = id ?{
       ...formValues,
       serialNumber: serialNub.toString(),
       architecture_id: architectureIds,
@@ -255,8 +255,15 @@ function QuotationForm() {
       shop_id: shopIds,
       sales: saleIds,
       addtotal: rows, 
-    };
-    
+    } : {
+      ...formValues,
+        serialNumber: serialNub.toString(),
+        architec: architectureIds,
+        carpenter: carpenterIds,
+        shop: shopIds,
+        sales: saleIds,
+        addtotal: rows, 
+      };
     try {
       const response = id
         ? await axios.put(`${url}/quotation/update/${id}`, data, {
@@ -271,8 +278,8 @@ function QuotationForm() {
         showModal: true,
         message: isSuccess
           ? id
-            ? "Quotation Update successful"
-            : "Quotation Create successful"
+            ? "Quotation Update successfully"
+            : "Quotation Create successfully"
           : response.data.message,
         isSuccess,
       });
@@ -292,8 +299,8 @@ function QuotationForm() {
     }));
     if (
       modalState.message &&
-      (modalState.message.includes("Quotation Create successful") ||
-        modalState.message.includes("Quotation Update successful"))
+      (modalState.message.includes("Quotation Create successfully") ||
+        modalState.message.includes("Quotation Update successfully"))
     ) {
       navigate(routeUrls.DASHBOARD);
     }
@@ -382,7 +389,7 @@ function QuotationForm() {
           setIsCreatingCarpenter(false);
           setModalState({
             showModal: true,
-            message: "Carpenter Create successful",
+            message: response.data.message,
             isSuccess: true,
           });
           const newCarpOption = {
@@ -432,7 +439,7 @@ function QuotationForm() {
           setIsCreatingShop(false);
           setModalState({
             showModal: true,
-            message: "Shop Create successful",
+            message: response.data.message,
             isSuccess: true,
           });
           const newShopOption = {

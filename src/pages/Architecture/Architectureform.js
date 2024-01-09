@@ -89,7 +89,7 @@ function Architectureform() {
         if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: "Architecture Update successful",
+            message: "Architecture Update successfully",
             showModal: true,
           }));
         } else {
@@ -119,7 +119,7 @@ function Architectureform() {
           localStorage.setItem(process.env.REACT_APP_KEY, saved);
           setFormData((prevData) => ({
             ...prevData,
-            message: "Architecture Create successful",
+            message: "Architecture Create successfully",
             showModal: true,
           }));
         } else {
@@ -146,7 +146,7 @@ function Architectureform() {
       ...prevData,
       showModal: false,
     }));
-    if (formData.message.includes("successful")) {
+    if (formData.message.includes("successfully")) {
       navigate(routeUrls.DASHBOARD);
     }
   }, [formData.message, navigate]);
@@ -243,7 +243,7 @@ function Architectureform() {
       <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            formData.message.includes("successful")
+            formData.message.includes("successfully")
               ? "modal-success"
               : "modal-error"
           }

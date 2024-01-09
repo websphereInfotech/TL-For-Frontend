@@ -83,7 +83,7 @@ function Carpenterform() {
         if (response.data && response.data.status === "Success") {
           setFormData((prevData) => ({
             ...prevData,
-            message: "Carpenter Update successful",
+            message: "Carpenter Update successfully",
             showModal: true,
           }));
         } else {
@@ -113,7 +113,7 @@ function Carpenterform() {
           localStorage.setItem(process.env.REACT_APP_KEY, savedToken);
           setFormData((prevData) => ({
             ...prevData,
-            message: "Carpenter Create successful",
+            message: "Carpenter Create successfully",
             showModal: true,
           }));
         } else {
@@ -139,7 +139,7 @@ function Carpenterform() {
       ...prevData,
       showModal: false,
     }));
-    if (formData.message.includes("successful")) {
+    if (formData.message.includes("successfully")) {
       navigate(routeUrls.DASHBOARD);
     }
   }, [formData.message, navigate]);
@@ -236,7 +236,7 @@ function Carpenterform() {
       <Modal show={formData.showModal} onHide={handleClose}>
         <Modal.Body
           className={
-            formData.message.includes("successful")
+            formData.message.includes("successfully")
               ? "modal-success"
               : "modal-error"
           }
