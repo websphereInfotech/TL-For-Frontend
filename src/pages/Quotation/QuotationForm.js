@@ -7,6 +7,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { IoMdClose } from "react-icons/io";
 
 const url = process.env.REACT_APP_BASEURL;
 
@@ -82,6 +83,13 @@ function QuotationForm() {
       const rate = parseFloat(newRows[rowIndex].rate) || 0; // convert integer value in float value
       const quantity = parseFloat(newRows[rowIndex].quantity) || 0; // convert integer value in float value
       newRows[rowIndex].total = (size * rate * quantity).toFixed(2); // total
+      return newRows;
+    });
+  };
+  const handleRowDelete = (rowIndex) => {
+    setRows((prevRows) => {
+      const newRows = [...prevRows];
+      newRows.splice(rowIndex, 1); // Remove the row at the specified index
       return newRows;
     });
   };
@@ -247,23 +255,25 @@ function QuotationForm() {
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
 
-     const data = id ?{
-      ...formValues,
-      serialNumber: serialNub.toString(),
-      architecture_id: architectureIds,
-      carpenter_id: carpenterIds,
-      shop_id: shopIds,
-      sales: saleIds,
-      addtotal: rows, 
-    } : {
-      ...formValues,
-        serialNumber: serialNub.toString(),
-        architec: architectureIds,
-        carpenter: carpenterIds,
-        shop: shopIds,
-        sales: saleIds,
-        addtotal: rows, 
-      };
+    const data = id
+      ? {
+          ...formValues,
+          serialNumber: serialNub.toString(),
+          architecture_id: architectureIds,
+          carpenter_id: carpenterIds,
+          shop_id: shopIds,
+          sales: saleIds,
+          addtotal: rows,
+        }
+      : {
+          ...formValues,
+          serialNumber: serialNub.toString(),
+          architec: architectureIds,
+          carpenter: carpenterIds,
+          shop: shopIds,
+          sales: saleIds,
+          addtotal: rows,
+        };
     try {
       const response = id
         ? await axios.put(`${url}/quotation/update/${id}`, data, {
@@ -675,6 +685,11 @@ function QuotationForm() {
                               handleRowChange(rowIndex, "total", e.target.value)
                             }
                             className="form-control"
+                          />
+                        </td>
+                        <td>
+                          <IoMdClose
+                            onClick={() => handleRowDelete(rowIndex)}
                           />
                         </td>
                       </tr>
