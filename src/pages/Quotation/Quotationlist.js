@@ -48,7 +48,6 @@ function Row({ row, setQuotation }) {
       })
       .then(function (response) {
         const userData = response.data.data1;
-        console.log(userData);
         axios
           .get(`${BaseUrl}/total/view/${id}`, {
             headers: {
@@ -66,7 +65,7 @@ function Row({ row, setQuotation }) {
             if (!Array.isArray(tableData)) {
               tableData = [tableData];
             }
-            console.log("tabledataa", tableData);
+            // console.log("tabledataa", tableData);
             let architecNames = "";
             let carpenterNames = "";
             let shopNames = "";
@@ -133,7 +132,7 @@ function Row({ row, setQuotation }) {
       )
 
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setQuotation((prevQuotation) =>
           prevQuotation.filter(
             (quotation) => quotation._id !== selectedQuotationID
