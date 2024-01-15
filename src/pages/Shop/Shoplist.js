@@ -329,53 +329,44 @@ function Row({ row, setShop }) {
               <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
                 <tbody>
                   <tr>
-                    <th className="m-table p-0 color">Token No</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.tokenNo}</td>
+                    <th className="m-table color table-width">Token No</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Date</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.Date}</td>
+                    <th className="m-table color table-width">Date</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Name </th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table break-words uppercase">
+                    <th className="m-table color table-width">Name </th>
+                    <td className="m-table break-words uppercase"><b style={{paddingRight:'20px'}}>:</b>
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Mobile No</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.mobileNo}</td>
+                    <th className="m-table color table-width">Mobile No</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Address</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table break-words">
+                    <th className="m-table color table-width">Address</th>
+                    <td className="m-table break-words"><b style={{paddingRight:'20px'}}>:</b>
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Architec</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.architec}</td>
+                    <th className="m-table color table-width">Architec</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Carpenter</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.carpenter}</td>
+                    <th className="m-table color table-width">Carpenter</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">shop</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.shop}</td>
+                    <th className="m-table color table-width">shop</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
-                    <th className="m-table color">Sales Person</th>
-                    <th style={{ padding: '8px', textAlign: 'right', whiteSpace: 'nowrap' }}>: </th>
-                    <td className="m-table">{selectedQuotationDetails.sales}</td>
+                    <th className="m-table color table-width">Sales Person</th>
+                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
@@ -520,7 +511,7 @@ export default function Shoplist() {
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
             <TableHead>
-              <TableRow>
+              <TableRow style={{borderBottom: '2px solid rgba(224, 224, 224, 1)'}}>
                 <TableCell />
                 <TableCell class="color">Shop Name</TableCell>
                 <TableCell class="color-1" align="center" className="font-bold">

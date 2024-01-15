@@ -104,6 +104,7 @@
 .css-1ygcj2i-MuiTableCell-root,
 .css-1ndpvdd-MuiTableCell-root {
   font-weight: 900 !important;
+  border-bottom: none !important;
 }
 .css-1yhpg23-MuiTableCell-root,
 .css-177gid-MuiTableCell-root {
@@ -300,7 +301,6 @@ option:hover {
   background-color: #fff;
   color: black;
 }
-
 .table-container {
   width: 400px;
 }
@@ -384,4 +384,7 @@ option:hover {
 }
 .m-table{
   white-space: normal;
+}
+.table-width{
+  width: 40%;
 }
