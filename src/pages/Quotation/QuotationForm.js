@@ -354,7 +354,7 @@ function QuotationForm() {
           });
           const newArchOption = {
             label: newArchitecture.name,
-            value: response.data.architectureId,
+            value: response.data.data._id,
           };
           setSelectedArchitecture([newArchOption]);
         } else {
@@ -377,11 +377,14 @@ function QuotationForm() {
   const handleCloseCreateArchitecture = () => {
     setIsCreatingArchitecture(false);
   };
+
   // create New  Carpenter
-  const handleSaveNewCarpenter = () => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .post(
+  const handleSaveNewCarpenter = async () => {
+    console.log('handleSaveNewCarpenter function is being called.');
+
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.post(
         `${url}/carpenter/data/create`,
         {
           carpentersName: newCarpenter.name,
@@ -393,37 +396,38 @@ function QuotationForm() {
             Authorization: `Bearer ${saved}`,
           },
         }
-      )
-      .then(function (response) {
-        if (response.data && response.data.status === "Success") {
-          setIsCreatingCarpenter(false);
-          setModalState({
-            showModal: true,
-            message: response.data.message,
-            isSuccess: true,
-          });
-          const newCarpOption = {
-            label: newCarpenter.name,
-            value: response.data.carpenterId,
-          };
-          selectsetCarpenter([newCarpOption]);
-        } else {
-          setModalState({
-            showModal: true,
-            message: response.data.message,
-            isSuccess: false,
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
+      );
+    
+      if (response.data && response.data.status === "Success") {
+        setIsCreatingCarpenter(false);
         setModalState({
           showModal: true,
-          message: error.response.data.message,
+          message: response.data.message,
+          isSuccess: true,
+        });
+
+        const newCarpOption = {
+          label: newCarpenter.name,
+          value: response.data.data._id,
+        };
+        selectsetCarpenter([newCarpOption]);
+      } else {
+        setModalState({
+          showModal: true,
+          message: response.data.message,
           isSuccess: false,
         });
+      }
+    } catch (error) {
+      console.error('Carpenter Creation Error:', error);
+      setModalState({
+        showModal: true,
+        message: error.response.data.message,
+        isSuccess: false,
       });
+    }
   };
+  
   const handleCloseCreateCarpenter = () => {
     setIsCreatingCarpenter(false);
   };
@@ -454,7 +458,7 @@ function QuotationForm() {
           });
           const newShopOption = {
             label: newShop.name,
-            value: response.data.shopId,
+            value: response.data.data._id,
           };
           selectsetShop([newShopOption]);
         } else {
@@ -756,7 +760,7 @@ function QuotationForm() {
                   selectedOption.some((option) => option.value === "create")
                 ) {
                   setIsCreatingCarpenter(true);
-                  selectsetCarpenter([]);
+                  selectsetCarpenter();
                 } else {
                   setIsCreatingCarpenter(false);
                   selectsetCarpenter(selectedOption);
