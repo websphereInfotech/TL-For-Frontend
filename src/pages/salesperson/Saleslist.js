@@ -30,6 +30,7 @@ function Row(props) {
   const [Quotation, setQuotation] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
+    const [userCount, setUserCount] = React.useState(null);
 
     const handleviewQutotation = async (id) => {
       try {
@@ -164,8 +165,6 @@ function Row(props) {
         apiUrl += `&status=${selectedFilter}`;
       }
   
-      console.log("API URL:", apiUrl);
-  
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: `Bearer ${saved}`,
@@ -174,6 +173,8 @@ function Row(props) {
   
       if (response.data.data && response.data.data.length > 0) {
         setQuotation({ Quotation: response.data.data[0].connectedUsers });
+        setUserCount(response.data.data[0].userCount);
+        console.log("###############",response.data.data[0].userCount )
       } else {
         setQuotation([]);
       }
@@ -191,7 +192,7 @@ function Row(props) {
     } else {
       setDatesSelected(false);
     }
-  }, [row._id, startDate, endDate, selectedFilter]);
+  }, [row._id, startDate, endDate, selectedFilter,userCount]);
 
   function getTrueStatus(followDetails) {
 
@@ -280,8 +281,10 @@ function Row(props) {
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6"className="color" gutterBottom component="div">
-                  Quotation
+                  Quotation :
+                  <span style={{fontWeight:"normal"}}> {userCount}</span>
                 </Typography>
+
                 <div className="">
                   <Table size="small" aria-label="purchases">
                     <TableHead>
