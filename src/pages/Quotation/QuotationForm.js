@@ -37,7 +37,7 @@ function QuotationForm() {
   const [selectShop, selectsetShop] = useState([]); //api response in only name find
   const [sale, setSale] = useState([]); // sale in add drop dwon
   const [selectSale, selectsetSale] = useState(null); //api response in only name find
-  const [serialNub, setSerialNub] = useState(1); // auto genarate  serialnumber
+  const [serialNub, setSerialNub] = useState(''); // auto genarate  serialnumber
 
   const [isCreatingArchitecture, setIsCreatingArchitecture] = useState(false); //create Architect show model
   const [newArchitecture, setNewArchitecture] = useState({
@@ -175,6 +175,29 @@ function QuotationForm() {
           selectsetShop(shopOptions);
           selectsetSale(saleOptions);
           setSerialNub(quotationData.serialNumber);
+          console.log("serial",quotationData.serialNumber);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+    axios
+        .get(`${url}/quotation/listdata`, {
+          headers: {
+            Authorization: `Bearer ${saved}`,
+          },
+        })
+        .then(function (response) {
+          const res = response.data.data;
+          if (res) {
+            const usedTokenNumbers = res.map((item) => item.serialNumber);
+            let newTokenNumber = 1;
+            while (usedTokenNumbers.includes(newTokenNumber)) {
+              newTokenNumber++;
+            }
+            setSerialNub(newTokenNumber);
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -187,29 +210,32 @@ function QuotationForm() {
     return `${year}-${month}-${day}`;
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
-      .get(`${url}/quotation/listdata`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      })
-      .then(function (response) {
-        const res = response.data.data;
-        if (res) {
-          const usedTokenNumbers = res.map((item) => item.serialNumber);
-          let newTokenNumber = 1;
-          while (usedTokenNumbers.includes(newTokenNumber)) {
-            newTokenNumber++;
-          }
-          setSerialNub(newTokenNumber);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //   const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  //   axios
+  //     .get(`${url}/quotation/listdata`, {
+  //       headers: {
+  //         Authorization: `Bearer ${saved}`,
+  //       },
+  //     })
+  //     .then(function (response) {
+  //       const res = response.data.data;
+  //       if (res) {
+  //         const usedTokenNumbers = res.map((item) => item.serialNumber);
+  //         let newTokenNumber = 1;
+  //         while (usedTokenNumbers.includes(newTokenNumber)) {
+  //           newTokenNumber++;
+  //         }
+  //         setSerialNub(newTokenNumber);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  //   };
+  //   fetchData();
+  // }, []);
 
   const handleQuotation = async (e) => {
     e.preventDefault();
@@ -520,7 +546,7 @@ function QuotationForm() {
                   placeholder="Token No. :"
                   onChange={(e) => setSerialNub(e.target.value)}
                   value={serialNub}
-                />
+                  />
               </Form.Group>
               <Form.Group
                 className="mb-3 md:w-72 w-72"
