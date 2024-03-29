@@ -210,6 +210,7 @@ function Row({ row, setShop }) {
                         <TableCell align="center"  class='color-1'>Name</TableCell>
                         <TableCell align="center"  class='color-1'>Mobile No.</TableCell>
                         <TableCell align="center"  class='color-1'>Address</TableCell>
+                        <TableCell align="center"  class='color-1'>Status</TableCell>
                         <TableCell align="center"  class='color-1'>Detalis</TableCell>
                       </TableRow>
                     </TableHead>
@@ -240,6 +241,13 @@ function Row({ row, setShop }) {
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {QuotationRow.address}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            class='color-1'
+                            style={{ wordBreak: "break-word", width: "15%" }}
+                          >
+                            {QuotationRow.status}
                           </TableCell>
                           <TableCell align="center" style={{ wordBreak: "break-word", width: '15%' }}>
                             <FaStreetView

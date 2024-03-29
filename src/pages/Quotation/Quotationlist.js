@@ -581,6 +581,7 @@ export default function Quotationlist() {
         });
         console.log(sortedQuotations);
         setQuotation(response.data.data);
+        console.log("res",response.data.data);
         setIsLoading(false);
       })
       .catch(function (error) {
