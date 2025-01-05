@@ -598,19 +598,53 @@ export default function Quotationlist() {
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = quotation.slice(startIndex, endIndex);
 
+  // const handleSearch = (inputValue) => {
+  //   setCurrentPage(1);
+  //   const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+  //   let url = `${BaseUrl}/quotation/searchdata?`;
+
+  //   if (inputValue) {
+  //     const isNumber = !isNaN(inputValue);
+  //     if (isNumber) {
+  //       url = `${url}serialNumber=${inputValue}`;
+  //     } else {
+  //       url = `${url}userName=${inputValue}`;
+  //     }
+  //   }
+  //   axios
+  //     .get(url, {
+  //       headers: {
+  //         Authorization: `Bearer ${saved}`,
+  //       },
+  //     })
+  //     .then(function (response) {
+  //       const sortedQuotations = response.data.data.sort((a, b) => {
+  //         return a.serialNumber - b.serialNumber;
+  //       });
+  //       setQuotation(sortedQuotations);
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+  // };
   const handleSearch = (inputValue) => {
     setCurrentPage(1);
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
-
+  
     if (inputValue) {
       const isNumber = !isNaN(inputValue);
-      if (isNumber) {
-        url = `${url}serialNumber=${inputValue}`;
+      const isMobile = /^[0-9]{10}$/.test(inputValue);  // Check if it's a mobile number (e.g., 10 digits)
+  
+      if (isMobile) {
+        url = `${url}mobileNo=${inputValue}`;  // Search by mobileNo if it is a valid mobile number
+      } else if (isNumber) {
+        url = `${url}serialNumber=${inputValue}`;  // Search by serialNumber if it is a number but not a mobile number
       } else {
-        url = `${url}userName=${inputValue}`;
+        url = `${url}userName=${inputValue}`;  // Search by userName if it's not a number
       }
     }
+  
     axios
       .get(url, {
         headers: {
@@ -627,7 +661,7 @@ export default function Quotationlist() {
         console.log(error);
       });
   };
-
+  
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
       <h1 className="color font-bold text-4xl">
