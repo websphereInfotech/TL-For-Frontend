@@ -13,7 +13,6 @@ import { Breadcrumb, Col, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
