@@ -179,7 +179,7 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
             console.log("endDate ", endDate)
 
             const queryString = query.length ? `?${query.join("&")}` : "";
-                        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
 
             const response = await axios.get(`${BaseUrl}/architec/listdata/${id}${queryString}`, {
@@ -448,38 +448,51 @@ export default function Architecturelist() {
     const [isLoading, setIsLoading] = React.useState(true);//set the loader when api get the data
     const [currentPage, setCurrentPage] = React.useState(1);//set the page in pagination
     const itemsPerPage = 10;
-    
+
     const [startDate, setStartDate] = React.useState('');
     const [endDate, setEndDate] = React.useState('');
     const [selectedFilter, setSelectedFilter] = React.useState('');
-    
     React.useEffect(() => {
         const fetchData = async () => {
             try {
+                console.log("📦 Fetching architecture list...");
+                setIsLoading(true);
 
-                console.log("📦 Fetching full architecture list...");
-                setIsLoading(false);
-                            const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+                const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+
+                const params = new URLSearchParams();
+
+                if (startDate) params.append('startDate', startDate);
+                if (endDate) params.append('endDate', endDate);
+                if (selectedFilter) params.append('filter', selectedFilter);
+                let response
+                if ((startDate && endDate) || selectedFilter) {
+                    response = await axios.get(`${BaseUrl}/architec/list?${params.toString()}`, {
+                        headers: {
+                            Authorization: `Bearer ${saved}`,
+                        },
+                    });
+                } else {
+                    response = await axios.get(`${BaseUrl}/architec/list`, {
+                        headers: {
+                            Authorization: `Bearer ${saved}`,
+                        },
+                    })
+
+                }
 
 
-                const response = await axios.get(`${BaseUrl}/architec/list`, {
-                    headers: {
-                        Authorization: `Bearer ${saved}`,
-                    },
-                });
+
                 setArchitecture(response.data.data);
-
-
             } catch (error) {
                 console.error("❌ Error fetching data:", error);
+            } finally {
                 setIsLoading(false);
             }
         };
 
         fetchData();
-    }, []); // run on mount AND when filters change
-
-
+    }, [startDate, endDate, selectedFilter]); // triggers on mount + when these values change
 
     const totalPages = Math.ceil(architecture.length / itemsPerPage);
     const handlePageChange = (event, page) => {
@@ -552,31 +565,32 @@ export default function Architecturelist() {
                     >
                         Architecture List
                     </Breadcrumb.Item>
-                    
-                <Col xs={120} md={4} lg={6} className="flex items-center px-0">
-                    <p className="leading-normal color">From</p>
-                    <input
-                        type="date"
-                        className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
-                        value={startDate}
-                        onChange={(startDate) => setStartDate(startDate.target.value)}
-                    />
-                    <p className="color">To</p>
-                    <input
-                        type="date"
-                        className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
-                        value={endDate}
-                        onChange={(endDate) => setEndDate(endDate.target.value)}
-                    />
-                    
 
-                <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
-                    <option value="">Filter By</option>
-                    <option value="Approve">Approve</option>
-                    <option value="Reject">Reject</option>
-                    <option value="followup">followup</option>
-                </select>
-                </Col>
+                    <Col xs={120} md={4} lg={6} className="flex items-center px-0">
+                        <p className="leading-normal color">From</p>
+                        <input
+                            type="date"
+                            className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
+                            value={startDate}
+                            onChange={(startDate) => setStartDate(startDate.target.value)}
+                        />
+                        <p className="color">To</p>
+                        <input
+                            type="date"
+                            className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
+                            value={endDate}
+                            onChange={(endDate) => setEndDate(endDate.target.value)}
+                        />
+
+
+                        <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+                            <option value="">Filter By</option>
+                            <option value="Approve">Approve</option>
+                            <option value="Reject">Reject</option>
+                            <option value="followup">followup</option>
+                            <option value="None">None</option>
+                        </select>
+                    </Col>
                 </Breadcrumb>
 
 
