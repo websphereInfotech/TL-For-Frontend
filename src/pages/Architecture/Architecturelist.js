@@ -235,7 +235,8 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <Box sx={{ margin: 1 }}>
                                 <Typography variant="h6" className="color" gutterBottom component="div">
-                                    Quotation
+                                    Quotation :
+                                    <span style={{ fontWeight: "normal" }}> {Quotation.Quotation?.length}</span>
                                 </Typography>
                                 <div>
                                     <Table size="small" aria-label="purchases">
@@ -456,7 +457,6 @@ export default function Architecturelist() {
         const fetchData = async () => {
             try {
                 console.log("📦 Fetching architecture list...");
-                setIsLoading(true);
 
                 const saved = localStorage.getItem(process.env.REACT_APP_KEY);
 
@@ -467,12 +467,14 @@ export default function Architecturelist() {
                 if (selectedFilter) params.append('filter', selectedFilter);
                 let response
                 if ((startDate && endDate) || selectedFilter) {
+                    setIsLoading(true);
                     response = await axios.get(`${BaseUrl}/architec/list?${params.toString()}`, {
                         headers: {
                             Authorization: `Bearer ${saved}`,
                         },
                     });
                 } else {
+                    setIsLoading(true);
                     response = await axios.get(`${BaseUrl}/architec/list`, {
                         headers: {
                             Authorization: `Bearer ${saved}`,
@@ -480,9 +482,6 @@ export default function Architecturelist() {
                     })
 
                 }
-
-
-
                 setArchitecture(response.data.data);
             } catch (error) {
                 console.error("❌ Error fetching data:", error);
@@ -492,7 +491,7 @@ export default function Architecturelist() {
         };
 
         fetchData();
-    }, [startDate, endDate, selectedFilter]); // triggers on mount + when these values change
+    }, [(startDate && endDate), selectedFilter]);
 
     const totalPages = Math.ceil(architecture.length / itemsPerPage);
     const handlePageChange = (event, page) => {
@@ -519,6 +518,22 @@ export default function Architecturelist() {
             setArchitecture(response.data.data);
         } catch (error) {
             console.log(error);
+        }
+    };
+
+    const handleStartDateChange = (e) => {
+        const newStartDate = e.target.value;
+        setStartDate(newStartDate);
+        if (!newStartDate) {
+            setStartDate("");
+        }
+    };
+
+    const handleEndDateChange = (e) => {
+        const newEndDate = e.target.value;
+        setEndDate(newEndDate);
+        if (!newEndDate) {
+            setEndDate("");
         }
     };
 
@@ -570,16 +585,20 @@ export default function Architecturelist() {
                         <p className="leading-normal color">From</p>
                         <input
                             type="date"
+                            name="date"
+                            id="date"
                             className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
                             value={startDate}
-                            onChange={(startDate) => setStartDate(startDate.target.value)}
+                            onChange={handleStartDateChange}
                         />
                         <p className="color">To</p>
                         <input
                             type="date"
+                            name="date"
+                            id="date"
                             className="border-solid border-2 border-[#49413C] rounded px-1 mx-2"
                             value={endDate}
-                            onChange={(endDate) => setEndDate(endDate.target.value)}
+                            onChange={handleEndDateChange}
                         />
 
 
