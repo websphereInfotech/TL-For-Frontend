@@ -469,14 +469,14 @@ export default function Architecturelist() {
                 let response;
 
                 if ((startDate && endDate) || selectedFilter) {
-                    setIsLoading(true);
+                    // setIsLoading(true);
                     response = await axios.get(`${BaseUrl}/architec/list?${params.toString()}`, {
                         headers: {
                             Authorization: `Bearer ${saved}`,
                         },
                     });
                 } else {
-                    setIsLoading(true);
+                    // setIsLoading(true);
                     response = await axios.get(`${BaseUrl}/architec/list`, {
                         headers: {
                             Authorization: `Bearer ${saved}`,
