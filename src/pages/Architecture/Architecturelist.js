@@ -465,7 +465,9 @@ export default function Architecturelist() {
                 if (startDate) params.append('startDate', startDate);
                 if (endDate) params.append('endDate', endDate);
                 if (selectedFilter) params.append('filter', selectedFilter);
-                let response
+
+                let response;
+
                 if ((startDate && endDate) || selectedFilter) {
                     setIsLoading(true);
                     response = await axios.get(`${BaseUrl}/architec/list?${params.toString()}`, {
@@ -479,9 +481,9 @@ export default function Architecturelist() {
                         headers: {
                             Authorization: `Bearer ${saved}`,
                         },
-                    })
-
+                    });
                 }
+
                 setArchitecture(response.data.data);
             } catch (error) {
                 console.error("❌ Error fetching data:", error);
@@ -491,7 +493,8 @@ export default function Architecturelist() {
         };
 
         fetchData();
-    }, [(startDate && endDate), selectedFilter]);
+    }, [startDate, endDate, selectedFilter]); // ✅ Fixed
+
 
     const totalPages = Math.ceil(architecture.length / itemsPerPage);
     const handlePageChange = (event, page) => {
