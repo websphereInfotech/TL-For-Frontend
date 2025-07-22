@@ -66,6 +66,7 @@ function QuotationForm() {
       area: "",
       size: "",
       rate: "",
+      invoiceNumber: "",
       quantity: "",
       total: "",
     };
@@ -630,10 +631,14 @@ function QuotationForm() {
                       Size<span className="text-red-600"> &#8727; </span>
                     </th>
                     <th className="color">
-                      Rate<span className="text-red-600"> &#8727; </span>
+                      Rate<span className="text-red-600">  </span>
                     </th>
                     <th className="color">
                       Quantity<span className="text-red-600"> &#8727; </span>
+                    </th>
+                    
+                    <th className="color">
+                      Invoice No.<span className="text-red-600">  </span>
                     </th>
                     <th className="color">
                       Total<span className="text-red-600"> &#8727; </span>
@@ -709,6 +714,19 @@ function QuotationForm() {
                         </td>
                         <td>
                           <input
+                           value={row.invoiceNumber || ""}
+                            onChange={(e) =>
+                              handleRowChange(
+                                rowIndex,
+                                "invoiceNumber",
+                                e.target.value
+                              )
+                            }
+                            className="form-control"
+                          />
+                        </td>
+                        <td>
+                          <input
                             type="text"
                             value={row.total || ""}
                             onChange={(e) =>
@@ -727,10 +745,18 @@ function QuotationForm() {
                   ))}
                   <tfoot>
                     <tr>
+                      {/* <td colSpan={5} align="right">
+                      </td> */}
                       <td colSpan={5} align="right">
-                        Main Total
+                        {rows
+                          .reduce(
+                            (total, row) =>
+                              total + (parseFloat(row.quantity) || 0),
+                            0
+                          )
+                          .toFixed(2)}
                       </td>
-                      <td>
+                      <td colSpan={6} align="center">
                         {rows
                           .reduce(
                             (total, row) =>
@@ -740,7 +766,9 @@ function QuotationForm() {
                           .toFixed(2)}
                       </td>
                     </tr>
+                    
                   </tfoot>
+                  
                 </>
               </table>
             </div>

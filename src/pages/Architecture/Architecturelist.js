@@ -57,9 +57,11 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
 
             let tableData = response2.data.data;
             let mainTotal = 0;
+            let qtyTotal = 0
 
             for (const item of tableData) {
                 mainTotal += item.total;
+                qtyTotal += item.quantity
             }
 
             const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
@@ -93,6 +95,7 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
                     <td className="break-words border">{item.area}</td>
                     <td className="border ">{item.size}</td>
                     <td className="border ">{item.rate}</td>
+                    <td className="border ">{item.invoiceNumber}</td>
                     <td className="border ">{item.quantity}</td>
                     <td className="border ">{item.total}</td>
                 </tr>
@@ -106,6 +109,7 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
                 address: QuotationData.address,
                 innerTable: innerTableRows,
                 mainTotal: mainTotal,
+                qtyTotal: qtyTotal,
                 architec: architecNames,
                 carpenter: carpenterNames,
                 shop: shopNames,
@@ -415,6 +419,7 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
                                                     <th className="border color ">Area</th>
                                                     <th className="border color ">Size</th>
                                                     <th className="border color ">Rate</th>
+                                                    <th className="border color ">Invoice No.</th>
                                                     <th className="border color ">Quantity</th>
                                                     <th className="border color ">Total</th>
                                                 </tr>
@@ -422,6 +427,7 @@ function Row({ row, setArchitecture, startDate, endDate, selectedFilter }) {
                                             <tbody>{selectedQuotationDetails.innerTable}</tbody>
                                             <tr className="text-right color">
                                                 <th colSpan="5">Main Total:</th>
+                                                <td className="border">{selectedQuotationDetails.qtyTotal}</td>
                                                 <td className="border">{selectedQuotationDetails.mainTotal}</td>
                                             </tr>
                                         </table>

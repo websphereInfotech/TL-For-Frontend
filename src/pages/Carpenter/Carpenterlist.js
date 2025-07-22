@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import {Box,Collapse,IconButton,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,Paper} from "@mui/material";
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from "@mui/material";
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -26,86 +26,90 @@ function Row({ row, setCarpenter }) {
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);//show Quotation data in model
 
-    const handleviewQutotation = async (id) => {
-      try {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        let tableData;
-    
-        const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-        const QuotationData = response1.data.data1;
-    
-        const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-        tableData = response2.data.data;
-    
-        let mainTotal = 0;
-        for (const item of tableData) {
-          mainTotal += item.total;
-        }
-    
-        const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-    
-        if (!Array.isArray(tableData)) {
-          tableData = [tableData];
-        }
-    
-        let architecNames = "";
-        let carpenterNames = "";
-        let shopNames = "";
-    
-        if (QuotationData.architec) {
-          architecNames = QuotationData.architec
-            .map((architec) => architec.architecsName)
-            .join(", ");
-        }
-        if (QuotationData.carpenter) {
-          carpenterNames = QuotationData.carpenter
-            .map((carpenter) => carpenter.carpentersName)
-            .join(", ");
-        }
-        if (QuotationData.shop) {
-          shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-        }
-    
-        const innerTableRows = tableData.map((item, index) => (
-          <tr key={index}>
-            <td className="break-words border">{item.description}</td>
-            <td className="break-words border">{item.area}</td>
-            <td className="border ">{item.size}</td>
-            <td className="border ">{item.rate}</td>
-            <td className="border ">{item.quantity}</td>
-            <td className="border ">{item.total}</td>
-          </tr>
-        ));
-    
-        setselectedQuotationDetails({
-          tokenNo: QuotationData.serialNumber,
-          Date: QuotationData.Date,
-          name: QuotationData.userName,
-          mobileNo: QuotationData.mobileNo,
-          address: QuotationData.address,
-          innerTable: innerTableRows,
-          mainTotal: mainTotal,
-          architec: architecNames,
-          carpenter: carpenterNames,
-          shop: shopNames,
-          sales: salesName,
-        });
-      } catch (error) {
-        console.error(error);
+  const handleviewQutotation = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      let tableData;
+
+      const response1 = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+      const QuotationData = response1.data.data1;
+
+      const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+      tableData = response2.data.data;
+
+      let mainTotal = 0;
+      let qtyTotal = 0;
+      for (const item of tableData) {
+        mainTotal += item.total;
+        qtyTotal += item.quantity
       }
-    };
-  const handleviewdata = async(id) => {
+
+      const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+
+      if (!Array.isArray(tableData)) {
+        tableData = [tableData];
+      }
+
+      let architecNames = "";
+      let carpenterNames = "";
+      let shopNames = "";
+
+      if (QuotationData.architec) {
+        architecNames = QuotationData.architec
+          .map((architec) => architec.architecsName)
+          .join(", ");
+      }
+      if (QuotationData.carpenter) {
+        carpenterNames = QuotationData.carpenter
+          .map((carpenter) => carpenter.carpentersName)
+          .join(", ");
+      }
+      if (QuotationData.shop) {
+        shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+      }
+
+      const innerTableRows = tableData.map((item, index) => (
+        <tr key={index}>
+          <td className="break-words border">{item.description}</td>
+          <td className="break-words border">{item.area}</td>
+          <td className="border ">{item.size}</td>
+          <td className="border ">{item.rate}</td>
+          <td className="border ">{item.invoiceNumber}</td>
+          <td className="border ">{item.quantity}</td>
+          <td className="border ">{item.total}</td>
+        </tr>
+      ));
+
+      setselectedQuotationDetails({
+        tokenNo: QuotationData.serialNumber,
+        Date: QuotationData.Date,
+        name: QuotationData.userName,
+        mobileNo: QuotationData.mobileNo,
+        address: QuotationData.address,
+        innerTable: innerTableRows,
+        mainTotal: mainTotal,
+        qtyTotal: qtyTotal,
+        architec: architecNames,
+        carpenter: carpenterNames,
+        shop: shopNames,
+        sales: salesName,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleviewdata = async (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
-      const response = await axios.get(`${BaseUrl}/carpenter/viewdata/${id}`,{
+      const response = await axios.get(`${BaseUrl}/carpenter/viewdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
@@ -117,21 +121,21 @@ function Row({ row, setCarpenter }) {
     }
   };
 
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
-      const response = await axios.delete(`${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`,{
+      const response = await axios.delete(`${BaseUrl}/carpenter/data/delete/${selectedCarpenterId}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       })
       console.log(response.data.data);
       setCarpenter((prevCarpenters) =>
-      prevCarpenters.filter(
-        (carpenter) => carpenter._id !== selectedCarpenterId
-      )
-    );
-    setShowDeleteConfirmation(false);
+        prevCarpenters.filter(
+          (carpenter) => carpenter._id !== selectedCarpenterId
+        )
+      );
+      setShowDeleteConfirmation(false);
 
     } catch (error) {
       console.log(error);
@@ -143,16 +147,16 @@ function Row({ row, setCarpenter }) {
     setShowDeleteConfirmation(true);
   };
 
-  const handleSubmit = async(id) => {
+  const handleSubmit = async (id) => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     try {
-      const response = await axios.get(`${BaseUrl}/carpenter/listdata/${id}`,{
+      const response = await axios.get(`${BaseUrl}/carpenter/listdata/${id}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       });
       setQuotation({ Quotation: response.data.data });
-        console.log({ Quotation: response.data.data });
+      console.log({ Quotation: response.data.data });
     } catch (error) {
       console.log(error);
     }
@@ -187,7 +191,7 @@ function Row({ row, setCarpenter }) {
           </TableCell>
           <TableCell align="right">
             <Link to={`${routeUrls.CARPENTERFORM}/${row._id}`}>
-              <BiEdit className="mx-auto color"/>
+              <BiEdit className="mx-auto color" />
             </Link>
           </TableCell>
         </TableRow>
@@ -214,14 +218,14 @@ function Row({ row, setCarpenter }) {
                       {Quotation.Quotation?.map((QuotationRow) => (
                         <TableRow key={QuotationRow._id}>
                           <TableCell
-                          class='color-1'
+                            class='color-1'
                             align="center"
                             style={{ wordBreak: "break-word", width: "15%" }}
                           >
                             {QuotationRow.serialNumber}
                           </TableCell>
                           <TableCell
-                           class='color-1'
+                            class='color-1'
                             scope="row"
                             align="center"
                             style={{ width: "15%", textTransform: "uppercase" }}
@@ -326,49 +330,49 @@ function Row({ row, setCarpenter }) {
         onHide={() => setselectedQuotationDetails(null)}
       >
         <Modal.Body className="bg-white rounded">
-          {selectedQuotationDetails!== null &&(
+          {selectedQuotationDetails !== null && (
             <div style={{ maxWidth: '400px', margin: '0 auto' }}>
               <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse' }}>
                 <tbody>
                   <tr>
                     <th className="m-table color table-width">Token No</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.tokenNo}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Date</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.Date}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Name </th>
-                    <td className="m-table break-words uppercase"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="m-table break-words uppercase"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Mobile No</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.mobileNo}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Address</th>
-                    <td className="m-table break-words"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="m-table break-words"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Architec</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.architec}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Carpenter</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.carpenter}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">shop</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.shop}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Sales Person</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.sales}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
@@ -378,6 +382,7 @@ function Row({ row, setCarpenter }) {
                           <th className="border color ">Area</th>
                           <th className="border color ">Size</th>
                           <th className="border color ">Rate</th>
+                          <th className="border color ">Invoice No.</th>
                           <th className="border color ">Quantity</th>
                           <th className="border color ">Total</th>
                         </tr>
@@ -385,6 +390,7 @@ function Row({ row, setCarpenter }) {
                       <tbody>{selectedQuotationDetails.innerTable}</tbody>
                       <tr className="text-right color">
                         <th colSpan="5">Main Total:</th>
+                        <td className="border">{selectedQuotationDetails.qtyTotal}</td>
                         <td className="border">{selectedQuotationDetails.mainTotal}</td>
                       </tr>
                     </table>
@@ -392,7 +398,7 @@ function Row({ row, setCarpenter }) {
                 </tbody>
               </table>
             </div>
-          ) }
+          )}
           <div className="flex justify-center mt-2">
             <div
               className="btn n-color text-white rounded-full py-2 px-4 mt-2"
@@ -464,32 +470,32 @@ export default function Carpenterlist() {
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-     <h1 className="color font-bold text-4xl">
-      TIMBERLAND
-     </h1>
+      <h1 className="color font-bold text-4xl">
+        TIMBERLAND
+      </h1>
     </div>;
   }
 
   return (
     <>
       <div className="n-color text-white rounded-br-full">
-          <div className="row mb-3 py-3 lg:mx-0 ms-12">
-            <Col md={6} sm={12}>
-              <p className="md:text-2xl text-xl font-bold pl-9">TIMBERLAND</p>
-            </Col>
-            <Col md={6} sm={12} className="lg:pl-40">
-              <div className="relative ">
-                <input
-                  type="search"
-                  className="search-input py-1  pr-2 ps-10 md:w-80 w-40 rounded-md	text-black"
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-                <div className="absolute fs-5 bottom-1 left-2 text-black">
-                  <BiSearch />
-                </div>
+        <div className="row mb-3 py-3 lg:mx-0 ms-12">
+          <Col md={6} sm={12}>
+            <p className="md:text-2xl text-xl font-bold pl-9">TIMBERLAND</p>
+          </Col>
+          <Col md={6} sm={12} className="lg:pl-40">
+            <div className="relative ">
+              <input
+                type="search"
+                className="search-input py-1  pr-2 ps-10 md:w-80 w-40 rounded-md	text-black"
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <div className="absolute fs-5 bottom-1 left-2 text-black">
+                <BiSearch />
               </div>
-            </Col>
-          </div>
+            </div>
+          </Col>
+        </div>
       </div>
       <div className="md:ps-24 ps-10">
         <Breadcrumb className="font-bold color">
@@ -507,14 +513,14 @@ export default function Carpenterlist() {
       <div className="container my-5 table-auto">
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
-            <TableHead style={{borderBottom: '2px solid rgba(224, 224, 224, 1)'}}>
+            <TableHead style={{ borderBottom: '2px solid rgba(224, 224, 224, 1)' }}>
               <TableRow>
                 <TableCell />
                 <TableCell class="color">carpenter Name</TableCell>
                 <TableCell class='color-1' align="center" className="font-bold">
                   Detalis
                 </TableCell>
-                <TableCell class='color-1'align="center">Delete</TableCell>
+                <TableCell class='color-1' align="center">Delete</TableCell>
                 <TableCell class='color-1' align="center">Edit</TableCell>
               </TableRow>
             </TableHead>

@@ -57,9 +57,11 @@ function Row({ row, setQuotation }) {
           .then(function (response2) {
 
             tableData = response2.data.data;
+            let quantityTotal = 0
             let mainTotal = 0;
             for (const item of tableData) {
               mainTotal += item.total;
+              quantityTotal += item.quantity
             }
             const salesName = userData.sales ? userData.sales.Name : "";
             if (!Array.isArray(tableData)) {
@@ -89,6 +91,7 @@ function Row({ row, setQuotation }) {
                 <td className="break-words border">{item.area}</td>
                 <td className="border ">{item.size}</td>
                 <td className="border ">{item.rate}</td>
+                <td className="border ">{item.invoiceNumber}</td>
                 <td className="border ">{item.quantity}</td>
                 <td className="border ">{item.total}</td>
               </tr>
@@ -100,6 +103,7 @@ function Row({ row, setQuotation }) {
               mobileNo: userData.mobileNo,
               address: userData.address,
               innerTable: innerTableRows,
+              quantityTotal: quantityTotal,
               mainTotal: mainTotal,
               architec: architecNames,
               carpenter: carpenterNames,
@@ -306,7 +310,7 @@ function Row({ row, setQuotation }) {
                 style={{
                   backgroundColor: "white",
                   color: "black",
-                  appearance: disableDropdown ? "none" :"auto"
+                  appearance: disableDropdown ? "none" : "auto"
                 }}
                 value={row.selectedValue}
                 onChange={handleSelectChange}
@@ -347,11 +351,11 @@ function Row({ row, setQuotation }) {
                       <TableBody>
                         {row.architecture?.map((architectureRow, index) => (
                           <TableRow key={index}>
-                            <TableCell class='color-1' scope="row" align="center" 
-                            style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
+                            <TableCell class='color-1' scope="row" align="center"
+                              style={{ width: "15%", textTransform: "uppercase", wordBreak: "break-word" }}>
                               {architectureRow.architecsName}
                             </TableCell>
-                            <TableCell  class='color-1' align="center" style={{ width: "15%" }}>
+                            <TableCell class='color-1' align="center" style={{ width: "15%" }}>
                               {architectureRow.mobileNo}
                             </TableCell>
                             <TableCell
@@ -375,7 +379,7 @@ function Row({ row, setQuotation }) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6"className="color" gutterBottom component="div">
+                <Typography variant="h6" className="color" gutterBottom component="div">
                   Carpenter
                 </Typography>
                 <div className="md:nested-table-container">
@@ -384,21 +388,21 @@ function Row({ row, setQuotation }) {
                     aria-label="purchases" >
                     <TableHead>
                       <TableRow>
-                        <TableCell align="center"  class='color-1'>Carpenter Name</TableCell>
-                        <TableCell align="center"  class='color-1'>Mobile No.</TableCell>
-                        <TableCell align="center"  class='color-1'>Address</TableCell>
+                        <TableCell align="center" class='color-1'>Carpenter Name</TableCell>
+                        <TableCell align="center" class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center" class='color-1'>Address</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {row.carpenter?.map((carpenterRow) => (
                         <TableRow>
-                          <TableCell  class='color-1' scope="row" align="center" style={{ width: "15%", wordBreak: "break-word", textTransform: "uppercase" }}>
+                          <TableCell class='color-1' scope="row" align="center" style={{ width: "15%", wordBreak: "break-word", textTransform: "uppercase" }}>
                             {carpenterRow.carpentersName}
                           </TableCell>
-                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center" class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {carpenterRow.mobileNo}
                           </TableCell>
-                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center" class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {carpenterRow.address}
                           </TableCell>
                         </TableRow>
@@ -424,8 +428,8 @@ function Row({ row, setQuotation }) {
                     <TableHead>
                       <TableRow>
                         <TableCell align="center" class='color-1' >Shop Name</TableCell>
-                        <TableCell align="center"  class='color-1'>Mobile No.</TableCell>
-                        <TableCell align="center"  class='color-1'>Address</TableCell>
+                        <TableCell align="center" class='color-1'>Mobile No.</TableCell>
+                        <TableCell align="center" class='color-1'>Address</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -437,7 +441,7 @@ function Row({ row, setQuotation }) {
                           <TableCell align="center" class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {shopRow.mobileNo}
                           </TableCell>
-                          <TableCell align="center"  class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
+                          <TableCell align="center" class='color-1' style={{ width: "15%", wordBreak: "break-word" }}>
                             {shopRow.address}
                           </TableCell>
 
@@ -486,52 +490,53 @@ function Row({ row, setQuotation }) {
                 <tbody>
                   <tr>
                     <th className="m-table  color table-width">Token No</th>
-                    <td className="m-table "><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.tokenNo}</td>
+                    <td className="m-table "><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table  color table-width">Date</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.Date}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Name </th>
-                    <td className="break-words m-table uppercase"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="break-words m-table uppercase"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Mobile No</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.mobileNo}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Address</th>
-                    <td className="m-table break-words"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="m-table break-words"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Architec</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.architec}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Carpenter</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.carpenter}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">shop</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.shop}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Sales Person</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.sales}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
                       <thead>
-                        <tr>  
+                        <tr>
                           <th className="border color">Description</th>
                           <th className="border color">Area</th>
                           <th className="border color">Size</th>
                           <th className="border color">Rate</th>
+                          <th className="border color">Invoice No.</th>
                           <th className="border color">Quantity</th>
                           <th className="border color">Total</th>
                         </tr>
@@ -539,6 +544,7 @@ function Row({ row, setQuotation }) {
                       <tbody>{selectedQuotationDetails.innerTable}</tbody>
                       <tr className="text-right color">
                         <th colSpan="5">Main Total:</th>
+                        <td className="border">{selectedQuotationDetails.quantityTotal}</td>
                         <td className="border">{selectedQuotationDetails.mainTotal}</td>
                       </tr>
                     </table>
@@ -581,7 +587,7 @@ export default function Quotationlist() {
         });
         console.log(sortedQuotations);
         setQuotation(response.data.data);
-        console.log("res",response.data.data);
+        console.log("res", response.data.data);
         setIsLoading(false);
       })
       .catch(function (error) {
@@ -631,11 +637,11 @@ export default function Quotationlist() {
     setCurrentPage(1);
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
     let url = `${BaseUrl}/quotation/searchdata?`;
-  
+
     if (inputValue) {
       const isNumber = !isNaN(inputValue);
       const isMobile = /^[0-9]{10}$/.test(inputValue);  // Check if it's a mobile number (e.g., 10 digits)
-  
+
       if (isMobile) {
         url = `${url}mobileNo=${inputValue}`;  // Search by mobileNo if it is a valid mobile number
       } else if (isNumber) {
@@ -644,7 +650,7 @@ export default function Quotationlist() {
         url = `${url}userName=${inputValue}`;  // Search by userName if it's not a number
       }
     }
-  
+
     axios
       .get(url, {
         headers: {
@@ -661,7 +667,7 @@ export default function Quotationlist() {
         console.log(error);
       });
   };
-  
+
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
       <h1 className="color font-bold text-4xl">
@@ -671,9 +677,9 @@ export default function Quotationlist() {
   }
 
   return (
-   <div>
-     <>
-      <div className="n-color text-white rounded-br-full">
+    <div>
+      <>
+        <div className="n-color text-white rounded-br-full">
           <div className="row mb-3 py-3 lg:mx-0 ms-12">
             <Col md={6} sm={12}>
               <p className="md:text-2xl text-1xl font-bold pl-9" >TIMBERLAND</p>
@@ -693,65 +699,65 @@ export default function Quotationlist() {
               </div>
             </Col>
           </div>
-      </div>
-      <div className="md:ps-24 ps-10 ">
-        <Breadcrumb className="font-bold color">
-          <Breadcrumb.Item
-            linkAs={Link}
-            linkProps={{ to: routeUrls.DASHBOARD }}
-          >
-            Dashboard
-          </Breadcrumb.Item>
-          <Breadcrumb.Item
-            linkAs={Link}
-            linkProps={{ to: routeUrls.QUOTATIONLIST }}
-          >
-            Quotation
-          </Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
-      <div className="container my-5 table-auto">
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table ">
-            <TableHead style={{borderBottom: '2px solid rgba(224, 224, 224, 1)'}}>
-              <TableRow>
-                <TableCell />
-                <TableCell class="color">Token No.</TableCell>
-                <TableCell class="color">Name</TableCell>
-                <TableCell align="center" class="color-1" >Detalis</TableCell>
-                <TableCell align="center" class="color-1" >Delete</TableCell>
-                <TableCell align="center" class="color-1" >Edit</TableCell>
-                <TableCell align="center" class="color-1" >Status</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-  {itemsToDisplay.map((row) =>
-    row && row.userName ? (
-      <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
-    ) : null
-  )}
-</TableBody>
-            {/* <TableBody>
+        </div>
+        <div className="md:ps-24 ps-10 ">
+          <Breadcrumb className="font-bold color">
+            <Breadcrumb.Item
+              linkAs={Link}
+              linkProps={{ to: routeUrls.DASHBOARD }}
+            >
+              Dashboard
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+              linkAs={Link}
+              linkProps={{ to: routeUrls.QUOTATIONLIST }}
+            >
+              Quotation
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
+        <div className="container my-5 table-auto">
+          <TableContainer component={Paper}>
+            <Table aria-label="collapsible table ">
+              <TableHead style={{ borderBottom: '2px solid rgba(224, 224, 224, 1)' }}>
+                <TableRow>
+                  <TableCell />
+                  <TableCell class="color">Token No.</TableCell>
+                  <TableCell class="color">Name</TableCell>
+                  <TableCell align="center" class="color-1" >Detalis</TableCell>
+                  <TableCell align="center" class="color-1" >Delete</TableCell>
+                  <TableCell align="center" class="color-1" >Edit</TableCell>
+                  <TableCell align="center" class="color-1" >Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {itemsToDisplay.map((row) =>
+                  row && row.userName ? (
+                    <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
+                  ) : null
+                )}
+              </TableBody>
+              {/* <TableBody>
               {quotation.map((row) =>
                 row && row.userName ? (
                   <Row key={row._id} row={row} setQuotation={setQuotation} followDetails={row.followDetails} />
                 ) : null
               )}
             </TableBody> */}
-          </Table>
-        </TableContainer>
-      </div>
-      {/* <div className="d-flex justify-center my-3">
+            </Table>
+          </TableContainer>
+        </div>
+        {/* <div className="d-flex justify-center my-3">
         <Stack spacing={2}>
           <Pagination count={totalPages} page={currentPage} onChange={handlePageChange} variant="outlined" />
         </Stack>
       </div> */}
-      <div className="d-flex justify-center my-3">
-  <Stack spacing={2}>
-    <Pagination count={Math.ceil(quotation.length / itemsPerPage)} page={currentPage} onChange={handlePageChange} variant="outlined" />
-  </Stack>
-</div>
-    </>
-   </div>
+        <div className="d-flex justify-center my-3">
+          <Stack spacing={2}>
+            <Pagination count={Math.ceil(quotation.length / itemsPerPage)} page={currentPage} onChange={handlePageChange} variant="outlined" />
+          </Stack>
+        </div>
+      </>
+    </div>
   );
 }

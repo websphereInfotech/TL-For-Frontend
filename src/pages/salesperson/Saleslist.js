@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Box,Collapse,IconButton,Table,TableBody,TableCell,TableContainer,TableHead,TableRow,Typography,Paper} from "@mui/material";
+import { Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from "@mui/material";
 import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
@@ -30,124 +30,128 @@ function Row(props) {
   const [Quotation, setQuotation] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
-    const [userCount, setUserCount] = React.useState(null);
+  const [userCount, setUserCount] = React.useState(null);
 
-    const handleviewQutotation = async (id) => {
-      try {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        const response = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-    
-        const QuotationData = response.data.data1;
-        console.log(QuotationData);
-    
-        const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-    
-        let tableData = response2.data.data;
-        let mainTotal = 0;
-        for (const item of tableData) {
-          mainTotal += item.total;
-        }
-    
-        const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
-    
-        if (!Array.isArray(tableData)) {
-          tableData = [tableData];
-        }
-    
-        let architecNames = "";
-        let carpenterNames = "";
-        let shopNames = "";
-    
-        if (QuotationData.architec) {
-          architecNames = QuotationData.architec
-            .map((architec) => architec.architecsName)
-            .join(", ");
-        }
-    
-        if (QuotationData.carpenter) {
-          carpenterNames = QuotationData.carpenter
-            .map((carpenter) => carpenter.carpentersName)
-            .join(", ");
-        }
-    
-        if (QuotationData.shop) {
-          shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
-        }
-    
-        const innerTableRows = tableData.map((item, index) => (
-          <tr key={index}>
-            <td className="break-words border">{item.description}</td>
-            <td className="break-words border">{item.area}</td>
-            <td className="border ">{item.size}</td>
-            <td className="border ">{item.rate}</td>
-            <td className="border ">{item.quantity}</td>
-            <td className="border ">{item.total}</td>
-          </tr>
-        ));
-    
-        setselectedQuotationDetails({
-          tokenNo: QuotationData.serialNumber,
-          Date: QuotationData.Date,
-          name: QuotationData.userName,
-          mobileNo: QuotationData.mobileNo,
-          address: QuotationData.address,
-          innerTable: innerTableRows,
-          mainTotal: mainTotal,
-          architec: architecNames,
-          carpenter: carpenterNames,
-          shop: shopNames,
-          sales: salesName,
-        });
-      } catch (error) {
-        console.log(error);
+  const handleviewQutotation = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/quotation/viewdata/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+
+      const QuotationData = response.data.data1;
+      console.log(QuotationData);
+
+      const response2 = await axios.get(`${BaseUrl}/total/view/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+
+      let tableData = response2.data.data;
+      let mainTotal = 0;
+      let qtyTotal = 0
+      for (const item of tableData) {
+        mainTotal += item.total;
+        qtyTotal += item.quantity
       }
-    };
-    
-    const handleviewdata = async (id) => {
-      try {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        const response = await axios.get(`${BaseUrl}/salesPerson/view/${id}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-    
-        console.log(response.data.data);
-        setSelectedSalesperson(response.data.data);
-      } catch (error) {
-        console.log(error);
+
+      const salesName = QuotationData.sales ? QuotationData.sales.Name : "";
+
+      if (!Array.isArray(tableData)) {
+        tableData = [tableData];
       }
-    };
-    
-    const handleDelete = async () => {
-      try {
-        const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-        const response = await axios.delete(`${BaseUrl}/salesPerson/delete/${salespersonID}`, {
-          headers: {
-            Authorization: `Bearer ${saved}`,
-          },
-        });
-    
-        console.log(response.data.data);
-    
-        setSalesperson((prevSalesperson) =>
-          prevSalesperson.filter((salesperson) => salesperson._id !== salespersonID)
-        );
-    
-        setShowDeleteConfirmation(false);
-      } catch (error) {
-        console.log(error);
+
+      let architecNames = "";
+      let carpenterNames = "";
+      let shopNames = "";
+
+      if (QuotationData.architec) {
+        architecNames = QuotationData.architec
+          .map((architec) => architec.architecsName)
+          .join(", ");
       }
-    };
-    
+
+      if (QuotationData.carpenter) {
+        carpenterNames = QuotationData.carpenter
+          .map((carpenter) => carpenter.carpentersName)
+          .join(", ");
+      }
+
+      if (QuotationData.shop) {
+        shopNames = QuotationData.shop.map((shop) => shop.shopName).join(", ");
+      }
+
+      const innerTableRows = tableData.map((item, index) => (
+        <tr key={index}>
+          <td className="break-words border">{item.description}</td>
+          <td className="break-words border">{item.area}</td>
+          <td className="border ">{item.size}</td>
+          <td className="border ">{item.rate}</td>
+          <td className="border ">{item.invoiceNumber}</td>
+          <td className="border ">{item.quantity}</td>
+          <td className="border ">{item.total}</td>
+        </tr>
+      ));
+
+      setselectedQuotationDetails({
+        tokenNo: QuotationData.serialNumber,
+        Date: QuotationData.Date,
+        name: QuotationData.userName,
+        mobileNo: QuotationData.mobileNo,
+        address: QuotationData.address,
+        innerTable: innerTableRows,
+        mainTotal: mainTotal,
+        qtyTotal: qtyTotal,
+        architec: architecNames,
+        carpenter: carpenterNames,
+        shop: shopNames,
+        sales: salesName,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleviewdata = async (id) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.get(`${BaseUrl}/salesPerson/view/${id}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+
+      console.log(response.data.data);
+      setSelectedSalesperson(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.delete(`${BaseUrl}/salesPerson/delete/${salespersonID}`, {
+        headers: {
+          Authorization: `Bearer ${saved}`,
+        },
+      });
+
+      console.log(response.data.data);
+
+      setSalesperson((prevSalesperson) =>
+        prevSalesperson.filter((salesperson) => salesperson._id !== salespersonID)
+      );
+
+      setShowDeleteConfirmation(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const confirmDelete = (id) => {
     setSalespersonId(id);
     setShowDeleteConfirmation(true);
@@ -157,24 +161,24 @@ function Row(props) {
     try {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
       let apiUrl = `${BaseUrl}/salesPerson/salespersonid/${id}?`;
-  
+
       if (startDate && endDate) {
         apiUrl += `startDate=${startDate}&endDate=${endDate}`;
       }
       if (selectedFilter) {
         apiUrl += `&status=${selectedFilter}`;
       }
-  
+
       const response = await axios.get(apiUrl, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       });
-  
+
       if (response.data.data && response.data.data.length > 0) {
         setQuotation({ Quotation: response.data.data[0].connectedUsers });
         setUserCount(response.data.data[0].userCount);
-        console.log("###############",response.data.data[0].userCount )
+        console.log("###############", response.data.data[0].userCount)
       } else {
         setQuotation([]);
       }
@@ -182,7 +186,7 @@ function Row(props) {
       console.log(error);
     }
   };
-  
+
   console.log(">>>>", datesSelected);
 
   React.useEffect(() => {
@@ -192,7 +196,7 @@ function Row(props) {
     } else {
       setDatesSelected(false);
     }
-  }, [row._id, startDate, endDate, selectedFilter,userCount]);
+  }, [row._id, startDate, endDate, selectedFilter, userCount]);
 
   function getTrueStatus(followDetails) {
 
@@ -212,7 +216,7 @@ function Row(props) {
       return followDetails;
     }
   }
-  
+
   const exportToExcel = async (id) => {
     try {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -226,17 +230,17 @@ function Row(props) {
         },
         responseType: 'blob',
       });
-  
+
       const blob = new Blob([response.data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
-  
+
       saveAs(blob, 'Quotation.xlsx');
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   return (
     <>
       <React.Fragment>
@@ -255,7 +259,7 @@ function Row(props) {
             {row.Name}
           </TableCell>
           <TableCell align="center">
-            <AiOutlineDownload className="mx-auto color" onClick={()=>exportToExcel(row._id)}/>
+            <AiOutlineDownload className="mx-auto color" onClick={() => exportToExcel(row._id)} />
 
           </TableCell>
           <TableCell align="center">
@@ -280,9 +284,9 @@ function Row(props) {
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
-                <Typography variant="h6"className="color" gutterBottom component="div">
+                <Typography variant="h6" className="color" gutterBottom component="div">
                   Quotation :
-                  <span style={{fontWeight:"normal"}}> {userCount}</span>
+                  <span style={{ fontWeight: "normal" }}> {userCount}</span>
                 </Typography>
 
                 <div className="">
@@ -404,8 +408,8 @@ function Row(props) {
           </div>
         </Modal.Body>
       </Modal>
-     
-       <Modal
+
+      <Modal
         show={selectedQuotationDetails !== null}
         onHide={() => setselectedQuotationDetails(null)}
       >
@@ -416,43 +420,43 @@ function Row(props) {
                 <tbody>
                   <tr>
                     <th className="m-table  color table-width">Token No</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.tokenNo}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.tokenNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Date</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.Date}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.Date}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Name </th>
-                    <td className="m-table break-words uppercase"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="m-table break-words uppercase"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.name}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Mobile No</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.mobileNo}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.mobileNo}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Address</th>
-                    <td className="m-table break-words"><b style={{paddingRight:'20px'}}>:</b>
+                    <td className="m-table break-words"><b style={{ paddingRight: '20px' }}>:</b>
                       {selectedQuotationDetails.address}
                     </td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Architec</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.architec}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.architec}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Carpenter</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.carpenter}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.carpenter}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">shop</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.shop}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.shop}</td>
                   </tr>
                   <tr>
                     <th className="m-table color table-width">Sales Person</th>
-                    <td className="m-table"><b style={{paddingRight:'20px'}}>:</b>{selectedQuotationDetails.sales}</td>
+                    <td className="m-table"><b style={{ paddingRight: '20px' }}>:</b>{selectedQuotationDetails.sales}</td>
                   </tr>
                   <tr className=" text-center">
                     <table className="table-container border border-separate my-3">
@@ -462,6 +466,7 @@ function Row(props) {
                           <th className="border color">Area</th>
                           <th className="border color">Size</th>
                           <th className="border color">Rate</th>
+                          <th className="border color">Invoice No.</th>
                           <th className="border color">Quantity</th>
                           <th className="border color">Total</th>
                         </tr>
@@ -469,6 +474,7 @@ function Row(props) {
                       <tbody>{selectedQuotationDetails.innerTable}</tbody>
                       <tr className="text-right color">
                         <th colSpan="5">Main Total:</th>
+                        <td className="border">{selectedQuotationDetails.qtyTotal}</td>
                         <td className="border">{selectedQuotationDetails.mainTotal}</td>
                       </tr>
                     </table>
@@ -504,13 +510,13 @@ export default function Saleslist() {
     const fetchData = async () => {
       try {
         const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-  
+
         const response = await axios.get(`${BaseUrl}/salesPerson/AllList`, {
           headers: {
             Authorization: `Bearer ${saved}`,
           },
         });
-  
+
         console.log("??????????????S", response.data.data);
         setSalesperson(response.data.data);
         setIsLoading(false);
@@ -519,11 +525,11 @@ export default function Saleslist() {
         setIsLoading(false);
       }
     };
-  
-    fetchData(); 
-  
+
+    fetchData();
+
   }, []);
-  
+
 
   const indexOfLastItem = page * rowsPerPage;
   const indexOfFirstItem = indexOfLastItem - rowsPerPage;
@@ -558,13 +564,13 @@ export default function Saleslist() {
     setPage(1);
     try {
       const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-  
+
       const response = await axios.get(`${BaseUrl}/salesPerson/search/?SalesPersonName=${SalesPersonName}`, {
         headers: {
           Authorization: `Bearer ${saved}`,
         },
       });
-  
+
       console.log(response.data.data);
       setSalesperson(response.data.data);
     } catch (error) {
@@ -574,34 +580,34 @@ export default function Saleslist() {
 
   if (isLoading) {
     return <div className="d-flex justify-content-center align-items-center vh-100">
-     <h1 className="color font-bold text-4xl">
-      TIMBERLAND
-     </h1>
+      <h1 className="color font-bold text-4xl">
+        TIMBERLAND
+      </h1>
     </div>;
   }
 
   return (
     <>
       <div className="n-color text-white rounded-br-full">
-          <div className="row mb-3 py-3 lg:mx-0 ms-12">
-            <Col md={6} sm={12}>
-              <p className="md:text-2xl text-xl font-bold pl-9">TIMBERLAND</p>
-            </Col>
-            <Col md={6} sm={12} className="lg:pl-40">
-              <div className="relative ">
-                <input
-                  type="search"
-                  name=""
-                  id=""
-                  className="search-input py-1 pr-2 ps-10 md:w-80 w-40 rounded-md	text-black"
-                  onChange={(e) => handleSearch(e.target.value)}
-                />
-                <div className="absolute fs-5 bottom-1 left-2 text-black">
-                  <BiSearch />
-                </div>
+        <div className="row mb-3 py-3 lg:mx-0 ms-12">
+          <Col md={6} sm={12}>
+            <p className="md:text-2xl text-xl font-bold pl-9">TIMBERLAND</p>
+          </Col>
+          <Col md={6} sm={12} className="lg:pl-40">
+            <div className="relative ">
+              <input
+                type="search"
+                name=""
+                id=""
+                className="search-input py-1 pr-2 ps-10 md:w-80 w-40 rounded-md	text-black"
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              <div className="absolute fs-5 bottom-1 left-2 text-black">
+                <BiSearch />
               </div>
-            </Col>
-          </div>
+            </div>
+          </Col>
+        </div>
       </div>
       <Container>
         <div className="row md:mx-auto mx-auto align-items-center">
@@ -668,16 +674,16 @@ export default function Saleslist() {
       <div className="container my-5 table-auto">
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
-            <TableHead style={{borderBottom: '2px solid rgba(224, 224, 224, 1)'}}>
+            <TableHead style={{ borderBottom: '2px solid rgba(224, 224, 224, 1)' }}>
               <TableRow>
                 <TableCell />
                 <TableCell class='color'> Name</TableCell>
                 <TableCell class='color-1' align="center">Excel</TableCell>
-                <TableCell class='color-1'align="center" className="font-bold">
+                <TableCell class='color-1' align="center" className="font-bold">
                   Detalis
                 </TableCell>
                 <TableCell class='color-1' align="center">Delete</TableCell>
-                <TableCell class='color-1'align="center">Edit</TableCell>
+                <TableCell class='color-1' align="center">Edit</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -696,7 +702,7 @@ export default function Saleslist() {
           <Pagination
             count={Math.ceil(salesperson.length / rowsPerPage)}
             page={page}
-            onChange={ handlePageChange} 
+            onChange={handlePageChange}
             variant="outlined"
           />
         </Stack>
