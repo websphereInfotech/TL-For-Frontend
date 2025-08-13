@@ -19,7 +19,10 @@ function QuotationForm() {
     userName: "",
     mobileNo: "",
     address: "",
+    addressTwo: "",
     Date: "",
+    marketingDataName: "",
+    marketingDataId: "",
   });
 
   const [rows, setRows] = useState([createNewRow()]); // table row added
@@ -145,6 +148,7 @@ function QuotationForm() {
             userName: quotationData.userName,
             mobileNo: quotationData.mobileNo,
             address: quotationData.address,
+            addressTwo: quotationData.addressTwo,
             Date: formattedDate,
           });
 
@@ -165,9 +169,9 @@ function QuotationForm() {
           const saleOptions = quotationData.sales
             ? Array.isArray(quotationData.sales)
               ? quotationData.sales.map((item) => ({
-                  label: item.Name,
-                  name: item._id,
-                }))
+                label: item.Name,
+                name: item._id,
+              }))
               : [{ label: quotationData.sales.Name }]
             : [];
 
@@ -176,14 +180,14 @@ function QuotationForm() {
           selectsetShop(shopOptions);
           selectsetSale(saleOptions);
           setSerialNub(quotationData.serialNumber);
-          console.log("serial",quotationData.serialNumber);
+          console.log("serial", quotationData.serialNumber);
         })
         .catch(function (error) {
           console.log(error);
         });
     } else {
-    const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-    axios
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      axios
         .get(`${url}/quotation/listdata`, {
           headers: {
             Authorization: `Bearer ${saved}`,
@@ -282,33 +286,38 @@ function QuotationForm() {
     const shopIds = selectShop.map((item) => item.value);
     const saleIds = selectSale ? selectSale.value : null;
 
+    const payload = { ...formValues };
+    if (!payload.marketingDataId) {
+      delete payload.marketingDataId;
+    }
+
     const data = id
       ? {
-          ...formValues,
-          serialNumber: serialNub.toString(),
-          architecture_id: architectureIds,
-          carpenter_id: carpenterIds,
-          shop_id: shopIds,
-          sales: saleIds,
-          addtotal: rows,
-        }
+        ...payload,
+        serialNumber: serialNub.toString(),
+        architecture_id: architectureIds,
+        carpenter_id: carpenterIds,
+        shop_id: shopIds,
+        sales: saleIds,
+        addtotal: rows,
+      }
       : {
-          ...formValues,
-          serialNumber: serialNub.toString(),
-          architec: architectureIds,
-          carpenter: carpenterIds,
-          shop: shopIds,
-          sales: saleIds,
-          addtotal: rows,
-        };
+        ...payload,
+        serialNumber: serialNub.toString(),
+        architec: architectureIds,
+        carpenter: carpenterIds,
+        shop: shopIds,
+        sales: saleIds,
+        addtotal: rows,
+      };
     try {
       const response = id
         ? await axios.put(`${url}/quotation/update/${id}`, data, {
-            headers: { Authorization: `Bearer ${saved}` },
-          })
+          headers: { Authorization: `Bearer ${saved}` },
+        })
         : await axios.post(`${url}/quotation/cerate`, data, {
-            headers: { Authorization: `Bearer ${saved}` },
-          });
+          headers: { Authorization: `Bearer ${saved}` },
+        });
       // console.log("Response:", response.data);
       const isSuccess = response.data.status === "Success";
       setModalState({
@@ -354,6 +363,39 @@ function QuotationForm() {
       };
     }
   }, [modalState.showModal, handleClose]);
+  const fetchMarketingPerson = async (address) => {
+    try {
+      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
+      const response = await axios.post(
+        `${url}/marketing/view/adress`,
+        { address },
+        { headers: { Authorization: `Bearer ${saved}` } }
+      );
+
+      const marketing = response.data.marketing;
+      const marketingPersone = response.data.login;
+
+      const formattedDate = marketing.date
+        ? new Date(marketing.date).toISOString().split("T")[0]
+        : "";
+
+      setFormValues(prev => ({
+        ...prev,
+        userName: marketing.name || "",
+        mobileNo: marketing.mobileNo || "",
+        address: marketing.address || "",
+        addressTwo: marketing.addressTwo || "",
+        // Date: formattedDate || "",
+        marketingDataName: marketingPersone.login_id || "",
+        marketingDataId: marketingPersone._id || "",
+      }));
+    } catch (error) {
+      console.error("Error fetching marketing person:", error);
+    }
+  };
+
+
+
   // Create New Architec
   const handleSaveNewArchitecture = () => {
     const saved = localStorage.getItem(process.env.REACT_APP_KEY);
@@ -424,7 +466,7 @@ function QuotationForm() {
           },
         }
       );
-    
+
       if (response.data && response.data.status === "Success") {
         setIsCreatingCarpenter(false);
         setModalState({
@@ -454,7 +496,7 @@ function QuotationForm() {
       });
     }
   };
-  
+
   const handleCloseCreateCarpenter = () => {
     setIsCreatingCarpenter(false);
   };
@@ -547,7 +589,7 @@ function QuotationForm() {
                   placeholder="Token No. :"
                   onChange={(e) => setSerialNub(e.target.value)}
                   value={serialNub}
-                  />
+                />
               </Form.Group>
               <Form.Group
                 className="mb-3 md:w-72 w-72"
@@ -601,19 +643,61 @@ function QuotationForm() {
                 />
               </Form.Group>
             </div>
+            <div className="md:flex justify-between flex-none">
+              <Form.Group
+                className="mb-3 md:w-72 w-72"
+                controlId="formBasicPassword"
+              >
+                <Form.Label className="font-bold color">
+                  Address <span className="text-red-600"> &#8727; </span>:
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Address :"
+                  value={formValues.address}
+                  onChange={(e) =>
+                    setFormValues({ ...formValues, address: e.target.value })
+                  }
+                  onBlur={() => {
+                    if (formValues.address.trim()) {
+                      fetchMarketingPerson(formValues.address);
+                    }
+                  }}
+                />
+              </Form.Group>
+
+              <Form.Group
+                className="mb-3 md:w-72 w-72"
+                controlId="formBasicPassword"
+              >
+                <Form.Label className="font-bold color">
+                  Marketing Persone <span className="text-red-600">  </span>:
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Marketing Persone :"
+                  value={formValues.marketingDataName}
+                  disabled
+                // onChange={(e) =>
+                //   setFormValues({ ...formValues, mobileNo: e.target.value })
+                // }
+                />
+              </Form.Group>
+            </div>
+
             <Form.Group
               className="mb-3 md:w-full w-72"
               controlId="formBasicPassword"
             >
               <Form.Label className="font-bold color">
-                Address <span className="text-red-600"> &#8727; </span>:
+                Address Two<span className="text-red-600"> </span>:
               </Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Address :"
-                value={formValues.address}
+                placeholder="Address Two :"
+                value={formValues.addressTwo}
                 onChange={(e) =>
-                  setFormValues({ ...formValues, address: e.target.value })
+                  setFormValues({ ...formValues, addressTwo: e.target.value })
                 }
               />
             </Form.Group>
@@ -636,7 +720,7 @@ function QuotationForm() {
                     <th className="color">
                       Quantity<span className="text-red-600"> &#8727; </span>
                     </th>
-                    
+
                     <th className="color">
                       Invoice No.<span className="text-red-600">  </span>
                     </th>
@@ -714,7 +798,7 @@ function QuotationForm() {
                         </td>
                         <td>
                           <input
-                           value={row.invoiceNumber || ""}
+                            value={row.invoiceNumber || ""}
                             onChange={(e) =>
                               handleRowChange(
                                 rowIndex,
@@ -766,9 +850,9 @@ function QuotationForm() {
                           .toFixed(2)}
                       </td>
                     </tr>
-                    
+
                   </tfoot>
-                  
+
                 </>
               </table>
             </div>

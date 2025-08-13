@@ -10,7 +10,10 @@ const routeUrls = {
   QUOTATION: "/quotation",
   QUOTATIONLIST: "/quotationlist",
   SALEFORM:"/Salesform",
-  SALELIST:"/Saleslist"
+  SALELIST:"/Saleslist",
+  MRAKETINGFORM:"/Marketingform",
+  MYMRAKETINGFORM:"/MyMarketingform",
+  MARKETINGLIST:"/Marketinglist"
 };
 
 export default routeUrls;

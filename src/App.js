@@ -13,18 +13,21 @@ import Protected from './Service/Protected';
 import routeUrls from './constants/routeUrls';
 import Quotationlist from './pages/Quotation/Quotationlist';
 import Salesform from './pages/salesperson/Salesfom';
+import Marketingform from './pages/marketingperson/Marketingform';
+import MyMarketingform from './pages/marketingperson/MyMarketingform';
+import Marketinglist from './pages/marketingperson/Marketinglist';
 import Saleslist from './pages/salesperson/Saleslist';
-import QuotationForm from'./pages/Quotation/QuotationForm'
+import QuotationForm from './pages/Quotation/QuotationForm'
 
 function App() {
- 
+
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route exct path={routeUrls.LOGIN} element={<AdminLogin />} />
           <Route path="/" element={<Navigate to={routeUrls.LOGIN} />} />
-  
+
           <Route path={routeUrls.DASHBOARD} element={<Protected><Dashboard /></Protected>} />
 
           <Route path={routeUrls.SHOPFORM} element={<Protected><Shopform /></Protected>} />
@@ -43,10 +46,22 @@ function App() {
           <Route path={`${routeUrls.QUOTATION}/:id`} element={<Protected><QuotationForm /></Protected>} />
           <Route path={routeUrls.QUOTATIONLIST} element={<Protected><Quotationlist /></Protected>} />
 
-          <Route path={`${routeUrls.SALEFORM}`} element={<Protected><Salesform/></Protected>} />
-          <Route path={`${routeUrls.SALEFORM}/:id`} element={<Protected><Salesform/></Protected>} />
-
+          <Route path={`${routeUrls.SALEFORM}`} element={<Protected><Salesform /></Protected>} />
+          <Route path={`${routeUrls.SALEFORM}/:id`} element={<Protected><Salesform /></Protected>} />
           <Route path={routeUrls.SALELIST} element={<Protected><Saleslist /></Protected>} />
+
+
+
+          <Route path={`${routeUrls.MRAKETINGFORM}`} element={<Protected><Marketingform /></Protected>} />
+          <Route path={`${routeUrls.MRAKETINGFORM}/:id`} element={<Protected><Marketingform /></Protected>} />
+          <Route path={routeUrls.MARKETINGLIST} element={<Protected><Marketinglist/></Protected>} />
+
+          
+          <Route path={`${routeUrls.MYMRAKETINGFORM}`} element={<Protected><MyMarketingform /></Protected>} />
+          <Route path={`${routeUrls.MYMRAKETINGFORM}/:id`} element={<Protected><MyMarketingform /></Protected>} />
+          
+
+
 
 
         </Routes>
