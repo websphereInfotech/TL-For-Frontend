@@ -375,9 +375,9 @@ function QuotationForm() {
       const marketing = response.data.marketing;
       const marketingPersone = response.data.login;
 
-      const formattedDate = marketing.date
-        ? new Date(marketing.date).toISOString().split("T")[0]
-        : "";
+      // const formattedDate = marketing.date
+      //   ? new Date(marketing.date).toISOString().split("T")[0]
+      //   : "";
 
       setFormValues(prev => ({
         ...prev,

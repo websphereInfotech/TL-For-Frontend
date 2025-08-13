@@ -7,7 +7,7 @@ import {
 import axios from "axios";
 import { FaStreetView } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { BiSearch, BiEdit } from "react-icons/bi";
+import { BiSearch } from "react-icons/bi";
 import { Breadcrumb, Col, Container, Modal } from "react-bootstrap";
 import routeUrls from "../../constants/routeUrls";
 import { AiOutlinePlus } from "react-icons/ai"
@@ -19,12 +19,11 @@ import { saveAs } from 'file-saver';
 let BaseUrl = process.env.REACT_APP_BASEURL
 
 function Row(props) {
-  const { row, setSalesperson, startDate, endDate } = props;//pass props for export salelist
+  const { row, startDate, endDate } = props;//pass props for export salelist
   const [open, setOpen] = React.useState(false);//open dropdown of Quotation data
-  const [salespersonID, setSalespersonId] = React.useState(null);//set salesperson id to delete data
   const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);//set confirmation for delete data
   const [selectedSalesperson, setSelectedSalesperson] = React.useState(null);//to show salesperson data in model
-  const [datesSelected, setDatesSelected] = React.useState(false);//set the date which is
+  // const [datesSelected, setDatesSelected] = React.useState(false);//set the date which is
   const [Quotation, setQuotation] = React.useState([]);
   const [selectedQuotationDetails, setselectedQuotationDetails] =
     React.useState(null);
@@ -71,31 +70,7 @@ function Row(props) {
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      const saved = localStorage.getItem(process.env.REACT_APP_KEY);
-      const response = await axios.delete(`${BaseUrl}/salesPerson/delete/${salespersonID}`, {
-        headers: {
-          Authorization: `Bearer ${saved}`,
-        },
-      });
 
-      console.log(response.data.data);
-
-      setSalesperson((prevSalesperson) =>
-        prevSalesperson.filter((salesperson) => salesperson._id !== salespersonID)
-      );
-
-      setShowDeleteConfirmation(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const confirmDelete = (id) => {
-    setSalespersonId(id);
-    setShowDeleteConfirmation(true);
-  };
 
   const handleSubmit = async (id, startDate, endDate) => {
     try {
@@ -126,9 +101,9 @@ function Row(props) {
   React.useEffect(() => {
     if ((startDate && endDate)) {
       handleSubmit(row._id, startDate, endDate);
-      setDatesSelected(true);
+      // setDatesSelected(true);
     } else {
-      setDatesSelected(false);
+      // setDatesSelected(false);
     }
   }, [row._id, startDate, endDate, userCount]);
 
@@ -270,7 +245,7 @@ function Row(props) {
               >
                 No
               </button>
-              <button className=" rounded-full n-color" onClick={handleDelete}>
+              <button className=" rounded-full n-color" >
                 Yes
               </button>
             </div>
