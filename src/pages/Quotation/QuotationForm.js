@@ -577,20 +577,19 @@ function QuotationForm() {
         <div>
           <Form className="w-50 sm:mx-auto " onSubmit={handleQuotation}>
             <div className="md:flex justify-between flex-none">
-              <Form.Group
-                className=" mb-3 md:w-72 w-72"
-                controlId="formBasicEmail"
-              >
+              <Form.Group className="mb-3 md:w-72 w-72" controlId="formBasicEmail">
                 <Form.Label className="font-bold color">
-                  Token No. <span className="text-red-600"> &#8727; </span>:
+                  Token No. <span className="text-red-600">&#8727;</span>:
                 </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Token No. :"
-                  onChange={(e) => setSerialNub(e.target.value)}
                   value={serialNub}
+                  onChange={(e) => setSerialNub(e.target.value.toUpperCase())} // ✅ convert to uppercase
+                  style={{ textTransform: "uppercase" }} // ✅ shows uppercase in UI
                 />
               </Form.Group>
+
               <Form.Group
                 className="mb-3 md:w-72 w-72"
                 controlId="formBasicEmail"
